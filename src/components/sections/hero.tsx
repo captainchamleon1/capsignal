@@ -13,17 +13,19 @@ export function Hero() {
         <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
           <Reveal direction="up">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-tertiary">
-              Fundraising infrastructure
+              Built to get you investors
             </p>
 
             <h1 className="display-serif mt-7 text-balance text-[2.65rem] font-semibold text-text-primary md:text-[4.5rem]">
               Investor outreach
-              <span className="block text-text-secondary">that runs like a system</span>
+              <span className="block text-text-secondary">that gets meetings</span>
             </h1>
 
             <p className="mt-7 max-w-lg text-[17px] leading-[1.65] text-text-secondary">
               Match with investors deploying in your space. Send thesis-aware
-              sequences from your inbox. Track every reply through close.
+              sequences from your inbox. Track every reply in an investor CRM
+              and share diligence through a built-in data room—all the way to
+              close.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">

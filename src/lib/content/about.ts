@@ -33,6 +33,6 @@ export const principles = [
 
 export const milestones = [
   { year: "2024", event: "CapSignal founded; first 20 campaigns launched" },
-  { year: "2025", event: "182K investor records; 840+ campaigns in dataset" },
+  { year: "2025", event: "Public investor datasets integrated; SEC IAPD nightly ingest" },
   { year: "2026", event: "Partner program launched; Full Service tier added" },
 ] as const;

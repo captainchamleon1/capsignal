@@ -1,56 +1,58 @@
-const investors = [
-  { firm: "Horizon Capital", partner: "M. Reeves", score: 94, status: "Replied", tag: "B2B SaaS" },
-  { firm: "Northwind Ventures", partner: "E. Vasquez", score: 91, status: "Meeting", tag: "Seed" },
-  { firm: "Basecamp Fund", partner: "A. Park", score: 87, status: "Opened", tag: "Enterprise" },
-  { firm: "Summit Partners", partner: "R. Chen", score: 84, status: "Sent", tag: "Growth" },
-  { firm: "Lattice Ventures", partner: "K. Morgan", score: 79, status: "Queued", tag: "Seed" },
-];
+"use client";
 
-const activity = [
-  { time: "09:14", event: "Reply from Horizon Capital", type: "reply" },
-  { time: "08:42", event: "Meeting booked — Northwind", type: "meeting" },
-  { time: "Yesterday", event: "Sequence step 2 sent (38 investors)", type: "send" },
-  { time: "Yesterday", event: "Basecamp Fund opened email", type: "open" },
-];
+import { useEffect, useState } from "react";
 
-function StatusBadge({ status }: { status: string }) {
-  const styles: Record<string, string> = {
-    Replied: "text-text-on-dark bg-surface-dark-raised",
-    Meeting: "text-text-on-dark bg-surface-dark-raised",
-    Opened: "text-text-on-dark-muted bg-white/5",
-    Sent: "text-text-on-dark-muted bg-white/5",
-    Queued: "text-text-on-dark-muted bg-white/5",
-  };
+type SampleFirm = {
+  name: string;
+  partner: string | null;
+  dataQuality: number;
+  sectorLabel: string;
+};
 
+function StatusBadge({ label }: { label: string }) {
   return (
-    <span className={`px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide ${styles[status] ?? styles.Queued}`}>
-      {status}
+    <span className="px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wide text-text-on-dark-muted bg-white/5">
+      {label}
     </span>
   );
 }
 
 export function ProductPreview() {
+  const [firms, setFirms] = useState<SampleFirm[]>([]);
+  const [total, setTotal] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/public/investor-sample")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) {
+          setFirms(data.firms ?? []);
+          setTotal(data.total ?? 0);
+        }
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <div className="overflow-hidden rounded-none border-0 bg-surface-dark">
       <div className="flex items-center justify-between border-b border-surface-dark-border px-4 py-3">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-xs text-text-on-dark-muted">meridian-seed-q2</span>
+          <span className="font-mono text-xs text-text-on-dark-muted">investor-database</span>
           <span className="hidden h-4 w-px bg-surface-dark-border sm:block" />
-          <span className="hidden text-xs text-text-on-dark-muted sm:inline">Investors</span>
+          <span className="hidden text-xs text-text-on-dark-muted sm:inline">Public source data</span>
         </div>
-        <div className="flex items-center gap-4 font-mono text-xs tabular-nums text-text-on-dark-muted">
-          <span>186 sent</span>
-          <span className="text-text-on-dark">24 replies</span>
-          <span className="text-text-on-dark">11.4%</span>
+        <div className="font-mono text-xs tabular-nums text-text-on-dark-muted">
+          {total !== null ? `${total.toLocaleString()} firms` : "—"}
         </div>
       </div>
 
       <div className="flex flex-col lg:flex-row">
         <div className="hidden w-44 shrink-0 border-r border-surface-dark-border p-3 md:block">
           <p className="mb-3 px-2 font-mono text-[10px] uppercase tracking-wider text-text-on-dark-muted">
-            Campaign
+            Views
           </p>
-          {["Overview", "Investors", "Sequences", "Analytics"].map((item, i) => (
+          {["Overview", "Investors", "Campaigns", "Data room"].map((item, i) => (
             <div
               key={item}
               className={`rounded-md px-2 py-1.5 text-xs ${
@@ -65,52 +67,60 @@ export function ProductPreview() {
         </div>
 
         <div className="min-w-0 flex-1 p-3 lg:p-4">
-          <div className="overflow-x-auto rounded-lg border border-surface-dark-border">
-            <table className="w-full min-w-[480px] text-left text-xs">
-              <thead>
-                <tr className="border-b border-surface-dark-border bg-surface-dark-raised/50">
-                  <th className="px-3 py-2 font-medium text-text-on-dark-muted">Firm</th>
-                  <th className="px-3 py-2 font-medium text-text-on-dark-muted">Score</th>
-                  <th className="px-3 py-2 font-medium text-text-on-dark-muted">Focus</th>
-                  <th className="px-3 py-2 font-medium text-text-on-dark-muted">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {investors.map((row) => (
-                  <tr key={row.firm} className="border-b border-surface-dark-border/60 last:border-0">
-                    <td className="px-3 py-2.5">
-                      <p className="font-medium text-text-on-dark">{row.firm}</p>
-                      <p className="text-[11px] text-text-on-dark-muted">{row.partner}</p>
-                    </td>
-                    <td className="px-3 py-2.5 font-mono tabular-nums text-text-on-dark">{row.score}</td>
-                    <td className="px-3 py-2.5 text-text-on-dark-muted">{row.tag}</td>
-                    <td className="px-3 py-2.5">
-                      <StatusBadge status={row.status} />
-                    </td>
+          {loading ? (
+            <div className="flex h-48 items-center justify-center text-xs text-text-on-dark-muted">
+              Loading investor records…
+            </div>
+          ) : firms.length === 0 ? (
+            <div className="flex h-48 flex-col items-center justify-center gap-2 text-center text-xs text-text-on-dark-muted">
+              <p>No investor data loaded yet.</p>
+              <p>Run bulk import from the dashboard data pipeline.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto rounded-lg border border-surface-dark-border">
+              <table className="w-full min-w-[480px] text-left text-xs">
+                <thead>
+                  <tr className="border-b border-surface-dark-border bg-surface-dark-raised/50">
+                    <th className="px-3 py-2 font-medium text-text-on-dark-muted">Firm</th>
+                    <th className="px-3 py-2 font-medium text-text-on-dark-muted">Data quality</th>
+                    <th className="px-3 py-2 font-medium text-text-on-dark-muted">Sector (source)</th>
+                    <th className="px-3 py-2 font-medium text-text-on-dark-muted">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {firms.map((row) => (
+                    <tr key={row.name} className="border-b border-surface-dark-border/60 last:border-0">
+                      <td className="px-3 py-2.5">
+                        <p className="font-medium text-text-on-dark">{row.name}</p>
+                        {row.partner && (
+                          <p className="text-[11px] text-text-on-dark-muted">{row.partner}</p>
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5 font-mono tabular-nums text-text-on-dark">
+                        {row.dataQuality}%
+                      </td>
+                      <td className="px-3 py-2.5 text-text-on-dark-muted">{row.sectorLabel}</td>
+                      <td className="px-3 py-2.5">
+                        <StatusBadge label="In database" />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         <div className="w-full border-t border-surface-dark-border p-3 lg:w-56 lg:border-t-0 lg:border-l lg:p-4">
-          <p className="mb-3 text-xs font-medium text-text-on-dark">Recent activity</p>
-          <ul className="space-y-3">
-            {activity.map((item) => (
-              <li key={item.event} className="text-[11px] leading-snug">
-                <span className="font-mono tabular-nums text-text-on-dark-muted">{item.time}</span>
-                <p className="mt-0.5 text-text-on-dark-muted">{item.event}</p>
-              </li>
-            ))}
+          <p className="mb-3 text-xs font-medium text-text-on-dark">Data sources</p>
+          <ul className="space-y-3 text-[11px] leading-snug text-text-on-dark-muted">
+            <li>SEC IAPD Form ADV (nightly)</li>
+            <li>PE/VC Atlas (CC BY 4.0)</li>
+            <li>Startup investor dataset (MIT)</li>
           </ul>
-          <div className="mt-4 rounded-lg border border-surface-dark-border bg-surface-dark-raised p-3">
-            <p className="font-mono text-[10px] uppercase tracking-wider text-text-on-dark-muted">
-              This week
-            </p>
-            <p className="mt-1 text-2xl font-semibold tabular-nums text-text-on-dark">41</p>
-            <p className="text-[11px] text-text-on-dark-muted">Meetings booked</p>
-          </div>
+          <p className="mt-4 text-[10px] leading-relaxed text-text-on-dark-muted">
+            Campaign activity and reply metrics appear after you run outreach — not shown here.
+          </p>
         </div>
       </div>
     </div>

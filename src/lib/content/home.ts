@@ -1,8 +1,8 @@
 export const stats = [
-  { value: "11.4%", label: "Median reply rate" },
-  { value: "182K", label: "Investor records" },
-  { value: "5–7 days", label: "To campaign launch" },
-  { value: "3.1×", label: "Faster to first meeting" },
+  { value: "12K+", label: "Investor firms (public datasets)" },
+  { value: "3", label: "Licensed open data sources" },
+  { value: "Daily", label: "SEC Form ADV refresh" },
+  { value: "100%", label: "Source-attributed records" },
 ] as const;
 
 export const logos = [
@@ -31,9 +31,16 @@ export const capabilities = [
   },
   {
     id: "pipeline",
-    title: "Pipeline & analytics",
+    title: "Investor CRM",
     description:
-      "Status, replies, and meetings in one view. Weekly reports on what's converting and where to adjust targeting.",
+      "Every relationship, reply, and meeting in one pipeline. Status tracking, notes, and next steps built for raises—not sales.",
+    span: "small" as const,
+  },
+  {
+    id: "dataroom",
+    title: "Data room",
+    description:
+      "Share deck, model, cap table, and legal docs securely. Permission controls and view tracking per investor.",
     span: "small" as const,
   },
 ] as const;
@@ -80,24 +87,7 @@ export const workflow = [
   },
 ] as const;
 
-export const testimonials = [
-  {
-    quote:
-      "Ten meetings in two weeks. The shortlist was the difference—every firm had deployed in our space within the last two quarters.",
-    author: "Sarah Chen",
-    title: "CEO, Meridian Labs",
-    detail: "Seed · 13.8% reply rate",
-    slug: "meridian-labs",
-  },
-  {
-    quote:
-      "We closed Series A in eleven weeks. Outreach came from my inbox and investors treated it like a warm intro, not a blast.",
-    author: "James Okonkwo",
-    title: "Founder, Stackline",
-    detail: "Series A · $4.2M",
-    slug: "stackline",
-  },
-] as const;
+export const testimonials = [] as const;
 
 export const comparisonRows = [
   {
@@ -130,6 +120,18 @@ export const comparisonRows = [
     crm: "1–2 weeks setup",
     capsignal: "5–7 business days",
   },
+  {
+    feature: "Investor CRM",
+    manual: "Spreadsheet tabs",
+    crm: "Sales-focused contacts",
+    capsignal: "Raise-specific pipeline",
+  },
+  {
+    feature: "Data room",
+    manual: "Google Drive links",
+    crm: "Not included",
+    capsignal: "Built-in with access controls",
+  },
 ] as const;
 
 export const outcomeScenarios = [
@@ -140,8 +142,6 @@ export const outcomeScenarios = [
     manualHours: 113,
     manualReplies: 4,
     manualMeetings: 1,
-    capsignalReplies: 17,
-    capsignalMeetings: 6,
   },
   {
     id: "typical",
@@ -150,8 +150,6 @@ export const outcomeScenarios = [
     manualHours: 188,
     manualReplies: 6,
     manualMeetings: 2,
-    capsignalReplies: 29,
-    capsignalMeetings: 10,
   },
   {
     id: "broad",
@@ -160,8 +158,6 @@ export const outcomeScenarios = [
     manualHours: 300,
     manualReplies: 10,
     manualMeetings: 3,
-    capsignalReplies: 46,
-    capsignalMeetings: 14,
   },
 ] as const;
 

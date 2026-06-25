@@ -7,11 +7,12 @@ export function Comparison() {
       <Container>
         <div className="max-w-2xl">
           <h2 className="text-2xl font-semibold tracking-[-0.02em] text-text-primary md:text-3xl">
-            Not a CRM. Not a spreadsheet.
+            Built to get you investors—not manage a sales pipeline.
           </h2>
           <p className="mt-3 text-base text-text-secondary">
-            CapSignal is fundraising execution—targeting, outreach, and follow-up
-            built for raises, not general sales.
+            CapSignal finds who's deploying, runs outreach from your inbox, and
+            tracks every reply through close—with investor CRM and data room
+            built in.
           </p>
         </div>
 

@@ -10,16 +10,17 @@ import { TextLink } from "@/components/ui/text-link";
 import { cn } from "@/lib/utils";
 
 const MANUAL_RATE = 2.5;
-const CAPSIGNAL_RATE = 11.4;
 
 function RateBar({
   label,
   rate,
+  maxRate,
   variant,
   animate,
 }: {
   label: string;
   rate: number;
+  maxRate: number;
   variant: "manual" | "capsignal";
   animate: boolean;
 }) {
@@ -35,7 +36,7 @@ function RateBar({
             "h-full transition-[width] duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]",
             variant === "capsignal" ? "bg-brand" : "bg-text-tertiary",
           )}
-          style={{ width: animate ? `${(rate / CAPSIGNAL_RATE) * 100}%` : "0%" }}
+          style={{ width: animate ? `${(rate / maxRate) * 100}%` : "0%" }}
         />
       </div>
     </div>
@@ -89,12 +90,12 @@ export function OutcomeBand() {
           <div className="max-w-2xl">
             <SectionLabel index="—" title="Outcomes" />
             <h2 className="display-serif mt-5 text-balance text-2xl font-semibold text-text-primary md:text-3xl">
-              Same investor list. A completely different raise.
+              Less founder time on list-building
             </h2>
             <p className="mt-4 text-[16px] leading-relaxed text-text-secondary">
-              Most founders lose a month to manual outreach before they know if the list was
-              wrong. CapSignal compresses launch to days—and puts replies in your inbox while
-              you stay on product.
+              Manual outreach costs hours you could spend on product and meetings. CapSignal
+              automates list-building from source data — reply and meeting metrics come from your
+              campaigns, not platform benchmarks.
             </p>
           </div>
 
@@ -139,19 +140,20 @@ export function OutcomeBand() {
               <Metric
                 value={String(scenario.manualReplies)}
                 label="Expected investor replies"
-                detail={`At ${MANUAL_RATE}% median reply rate`}
+                detail={`Illustrative at ${MANUAL_RATE}% reply rate`}
               />
               <Metric
                 value={String(scenario.manualMeetings)}
                 label="Likely first meetings"
-                detail="Before you pivot the list or the pitch"
+                detail="Illustrative — varies by list quality and pitch"
               />
             </div>
 
             <div className="mt-8">
               <RateBar
-                label="Reply rate"
+                label="Illustrative reply rate"
                 rate={MANUAL_RATE}
+                maxRate={10}
                 variant="manual"
                 animate={barsReady}
               />
@@ -163,33 +165,29 @@ export function OutcomeBand() {
               With CapSignal
             </p>
             <p className="mt-2 text-sm text-text-secondary">
-              Ranked shortlist, inbox-native sequences, live funnel reporting.
+              Ranked shortlist from public data, inbox-native sequences, per-campaign analytics.
             </p>
 
             <div className="mt-8 space-y-0">
-              <Metric value="5–7 days" label="To campaign launch" detail="After shortlist approval" highlight />
+              <Metric value="5–7 days" label="Typical setup time" detail="After shortlist approval" highlight />
               <Metric
-                value={String(scenario.capsignalReplies)}
-                label="Expected investor replies"
-                detail={`At ${CAPSIGNAL_RATE}% median reply rate`}
+                value="—"
+                label="Reply rate"
+                detail="Tracked from your campaign after launch"
                 highlight
               />
               <Metric
-                value={String(scenario.capsignalMeetings)}
-                label="Likely first meetings"
-                detail="Based on Meridian Labs benchmark"
+                value="—"
+                label="Meetings booked"
+                detail="Recorded in your CRM from real outreach"
                 highlight
               />
             </div>
 
-            <div className="mt-8">
-              <RateBar
-                label="Reply rate"
-                rate={CAPSIGNAL_RATE}
-                variant="capsignal"
-                animate={barsReady}
-              />
-            </div>
+            <p className="mt-8 text-xs leading-relaxed text-text-tertiary">
+              We do not display median reply rates or meeting benchmarks until they are computed
+              from verified customer campaigns.
+            </p>
           </div>
         </RevealStagger>
 

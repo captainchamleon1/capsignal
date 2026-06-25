@@ -10,7 +10,7 @@ import { AnalyticsPreview } from "@/components/product/analytics-preview";
 const views = [
   { id: "investors", label: "Investors", caption: "Ranked shortlist with live match scores" },
   { id: "sequences", label: "Sequences", caption: "Per-investor cadence from your domain" },
-  { id: "analytics", label: "Analytics", caption: "Funnel metrics and weekly reporting" },
+  { id: "analytics", label: "CRM", caption: "Track interested investors and share diligence" },
 ] as const;
 
 type ViewId = (typeof views)[number]["id"];
@@ -103,7 +103,7 @@ export function ProductShowcase({ className }: ProductShowcaseProps) {
             aria-hidden="true"
           />
           <span className="hidden font-mono text-[10px] text-text-tertiary sm:inline">
-            meridian-seed-q2 · live
+            investor-database
           </span>
         </div>
       </div>

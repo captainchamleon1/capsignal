@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3005](http://localhost:3005) (dev runs on port 3005).
 
 ## Site map — 52 pages
 

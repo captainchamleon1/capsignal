@@ -49,11 +49,25 @@ export const compareFeatures = [
     agency: "$10K–$50K+ retainers",
   },
   {
-    feature: "Reply rate (median)",
-    capsignal: "11.4%",
-    manual: "1–3%",
-    crm: "2–5%",
-    agency: "8–15% (varies widely)",
+    feature: "Reply rate tracking",
+    capsignal: "Measured from your campaigns",
+    manual: "Manual spreadsheet tracking",
+    crm: "Email open rates only",
+    agency: "Varies by engagement",
+  },
+  {
+    feature: "Investor CRM",
+    capsignal: "Raise-specific pipeline with notes and status",
+    manual: "Spreadsheet tabs",
+    crm: "Sales contacts, not investor workflow",
+    agency: "Shared spreadsheet or Notion",
+  },
+  {
+    feature: "Data room",
+    capsignal: "Built-in with permissions and view tracking",
+    manual: "Google Drive or DocSend links",
+    crm: "Not included",
+    agency: "Third-party setup, extra cost",
   },
   {
     feature: "Pipeline analytics",
@@ -75,9 +89,9 @@ export const compareVerdicts = [
   {
     title: "Choose CapSignal if",
     items: [
-      "You want structured outreach without hiring a fundraising associate",
-      "You need investor targeting based on who's deploying now",
+      "You need to reach investors who are actively deploying in your space",
       "You want outreach from your inbox with automated follow-up",
+      "You need replies turning into meetings—not lost in spreadsheets",
       "You're running a Seed or Series A raise with 5–7 days to launch",
     ],
   },

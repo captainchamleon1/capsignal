@@ -41,3 +41,12 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# database
+/dev.db
+*.db-journal
+/data/*.gz
+/data/sec-feed*.xml*
+
+# prisma generated client (rebuilt via npm run postinstall)
+/src/generated

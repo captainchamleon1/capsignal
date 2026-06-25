@@ -92,7 +92,7 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" href="/request-access" className="hidden sm:inline-flex">
+            <Button variant="ghost" href="/login" className="hidden sm:inline-flex">
               Sign in
             </Button>
             <Button variant="primary" href="/request-access" className="hidden sm:inline-flex">

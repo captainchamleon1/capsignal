@@ -3,7 +3,7 @@ export const glossaryTerms = [
   { term: "Thesis fit", definition: "Alignment between an investor's stated sector/stage focus and your company's category and round." },
   { term: "Match score", definition: "CapSignal's 0–100 ranking of investor fit for your specific raise, with written rationale." },
   { term: "Sequence", definition: "A multi-step outreach cadence (typically 3–5 emails) sent to one investor over 2–3 weeks." },
-  { term: "Reply rate", definition: "Percentage of contacted investors who respond by email. CapSignal median: 11.4%." },
+  { term: "Reply rate", definition: "Percentage of contacted investors who respond by email. Tracked per campaign from your outreach data." },
   { term: "Send window", definition: "Optimal days/times for outreach based on investor timezone and historical open data." },
   { term: "Shortlist", definition: "Ranked list of target investors approved before campaign launch." },
   { term: "Signal layer", definition: "One of four data categories—deployment, thesis, engagement, network—used in scoring." },

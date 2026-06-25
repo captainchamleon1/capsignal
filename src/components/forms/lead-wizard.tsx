@@ -7,8 +7,7 @@ import { cn } from "@/lib/utils";
 import { submitLead } from "@/lib/leads/submit";
 import { getStoredUtm } from "@/lib/analytics/utm";
 import { trackLeadConversion } from "@/lib/analytics";
-import { generateMatchPreview } from "@/lib/leads/match-preview";
-import type { MatchPreview } from "@/lib/leads/match-preview";
+import type { MatchPreview } from "@/lib/leads/match-types";
 import type { LeadPayload } from "@/lib/leads/types";
 import { MatchPreviewModal } from "@/components/forms/match-preview-modal";
 
@@ -114,17 +113,85 @@ export function LeadWizard({ source = "lp-start", id, hidePricing = false }: Lea
     openPreview();
   }
 
-  function openPreview() {
-    const result = generateMatchPreview({
-      company: data.company,
-      sector: data.sector,
-      stage: data.stage,
-      raise: data.raise,
-    });
-    setPreview(result);
+  async function openPreview() {
     setModalOpen(true);
     setModalLoading(true);
-    window.setTimeout(() => setModalLoading(false), 2200);
+
+    const stageMap: Record<string, string> = {
+      "Pre-seed": "pre_seed",
+      Seed: "seed",
+      "Series A": "series_a",
+      "Series B": "series_b",
+    };
+    const sectorMap: Record<string, string> = {
+      "B2B SaaS": "b2b_saas",
+      Fintech: "fintech",
+      Healthtech: "healthtech",
+      Climate: "climate",
+      "Deep tech": "deep_tech",
+      Consumer: "consumer",
+      Other: "b2b_saas",
+    };
+
+    const stage = stageMap[data.stage] ?? "seed";
+    const sector = sectorMap[data.sector] ?? "b2b_saas";
+
+    try {
+      const res = await fetch("/api/match", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stage, sector, company: data.company }),
+      });
+      if (res.ok) {
+        const api = await res.json();
+        if (api.source === "database" && api.topInvestors?.length > 0) {
+          const total = api.totalMatches;
+          setPreview({
+            totalMatches: total,
+            topInvestors: api.topInvestors.map(
+              (
+                inv: { firm: string; partner: string | null; score: number; rationale: string },
+                i: number,
+              ) => ({
+                firm: inv.firm,
+                partner: inv.partner,
+                score: inv.score,
+                reason: inv.rationale,
+                blurred: i >= 3,
+              }),
+            ),
+          });
+          setModalLoading(false);
+          return;
+        }
+
+        setPreview({
+          totalMatches: 0,
+          topInvestors: [],
+          emptyMessage:
+            api.source === "empty"
+              ? "Investor database is not loaded yet. Submit your profile and we will match you once data is available."
+              : "No investors in our database matched your stage and sector with enough source data. Submit your profile and we will review manually.",
+        });
+        setModalLoading(false);
+        return;
+      }
+    } catch {
+      setPreview({
+        totalMatches: 0,
+        topInvestors: [],
+        emptyMessage: "Could not load matches right now. Submit your profile and we will send your shortlist within one business day.",
+      });
+      setModalLoading(false);
+      return;
+    }
+
+    setPreview({
+      totalMatches: 0,
+      topInvestors: [],
+      emptyMessage: "No matches available. Submit your profile and we will build your shortlist manually.",
+    });
+    setModalLoading(false);
   }
 
   function buildPayload(): LeadPayload {

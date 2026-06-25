@@ -14,7 +14,7 @@ export function CompareStrip() {
             <div className="max-w-md">
               <SectionLabel index="—" title="Compare" />
               <h2 className="display-serif mt-5 text-2xl font-semibold tracking-[-0.02em] text-text-primary md:text-3xl">
-                Built for raises, not sales pipelines
+                More investors reached. More meetings booked.
               </h2>
             </div>
             <TextLink href="/compare" className="shrink-0">

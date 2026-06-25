@@ -6,6 +6,8 @@ export const pricingTiers = [
     description: "Structured outreach with AI-powered targeting and onboarding support.",
     features: [
       "Up to 500 investor targets",
+      "Investor CRM & pipeline tracking",
+      "Secure data room",
       "Personalized email sequences",
       "Automated follow-up cadence",
       "Campaign dashboard",
@@ -73,6 +75,8 @@ export const pricingFaqs = [
 
 export const pricingComparison = [
   { feature: "Investor targets", launch: "500", scale: "500+", full: "Unlimited" },
+  { feature: "Investor CRM", launch: true, scale: true, full: true },
+  { feature: "Data room", launch: true, scale: true, full: true },
   { feature: "Email sequences", launch: true, scale: true, full: true },
   { feature: "LinkedIn outreach", launch: false, scale: true, full: true },
   { feature: "Pitch deck review", launch: false, scale: "2 sessions", full: "Ongoing" },

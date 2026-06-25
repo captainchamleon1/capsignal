@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { logos, stats, comparisonRows } from "@/lib/content/home";
 import { lpFaqs, lpProofStats, lpSteps } from "@/lib/content/lp";
-import { testimonials } from "@/lib/content/home";
 import { siteConfig } from "@/lib/content/site";
 import { Container } from "@/components/ui/container";
 import { LeadWizard } from "@/components/forms/lead-wizard";
@@ -21,7 +20,6 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-const featured = testimonials[0];
 
 export default function StartPage() {
   return (
@@ -38,8 +36,8 @@ export default function StartPage() {
                 Signal over spray
               </p>
               <h1 className="display-serif mt-6 text-balance text-[2.5rem] font-semibold leading-[1.05] text-text-primary md:text-[3.75rem]">
-                Ten investor meetings
-                <span className="block text-text-secondary">in two weeks—not two months</span>
+                Reach the right investors
+                <span className="block text-text-secondary">with source-attributed data</span>
               </h1>
               <p className="mt-6 max-w-lg text-[17px] leading-[1.65] text-text-secondary">
                 Stop copy-pasting into spreadsheets. CapSignal scores active investors in your space,
@@ -92,27 +90,25 @@ export default function StartPage() {
       <section className="border-y border-border bg-surface-dark py-14 text-text-on-dark md:py-20">
         <Container>
           <Reveal direction="up">
-            <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
-              <blockquote>
-                <p className="text-balance text-xl font-medium leading-[1.5] md:text-2xl">
-                  &ldquo;{featured.quote}&rdquo;
-                </p>
-                <footer className="mt-6">
-                  <cite className="not-italic text-sm font-medium">{featured.author}</cite>
-                  <p className="text-sm text-text-on-dark-muted">{featured.title}</p>
-                  <p className="mt-2 font-mono text-xs tabular-nums text-text-on-dark-muted">
-                    {featured.detail}
-                  </p>
-                </footer>
-              </blockquote>
-              <div className="grid grid-cols-2 gap-4 border-t border-surface-dark-border pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-12">
-                {stats.map((stat) => (
-                  <div key={stat.label} className="border-t border-surface-dark-border pt-4">
-                    <p className="font-mono text-lg tabular-nums text-text-on-dark">{stat.value}</p>
-                    <p className="mt-1 text-xs text-text-on-dark-muted">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
+            <div className="max-w-2xl">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-on-dark-muted">
+                Public data only
+              </p>
+              <p className="mt-4 text-balance text-xl font-medium leading-[1.5] md:text-2xl">
+                Investor matches come from SEC filings and open datasets — not fabricated shortlists.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-text-on-dark-muted">
+                Reply rates and meeting counts are tracked from your campaigns after launch. We do
+                not publish platform-wide performance benchmarks without verified customer data.
+              </p>
+            </div>
+            <div className="mt-10 grid grid-cols-2 gap-4 border-t border-surface-dark-border pt-8 sm:grid-cols-4">
+              {stats.map((stat) => (
+                <div key={stat.label} className="border-t border-surface-dark-border pt-4 sm:border-t-0 sm:pt-0">
+                  <p className="font-mono text-lg tabular-nums text-text-on-dark">{stat.value}</p>
+                  <p className="mt-1 text-xs text-text-on-dark-muted">{stat.label}</p>
+                </div>
+              ))}
             </div>
           </Reveal>
         </Container>

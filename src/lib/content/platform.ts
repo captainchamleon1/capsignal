@@ -1,53 +1,53 @@
 export const platformMetrics = [
   {
-    label: "Investor records",
-    value: "182,000+",
-    detail: "Partners, associates, and family office contacts with firm affiliation",
+    label: "Investor firms",
+    value: "12,000+",
+    detail: "From SEC IAPD, PE/VC Atlas, and Hugging Face datasets (deduplicated)",
+  },
+  {
+    label: "Data sources",
+    value: "3",
+    detail: "Public filings and open CSV datasets with license attribution",
   },
   {
     label: "Signal refresh",
-    value: "24h",
-    detail: "Deployment and thesis scores recalculated nightly",
+    value: "On ingest",
+    detail: "Deployment and partner signals computed from recorded investments and people",
   },
   {
-    label: "Campaign dataset",
-    value: "840+",
-    detail: "Active and completed raises informing engagement models",
-  },
-  {
-    label: "Deliverability",
-    value: "98.4%",
-    detail: "Inbox placement across Google Workspace and M365",
+    label: "Campaign metrics",
+    value: "Your data",
+    detail: "Reply and meeting rates come from your outreach — not platform benchmarks",
   },
 ] as const;
 
 export const dataPipeline = [
   {
     stage: "Ingest",
-    description: "Fund filings, portfolio announcements, partner moves, and public thesis data",
+    description: "SEC Form ADV, PE/VC Atlas, and startup investor CSV datasets",
   },
   {
     stage: "Enrich",
-    description: "Behavioral tags: deployment velocity, sector concentration, stage preference",
+    description: "Partners, investments, and fund data from licensed sources (as available)",
   },
   {
     stage: "Score",
-    description: "Raise-specific match score with natural-language rationale",
+    description: "Raise-specific match score using only source-attributed fields",
   },
   {
     stage: "Feedback",
-    description: "Reply and meeting outcomes reweight models for your campaign",
+    description: "Reply and meeting outcomes from your campaigns reweight future targeting",
   },
 ] as const;
 
 export const platformFaqs = [
   {
     q: "Where does investor data come from?",
-    a: "Public filings, fund websites, portfolio pages, LinkedIn, and proprietary engagement data from prior CapSignal campaigns. We do not sell your campaign data to third parties.",
+    a: "SEC IAPD Form ADV (public), Imergea PE/VC Atlas (CC BY 4.0), and the Hugging Face startup investor dataset (MIT). We attribute every record to its source. Portfolio, partner, and check-size data require additional licensed feeds.",
   },
   {
     q: "Can I see why an investor was ranked?",
-    a: "Yes. Every match includes a rationale citing the signals that drove the score—recent investments, thesis overlap, check size fit, and activity indicators.",
+    a: "Yes. Every match includes a rationale citing only fields we have from source data — stage, sector, investments on record, and computed signals from that data.",
   },
   {
     q: "How is my data handled?",

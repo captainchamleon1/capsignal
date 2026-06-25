@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { LeadPayload } from "@/lib/leads/types";
+import { db } from "@/lib/db";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -109,6 +110,28 @@ export async function POST(request: Request) {
     }
   } else {
     console.info("New lead (no delivery configured):", JSON.stringify(lead));
+  }
+
+  try {
+    await db.lead.create({
+      data: {
+        name: lead.name,
+        email: lead.email,
+        company: lead.company,
+        stage: lead.stage,
+        sector: lead.sector,
+        raise: lead.raise,
+        message: lead.message,
+        source: lead.source,
+        utmSource: lead.utm_source,
+        utmMedium: lead.utm_medium,
+        utmCampaign: lead.utm_campaign,
+        utmTerm: lead.utm_term,
+        utmContent: lead.utm_content,
+      },
+    });
+  } catch (err) {
+    console.error("Lead persist error:", err);
   }
 
   return NextResponse.json({ ok: true });

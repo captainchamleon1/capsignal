@@ -7,12 +7,12 @@ export function RoiCalculator() {
   const [investors, setInvestors] = useState(250);
   const [founderRate, setFounderRate] = useState(50);
   const [manualReplyRate, setManualReplyRate] = useState(2.5);
+  const [targetReplyRate, setTargetReplyRate] = useState(5);
 
-  const capsignalReplyRate = 11.4;
   const manualHours = Math.round(investors * 0.75);
   const capsignalHours = 12;
   const manualReplies = Math.round(investors * (manualReplyRate / 100));
-  const capsignalReplies = Math.round(investors * (capsignalReplyRate / 100));
+  const targetReplies = Math.round(investors * (targetReplyRate / 100));
   const hoursSaved = manualHours - capsignalHours;
   const founderCost = founderRate * manualHours;
   const capsignalCost = 99.99;
@@ -27,8 +27,8 @@ export function RoiCalculator() {
               What manual outreach actually costs
             </h2>
             <p className="mt-3 text-base text-text-secondary">
-              Adjust the inputs to compare founder time and reply volume against
-              a CapSignal Scale campaign.
+              Compare founder time and reply volume. Set your own target reply rate for CapSignal —
+              we do not assume a platform benchmark.
             </p>
 
             <div className="mt-8 space-y-6">
@@ -77,6 +77,21 @@ export function RoiCalculator() {
                   className="mt-2 w-full"
                 />
               </div>
+              <div>
+                <label htmlFor="target-reply" className="text-sm font-medium text-text-primary">
+                  Your target reply rate: {targetReplyRate}%
+                </label>
+                <input
+                  id="target-reply"
+                  type="range"
+                  min={1}
+                  max={15}
+                  step={0.5}
+                  value={targetReplyRate}
+                  onChange={(e) => setTargetReplyRate(Number(e.target.value))}
+                  className="mt-2 w-full"
+                />
+              </div>
             </div>
           </div>
 
@@ -93,8 +108,8 @@ export function RoiCalculator() {
                 <p className="text-xs font-medium uppercase tracking-wider text-text-tertiary">CapSignal</p>
                 <p className="mt-2 font-mono text-2xl font-semibold tabular-nums">{capsignalHours}h</p>
                 <p className="text-sm text-text-secondary">Your time (review + meetings)</p>
-                <p className="mt-4 font-mono text-xl tabular-nums text-text-primary">{capsignalReplies}</p>
-                <p className="text-sm text-text-secondary">Expected replies</p>
+                <p className="mt-4 font-mono text-xl tabular-nums text-text-primary">{targetReplies}</p>
+                <p className="text-sm text-text-secondary">At your target rate</p>
               </div>
             </div>
             <div className="mt-8 border-t border-border pt-6">

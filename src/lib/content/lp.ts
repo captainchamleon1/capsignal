@@ -1,8 +1,8 @@
 export const lpProofStats = [
-  { value: "11.4%", label: "Median reply rate" },
-  { value: "10", label: "Meetings in 14 days" },
-  { value: "5–7 days", label: "To campaign launch" },
-  { value: "182K", label: "Investor records" },
+  { value: "12K+", label: "Investor firms (public data)" },
+  { value: "3", label: "Open data sources" },
+  { value: "5–7 days", label: "Typical campaign setup" },
+  { value: "Source", label: "Attribution on every record" },
 ] as const;
 
 export const lpSteps = [
@@ -14,7 +14,7 @@ export const lpSteps = [
   {
     step: "02",
     title: "Approve your shortlist",
-    body: "Ranked investors with deployment signals and thesis fit—nothing sends until you sign off.",
+    body: "Ranked investors with source-attributed fit scores—nothing sends until you sign off.",
   },
   {
     step: "03",

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import type { MatchPreview } from "@/lib/leads/match-preview";
+import type { MatchPreview } from "@/lib/leads/match-types";
 
 type MatchPreviewModalProps = {
   open: boolean;
@@ -28,9 +28,10 @@ export function MatchPreviewModal({
   onConfirm,
 }: MatchPreviewModalProps) {
   const [revealed, setRevealed] = useState(0);
+  const isEmpty = preview.topInvestors.length === 0;
 
   useEffect(() => {
-    if (!open || loading) {
+    if (!open || loading || isEmpty) {
       setRevealed(0);
       return;
     }
@@ -38,7 +39,7 @@ export function MatchPreviewModal({
       window.setTimeout(() => setRevealed((n) => Math.max(n, i + 1)), 400 + i * 280),
     );
     return () => timers.forEach(clearTimeout);
-  }, [open, loading, preview.topInvestors]);
+  }, [open, loading, isEmpty, preview.topInvestors]);
 
   useEffect(() => {
     if (!open) return;
@@ -78,9 +79,22 @@ export function MatchPreviewModal({
                 Scoring investors
               </p>
               <p className="mt-2 text-sm text-text-on-dark-muted">
-                Matching {company} against live deployment signals…
+                Matching {company} against firms in our database…
               </p>
             </div>
+          ) : isEmpty ? (
+            <>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-gold">
+                Shortlist preview
+              </p>
+              <h2 id="match-preview-title" className="mt-2 text-xl font-semibold leading-snug">
+                No automated matches yet
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-text-on-dark-muted">
+                {preview.emptyMessage ??
+                  "We could not score investors for your profile from current source data."}
+              </p>
+            </>
           ) : (
             <>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-gold">
@@ -89,25 +103,15 @@ export function MatchPreviewModal({
               <h2 id="match-preview-title" className="mt-2 text-xl font-semibold leading-snug">
                 {preview.totalMatches} investors match your {stage} {sector} raise
               </h2>
-              <div className="mt-4 grid grid-cols-3 gap-3 border-t border-surface-dark-border pt-4">
-                <div>
-                  <p className="font-mono text-lg tabular-nums text-text-on-dark">{preview.projectedReplies}</p>
-                  <p className="text-[11px] text-text-on-dark-muted">Est. replies</p>
-                </div>
-                <div>
-                  <p className="font-mono text-lg tabular-nums text-text-on-dark">{preview.projectedMeetings}</p>
-                  <p className="text-[11px] text-text-on-dark-muted">Est. meetings</p>
-                </div>
-                <div>
-                  <p className="font-mono text-lg tabular-nums text-text-on-dark">{preview.launchDays}d</p>
-                  <p className="text-[11px] text-text-on-dark-muted">To launch</p>
-                </div>
-              </div>
+              <p className="mt-3 text-sm text-text-on-dark-muted">
+                Ranked from public source data only. Scores reflect what we can verify — not
+                outreach performance.
+              </p>
             </>
           )}
         </div>
 
-        {!loading && (
+        {!loading && !isEmpty && (
           <>
             <div className="flex-1 overflow-y-auto px-5 py-4 md:px-6">
               <p className="mb-3 font-mono text-[10px] uppercase tracking-wider text-text-tertiary">
@@ -132,7 +136,9 @@ export function MatchPreviewModal({
                     <div className="flex items-start justify-between gap-3">
                       <div className={cn(inv.blurred && "select-none blur-[2px]")}>
                         <p className="text-sm font-medium text-text-primary">{inv.firm}</p>
-                        <p className="text-xs text-text-tertiary">{inv.partner}</p>
+                        {inv.partner && (
+                          <p className="text-xs text-text-tertiary">{inv.partner}</p>
+                        )}
                       </div>
                       <span className="shrink-0 font-mono text-sm tabular-nums text-brand">{inv.score}</span>
                     </div>
@@ -142,9 +148,12 @@ export function MatchPreviewModal({
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-center text-xs text-text-tertiary">
-                +{preview.totalMatches - 5} more in your full shortlist after onboarding
-              </p>
+              {preview.totalMatches > preview.topInvestors.length && (
+                <p className="mt-4 text-center text-xs text-text-tertiary">
+                  +{preview.totalMatches - preview.topInvestors.length} more in your full shortlist
+                  after onboarding
+                </p>
+              )}
             </div>
 
             <div className="border-t border-border bg-surface-muted px-5 py-4 md:px-6">
@@ -169,6 +178,30 @@ export function MatchPreviewModal({
               </button>
             </div>
           </>
+        )}
+
+        {!loading && isEmpty && (
+          <div className="border-t border-border bg-surface-muted px-5 py-4 md:px-6">
+            <button
+              type="button"
+              onClick={onConfirm}
+              disabled={submitting}
+              className={cn(
+                "flex h-11 w-full items-center justify-center bg-text-primary text-sm font-medium text-text-on-dark transition-colors hover:bg-[var(--primary-hover)]",
+                submitting && "opacity-70",
+              )}
+            >
+              {submitting ? "Submitting…" : "Submit profile for manual shortlist"}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={submitting}
+              className="mt-2 w-full py-2 text-center text-xs text-text-tertiary hover:text-text-secondary"
+            >
+              Back to edit profile
+            </button>
+          </div>
         )}
       </div>
     </div>

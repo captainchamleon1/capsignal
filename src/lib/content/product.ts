@@ -27,15 +27,16 @@ export const productModules = [
   },
   {
     id: "analytics",
-    title: "Analytics & reporting",
-    headline: "Know what's working before the week ends",
+    title: "Investor CRM & data room",
+    headline: "Keep momentum from first reply to term sheet",
     description:
-      "Campaign dashboard tracks sends, opens, replies, and meetings. Weekly reports summarize conversion by investor segment and recommend targeting adjustments for the next batch.",
+      "Once investors engage, don't lose them to scattered spreadsheets and Drive links. Track every relationship in one CRM, share deck and diligence docs through a secure data room, and see exactly who's moving toward a meeting—or a check.",
     bullets: [
+      "Investor pipeline with status, notes, and next steps",
+      "Secure data room with permission controls per investor",
+      "View tracking on deck and diligence materials",
       "Funnel view: sent → opened → replied → meeting",
-      "Segment breakdown by sector and stage",
-      "Subject line and send-window performance",
-      "Export to CSV for board updates",
+      "Weekly reports on what's converting into meetings",
     ],
   },
 ] as const;

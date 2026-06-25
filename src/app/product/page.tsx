@@ -12,7 +12,8 @@ import { AnalyticsPreview } from "@/components/product/analytics-preview";
 
 export const metadata: Metadata = {
   title: "Product",
-  description: "Investor matching, outreach sequences, and campaign analytics for structured raises.",
+  description:
+    "Find active investors, run outreach from your inbox, and track every reply through close.",
 };
 
 const previews = {
@@ -28,8 +29,8 @@ export default function ProductPage() {
     <>
       <PageHeader
         label="Product"
-        title="Everything you need to run a raise"
-        description="Three integrated modules share the same data layer. Targeting improves as replies come in."
+        title="Everything you need to get investors"
+        description="Find who's deploying, reach them from your inbox, and track every reply through close—with investor CRM and data room built in."
       >
         <Button variant="primary" href="/request-access">
           Request access

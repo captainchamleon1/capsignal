@@ -23,7 +23,7 @@ export default function FoundersPage() {
       <PageHeader
         label="Founders"
         title="Stop fundraising blind"
-        description="CapSignal gives you a ranked investor pipeline, inbox-native outreach, and weekly reporting—so you spend time in meetings, not spreadsheets."
+        description="CapSignal helps you find the right investors, get replies from your inbox, and book meetings—without spreadsheets, stale lists, or manual follow-up."
       >
         <Button variant="primary" href="/request-access">
           Request access

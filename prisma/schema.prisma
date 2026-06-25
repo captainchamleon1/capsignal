@@ -1,0 +1,457 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── Auth (better-auth) ─────────────────────────────────────────────────────
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sessions Session[]
+  accounts Account[]
+
+  memberships OrganizationMember[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ─── Organizations (founder teams) ──────────────────────────────────────────
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  website   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members      OrganizationMember[]
+  raiseProfiles RaiseProfile[]
+  campaigns    Campaign[]
+  dataRooms    DataRoom[]
+  leads        Lead[]
+}
+
+model OrganizationMember {
+  id             String   @id @default(cuid())
+  role           String   @default("owner") // owner | admin | member
+  organizationId String
+  userId         String
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+}
+
+// ─── Investor knowledge graph ───────────────────────────────────────────────
+
+model InvestorFirm {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  website     String?
+  linkedInUrl String?
+  hqCity      String?
+  hqCountry   String?  @default("US")
+  firmType    String   // vc | angel_group | family_office | corporate_vc | accelerator
+  aumUsd      Float?
+  checkMinUsd Float?
+  checkMaxUsd Float?
+  stages      String   // JSON array: ["pre_seed","seed","series_a"]
+  sectors     String   // JSON array: ["b2b_saas","fintech"]
+  geos        String   // JSON array: ["US","EU"]
+  description String?
+  cik         String?  // SEC CIK for registered advisers
+  secAdvId    String?
+  dataQuality Int      @default(50) // 0-100 completeness score
+  lastEnrichedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  people       InvestorPerson[]
+  funds        Fund[]
+  investments  Investment[]
+  signals      Signal[]
+  aliases      EntityAlias[]
+  ingestRecords IngestRecord[]
+  campaignInvestors CampaignInvestor[]
+
+  @@index([firmType])
+  @@index([name])
+}
+
+model InvestorPerson {
+  id          String   @id @default(cuid())
+  firmId      String
+  name        String
+  title       String?
+  email       String?
+  linkedInUrl String?
+  isPartner   Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  firm              InvestorFirm       @relation(fields: [firmId], references: [id], onDelete: Cascade)
+  campaignInvestors CampaignInvestor[]
+  outreachEvents    OutreachEvent[]
+  documentAccess    DocumentAccess[]
+
+  @@index([firmId])
+  @@index([name])
+}
+
+model Fund {
+  id           String    @id @default(cuid())
+  firmId       String
+  name         String
+  vintageYear  Int?
+  sizeUsd      Float?
+  deployedPct  Float?    // estimated % deployed
+  status       String    @default("active") // raising | active | fully_deployed
+  closedAt     DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  firm InvestorFirm @relation(fields: [firmId], references: [id], onDelete: Cascade)
+
+  @@index([firmId])
+}
+
+model Investment {
+  id              String    @id @default(cuid())
+  firmId          String
+  companyName     String
+  companySector   String?
+  companyStage    String?
+  announcedAt     DateTime?
+  amountUsd       Float?
+  isLead          Boolean   @default(false)
+  sourceUrl       String?
+  sourceType      String?   // sec_filing | press | crunchbase | manual
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  firm InvestorFirm @relation(fields: [firmId], references: [id], onDelete: Cascade)
+
+  @@index([firmId])
+  @@index([companySector])
+  @@index([announcedAt])
+}
+
+model Signal {
+  id         String   @id @default(cuid())
+  firmId     String
+  signalType String   // deployment_velocity | thesis_alignment | partner_activity | fund_timing | engagement
+  score      Float    // 0-100
+  weight     Float    @default(1.0)
+  rationale  String
+  metadata   String?  // JSON blob
+  observedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  firm InvestorFirm @relation(fields: [firmId], references: [id], onDelete: Cascade)
+
+  @@index([firmId, signalType])
+  @@index([observedAt])
+}
+
+model EntityAlias {
+  id         String   @id @default(cuid())
+  firmId     String?
+  alias      String
+  source     String   // sec_edgar | manual | linkedin
+  confidence Float    @default(1.0)
+  createdAt  DateTime @default(now())
+
+  firm InvestorFirm? @relation(fields: [firmId], references: [id], onDelete: SetNull)
+
+  @@unique([alias, source])
+  @@index([alias])
+}
+
+// ─── Data ingestion pipeline ─────────────────────────────────────────────────
+
+model DataSource {
+  id          String   @id @default(cuid())
+  key         String   @unique // sec_edgar | openvc | manual
+  name        String
+  description String?
+  isEnabled   Boolean  @default(true)
+  priority    Int      @default(50) // higher = preferred
+  lastSyncAt  DateTime?
+  config      String?  // JSON
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  jobs IngestJob[]
+}
+
+model IngestJob {
+  id           String    @id @default(cuid())
+  sourceId     String
+  status       String    @default("pending") // pending | running | completed | failed
+  recordsFound Int       @default(0)
+  recordsNew   Int       @default(0)
+  recordsUpdated Int     @default(0)
+  error        String?
+  startedAt    DateTime?
+  completedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  source  DataSource    @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  records IngestRecord[]
+}
+
+model IngestRecord {
+  id           String   @id @default(cuid())
+  jobId        String
+  externalId   String
+  firmId       String?
+  rawPayload   String   // JSON
+  normalized   String?  // JSON
+  status       String   @default("pending") // pending | processed | skipped | error
+  error        String?
+  createdAt    DateTime @default(now())
+
+  job  IngestJob    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  firm InvestorFirm? @relation(fields: [firmId], references: [id], onDelete: SetNull)
+
+  @@unique([jobId, externalId])
+  @@index([externalId])
+}
+
+// ─── Founder raise & campaigns ───────────────────────────────────────────────
+
+model RaiseProfile {
+  id             String   @id @default(cuid())
+  organizationId String
+  stage          String   // pre_seed | seed | series_a | series_b
+  sector         String
+  traction       String?  // JSON metrics
+  targetRaiseUsd Float?
+  checkSizeMin   Float?
+  checkSizeMax   Float?
+  geographies    String?  // JSON
+  thesis         String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  campaigns    Campaign[]
+}
+
+model Campaign {
+  id             String   @id @default(cuid())
+  organizationId String
+  raiseProfileId String?
+  name           String
+  status         String   @default("draft") // draft | active | paused | completed
+  launchedAt     DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  raiseProfile RaiseProfile?     @relation(fields: [raiseProfileId], references: [id], onDelete: SetNull)
+  investors    CampaignInvestor[]
+  sequences    OutreachSequence[]
+}
+
+model CampaignInvestor {
+  id          String    @id @default(cuid())
+  campaignId  String
+  firmId      String
+  personId    String?
+  matchScore  Float?
+  rationale   String?
+  status      String    @default("shortlisted") // shortlisted | excluded | contacted | replied | meeting | diligence | passed | committed
+  notes       String?
+  nextStep    String?
+  nextStepAt  DateTime?
+  excludedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  campaign Campaign       @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  firm     InvestorFirm   @relation(fields: [firmId], references: [id], onDelete: Cascade)
+  person   InvestorPerson? @relation(fields: [personId], references: [id], onDelete: SetNull)
+  events   OutreachEvent[]
+  meetings Meeting[]
+  docAccess DocumentAccess[]
+
+  @@unique([campaignId, firmId])
+  @@index([campaignId, status])
+  @@index([matchScore])
+}
+
+model OutreachSequence {
+  id         String   @id @default(cuid())
+  campaignId String
+  name       String   @default("Primary")
+  steps      String   // JSON array of step definitions
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  campaign Campaign        @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  events   OutreachEvent[]
+}
+
+model OutreachEvent {
+  id                 String    @id @default(cuid())
+  campaignInvestorId String
+  sequenceId         String?
+  personId           String?
+  eventType          String    // sent | opened | replied | bounced | paused
+  stepNumber         Int?
+  subject            String?
+  bodyPreview        String?
+  occurredAt         DateTime  @default(now())
+  metadata           String?
+
+  campaignInvestor CampaignInvestor  @relation(fields: [campaignInvestorId], references: [id], onDelete: Cascade)
+  sequence         OutreachSequence? @relation(fields: [sequenceId], references: [id], onDelete: SetNull)
+  person           InvestorPerson?   @relation(fields: [personId], references: [id], onDelete: SetNull)
+
+  @@index([campaignInvestorId])
+  @@index([occurredAt])
+}
+
+model Meeting {
+  id                 String   @id @default(cuid())
+  campaignInvestorId String
+  scheduledAt        DateTime
+  durationMin        Int      @default(30)
+  status             String   @default("scheduled") // scheduled | completed | cancelled | no_show
+  notes              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  campaignInvestor CampaignInvestor @relation(fields: [campaignInvestorId], references: [id], onDelete: Cascade)
+}
+
+// ─── Data room ───────────────────────────────────────────────────────────────
+
+model DataRoom {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String   @default("Diligence")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  documents    Document[]
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  dataRoomId  String
+  name        String
+  category    String   // deck | financials | legal | product | other
+  fileKey     String?  // storage key when uploaded
+  fileSize    Int?
+  mimeType    String?
+  version     Int      @default(1)
+  uploadedBy  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  dataRoom DataRoom         @relation(fields: [dataRoomId], references: [id], onDelete: Cascade)
+  access   DocumentAccess[]
+}
+
+model DocumentAccess {
+  id                 String    @id @default(cuid())
+  documentId         String
+  campaignInvestorId String?
+  personId           String?
+  grantedAt          DateTime  @default(now())
+  expiresAt          DateTime?
+  viewedAt           DateTime?
+  viewCount          Int       @default(0)
+  watermarkId        String?
+
+  document         Document          @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  campaignInvestor CampaignInvestor? @relation(fields: [campaignInvestorId], references: [id], onDelete: Cascade)
+  person           InvestorPerson?   @relation(fields: [personId], references: [id], onDelete: SetNull)
+
+  @@index([documentId])
+}
+
+// ─── Marketing leads ─────────────────────────────────────────────────────────
+
+model Lead {
+  id             String   @id @default(cuid())
+  organizationId String?
+  name           String
+  email          String
+  company        String
+  stage          String?
+  sector         String?
+  raise          String?
+  message        String?
+  source         String?
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+  utmTerm        String?
+  utmContent     String?
+  status         String   @default("new") // new | contacted | qualified | converted | rejected
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@index([email])
+  @@index([status])
+}

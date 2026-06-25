@@ -14,11 +14,12 @@ export const sectors: Sector[] = [
     slug: "b2b-saas",
     name: "B2B SaaS",
     headline: "Reach Seed and Series A investors deploying in software",
-    description: "CapSignal's strongest signal coverage. We track 4,200+ active B2B investors with weekly deployment updates.",
+    description:
+      "Filter the investor database by sector tags from source data. Portfolio and deployment signals improve as you add licensed enrichment feeds.",
     stats: [
-      { label: "Median reply rate", value: "12.8%" },
-      { label: "Avg. shortlist", value: "280" },
-      { label: "Typical close", value: "9 weeks" },
+      { label: "Sector tagging", value: "From source data" },
+      { label: "Match basis", value: "Stage + sector fields" },
+      { label: "Reply metrics", value: "Your campaigns" },
     ],
     challenges: [
       "Generic 'SaaS investor' lists include growth funds wrong for your stage",
@@ -26,8 +27,8 @@ export const sectors: Sector[] = [
       "Outreach that doesn't reference specific portfolio companies gets ignored",
     ],
     approach: [
-      "Filter by check size and stage-specific deployment in last 12 months",
-      "Reference portfolio companies in outreach copy per investor",
+      "Filter by stage and sector fields where present in source data",
+      "Reference portfolio companies when recorded in your database",
       "Segment by sub-vertical: infra, vertical SaaS, PLG, enterprise",
     ],
     exampleInvestors: ["Bessemer", "Unusual Ventures", "First Round", "Point Nine"],
@@ -35,22 +36,23 @@ export const sectors: Sector[] = [
   {
     slug: "fintech",
     name: "Fintech",
-    headline: "Target investors with recent fintech deployment",
-    description: "Regulatory complexity makes generic outreach fail. We match on fintech-specific thesis and recent portfolio moves.",
+    headline: "Target investors with fintech focus in source data",
+    description:
+      "Regulatory complexity makes generic outreach fail. Match on fintech sector tags and recorded investments where available.",
     stats: [
-      { label: "Median reply rate", value: "11.2%" },
-      { label: "Avg. shortlist", value: "210" },
-      { label: "Typical close", value: "11 weeks" },
+      { label: "Sector tagging", value: "From source data" },
+      { label: "Match basis", value: "Stage + sector fields" },
+      { label: "Reply metrics", value: "Your campaigns" },
     ],
     challenges: [
       "Fintech means different things to different funds—payments vs. lending vs. infra",
       "Regulatory narrative required in positioning",
-      "Many 'fintech' investors paused after 2022—signal filtering critical",
+      "Many 'fintech' investors paused after 2022—verify recent activity",
     ],
     approach: [
       "Sub-sector tagging: payments, lending, banking infra, insurtech, crypto",
       "Compliance-aware messaging review on Scale tier",
-      "Partner-level tracking for fintech specialists vs. generalists",
+      "Partner-level data when enriched from licensed sources",
     ],
     exampleInvestors: ["QED Investors", "Nyca Partners", "Ribbit Capital", "Matrix Partners"],
   },
@@ -58,11 +60,12 @@ export const sectors: Sector[] = [
     slug: "deep-tech",
     name: "Deep tech",
     headline: "Find investors who fund technical risk",
-    description: "Deep tech raises need investors who understand long development cycles and technical differentiation.",
+    description:
+      "Deep tech raises need investors who understand long development cycles and technical differentiation.",
     stats: [
-      { label: "Median reply rate", value: "10.4%" },
-      { label: "Avg. shortlist", value: "190" },
-      { label: "Typical close", value: "14 weeks" },
+      { label: "Sector tagging", value: "From source data" },
+      { label: "Match basis", value: "Stage + sector fields" },
+      { label: "Reply metrics", value: "Your campaigns" },
     ],
     challenges: [
       "Smaller investor universe than SaaS",
@@ -70,7 +73,7 @@ export const sectors: Sector[] = [
       "Longer diligence cycles require sustained follow-up",
     ],
     approach: [
-      "Match on technical thesis: AI/ML, robotics, materials, quantum, biotech platforms",
+      "Match on technical thesis tags from source data",
       "Messaging led by technical founder review before launch",
       "Extended follow-up cadence for partners with longer decision cycles",
     ],
@@ -79,12 +82,13 @@ export const sectors: Sector[] = [
   {
     slug: "climate",
     name: "Climate & energy",
-    headline: "Connect with climate investors actively deploying",
-    description: "Climate capital surged and contracted. Signal-based targeting finds who's writing checks now—not in 2021.",
+    headline: "Connect with climate investors in source data",
+    description:
+      "Target firms tagged for climate, energy, and sustainability in open datasets. Verify deployment with portfolio enrichment when available.",
     stats: [
-      { label: "Median reply rate", value: "11.9%" },
-      { label: "Avg. shortlist", value: "175" },
-      { label: "Typical close", value: "12 weeks" },
+      { label: "Sector tagging", value: "From source data" },
+      { label: "Match basis", value: "Stage + sector fields" },
+      { label: "Reply metrics", value: "Your campaigns" },
     ],
     challenges: [
       "Climate label overused—many funds rebranded without deploying",
@@ -92,9 +96,9 @@ export const sectors: Sector[] = [
       "Policy and grant context matters in positioning",
     ],
     approach: [
-      "Verify deployment via portfolio, not marketing pages",
+      "Verify deployment via recorded investments, not marketing pages alone",
       "Segment: climate software, energy, mobility, agtech, carbon",
-      "Reference specific climate portfolio companies per investor",
+      "Reference specific portfolio companies when on record",
     ],
     exampleInvestors: ["Breakthrough Energy", "Lowercarbon Capital", "Congruent Ventures", "Energy Impact Partners"],
   },

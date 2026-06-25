@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Compare",
-  description: "CapSignal vs manual outreach, CRMs, and fundraising agencies.",
+  description: "CapSignal vs manual outreach, generic CRMs, and fundraising agencies.",
 };
 
 export default function ComparePage() {
