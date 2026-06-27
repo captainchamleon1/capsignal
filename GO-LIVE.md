@@ -39,9 +39,17 @@ Or push to the connected Git branch and Vercel auto-deploys.
 | Variable | Value | Source |
 |----------|-------|--------|
 | `NEXT_PUBLIC_SITE_URL` | `https://getcapsignal.com` | **[done]** now the default |
+| `STRIPE_SECRET_KEY` | `sk_live_...` or `sk_test_...` | Step 4b |
+| `STRIPE_PRICE_CAPSIGNAL` | `price_...` | Step 4b |
+| `BETTER_AUTH_SECRET` | random 32+ chars | `openssl rand -base64 32` |
+| `BETTER_AUTH_URL` | `https://getcapsignal.com` | same as site URL |
 | `NEXT_PUBLIC_GTM_ID` | `GTM-XXXXXXX` | Step 5 |
 | `NEXT_PUBLIC_META_PIXEL_ID` | `1234567890` | Step 6 |
 | `LEAD_WEBHOOK_URL` | your Zapier/Slack/Formspree URL | so leads reach your inbox |
+
+**Stripe (Step 4b):** In [Stripe Dashboard](https://dashboard.stripe.com) → **Product catalog** → add product **CapSignal** at **$99.99/month** recurring. Copy the **Price ID** (`price_...`) into `STRIPE_PRICE_CAPSIGNAL`. Copy **Secret key** from Developers → API keys into `STRIPE_SECRET_KEY`. Use **test keys** first (`sk_test_`, test mode price); switch to live when ready. Checkout redirects to `/checkout/success` — no webhook required for MVP.
+
+**Redeploy after changing any env var.**
 
 **Lead routing:** `/api/leads` forwards to `LEAD_WEBHOOK_URL`. Quickest path — Zapier "Catch Hook" → Gmail/Slack, paste the hook URL here. **Until this is set, form submissions succeed but the lead only goes to server logs — you won't receive it.**
 
@@ -88,5 +96,6 @@ https://getcapsignal.com/start?utm_source=meta&utm_medium=paid_social&utm_campai
 - [ ] `LEAD_WEBHOOK_URL` set → test submit reaches you **[you]**
 - [ ] GTM live, `generate_lead` → Google Ads conversion verified **[you]**
 - [ ] Meta Pixel `Lead` event verified in Test Events **[you]**
-- [ ] Env vars set + redeployed **[you]**
+- [ ] `STRIPE_SECRET_KEY` + `STRIPE_PRICE_CAPSIGNAL` set → test checkout on `/checkout` **[you]**
+- [ ] `BETTER_AUTH_SECRET` set **[you]**
 - [ ] Campaigns built per `AD-CAMPAIGNS.md`, paused, ready to launch **[you]**

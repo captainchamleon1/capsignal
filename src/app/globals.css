@@ -79,6 +79,11 @@
     scroll-behavior: smooth;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+
   body {
     background: var(--surface-page);
     color: var(--text-primary);
@@ -313,9 +318,33 @@
     border: 1px solid var(--border);
     background: var(--surface-elevated);
     color: var(--text-primary);
-    font-size: 0.875rem;
-    padding: 0.625rem 0.75rem;
+    font-size: 1rem;
+    padding: 0.75rem 0.875rem;
     transition: border-color var(--duration-med) var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (min-width: 768px) {
+    .field-input {
+      font-size: 0.875rem;
+      padding: 0.625rem 0.75rem;
+    }
+  }
+
+  .touch-target {
+    min-height: 48px;
+  }
+
+  .pb-safe {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+
+  .pt-safe {
+    padding-top: max(0px, env(safe-area-inset-top));
+  }
+
+  .wizard-sticky-bar {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
   }
 
   .field-input::placeholder {

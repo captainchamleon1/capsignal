@@ -14,7 +14,7 @@ export function MobileNav() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex h-10 w-10 items-center justify-center border border-border md:hidden"
+        className="flex h-11 min-h-[44px] w-11 items-center justify-center border border-border lg:hidden"
         aria-expanded={open}
         aria-label="Toggle menu"
       >
@@ -26,7 +26,7 @@ export function MobileNav() {
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 top-16 border-b border-border bg-surface-elevated p-5 md:hidden">
+        <div className="absolute left-0 right-0 top-14 max-h-[calc(100dvh-3.5rem)] overflow-y-auto border-b border-border bg-surface-elevated p-4 pb-safe sm:top-16 lg:hidden">
           <nav className="space-y-1">
             {mainNav.map((group) =>
               group.items ? (
@@ -39,7 +39,7 @@ export function MobileNav() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setOpen(false)}
-                      className="block px-2 py-2.5 text-sm text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
+                      className="block min-h-[44px] px-2 py-3 text-sm text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
                     >
                       {item.label}
                     </Link>
@@ -50,16 +50,19 @@ export function MobileNav() {
                   key={group.label}
                   href={group.href!}
                   onClick={() => setOpen(false)}
-                  className="block px-2 py-2.5 text-sm font-medium text-text-primary transition-colors hover:bg-surface-muted"
+                  className="block min-h-[44px] px-2 py-3 text-sm font-medium text-text-primary transition-colors hover:bg-surface-muted"
                 >
                   {group.label}
                 </Link>
               ),
             )}
           </nav>
-          <div className="mt-4 border-t border-border pt-4">
-            <Button variant="primary" href="/request-access" className="w-full">
-              Request access
+          <div className="mt-4 space-y-3 border-t border-border pt-4">
+            <Button variant="ghost" href="/login" className="min-h-[48px] w-full">
+              Sign in
+            </Button>
+            <Button variant="primary" href="/start#apply" className="min-h-[48px] w-full bg-brand border-brand hover:bg-brand/90">
+              Get started
             </Button>
           </div>
         </div>

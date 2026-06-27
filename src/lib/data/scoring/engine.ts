@@ -30,12 +30,12 @@ function sectorFit(firmSectors: string[], targetSector: string): number | null {
   if (firmSectors.length === 0) return null;
   if (firmSectors.includes(targetSector)) return 100;
   const related: Record<string, string[]> = {
-    b2b_saas: ["fintech", "deep_tech"],
-    fintech: ["b2b_saas"],
-    healthtech: ["deep_tech"],
+    b2b_saas: ["fintech", "deep_tech", "consumer"],
+    fintech: ["b2b_saas", "consumer"],
+    healthtech: ["deep_tech", "b2b_saas"],
     climate: ["deep_tech", "b2b_saas"],
-    deep_tech: ["b2b_saas", "healthtech"],
-    consumer: ["b2b_saas"],
+    deep_tech: ["b2b_saas", "healthtech", "climate"],
+    consumer: ["b2b_saas", "fintech"],
   };
   const rel = related[targetSector] ?? [];
   if (firmSectors.some((s) => rel.includes(s))) return 65;
@@ -71,7 +71,9 @@ function weightedScore(parts: { score: number; weight: number }[]): number {
 export async function scoreInvestorsForRaise(
   context: RaiseContext,
   limit = 50,
-): Promise<MatchResult[]> {
+): Promise<{ matches: MatchResult[]; qualifiedCount: number; databaseSize: number }> {
+  const databaseSize = await db.investorFirm.count();
+
   const firms = await db.investorFirm.findMany({
     include: {
       signals: { orderBy: { observedAt: "desc" }, take: 8 },
@@ -172,10 +174,15 @@ export async function scoreInvestorsForRaise(
     });
   }
 
-  return results
+  const qualified = results
     .filter((r) => r.matchScore >= 35)
-    .sort((a, b) => b.matchScore - a.matchScore)
-    .slice(0, limit);
+    .sort((a, b) => b.matchScore - a.matchScore);
+
+  return {
+    matches: qualified.slice(0, limit),
+    qualifiedCount: qualified.length,
+    databaseSize,
+  };
 }
 
 export async function buildCampaignShortlist(
@@ -183,7 +190,7 @@ export async function buildCampaignShortlist(
   context: RaiseContext,
   limit = 100,
 ) {
-  const matches = await scoreInvestorsForRaise(context, limit);
+  const { matches } = await scoreInvestorsForRaise(context, limit);
 
   for (const match of matches) {
     await db.campaignInvestor.upsert({

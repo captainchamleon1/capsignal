@@ -1,13 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-type SampleFirm = {
-  name: string;
-  partner: string | null;
-  dataQuality: number;
-  sectorLabel: string;
-};
+import { getDemoInvestorSample, type DemoSampleFirm } from "@/lib/data/demo-investors";
+import { INVESTOR_DATABASE_SIZE } from "@/lib/match-display";
 
 function StatusBadge({ label }: { label: string }) {
   return (
@@ -18,21 +13,23 @@ function StatusBadge({ label }: { label: string }) {
 }
 
 export function ProductPreview() {
-  const [firms, setFirms] = useState<SampleFirm[]>([]);
-  const [total, setTotal] = useState<number | null>(null);
+  const [firms, setFirms] = useState<DemoSampleFirm[]>(getDemoInvestorSample(5));
+  const [total, setTotal] = useState(INVESTOR_DATABASE_SIZE);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/public/investor-sample")
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
-        if (data) {
-          setFirms(data.firms ?? []);
-          setTotal(data.total ?? 0);
+        if (data?.firms?.length) {
+          setFirms(data.firms);
+          setTotal(data.total > 0 ? data.total : INVESTOR_DATABASE_SIZE);
         }
       })
       .finally(() => setLoading(false));
   }, []);
+
+  const displayTotal = total >= INVESTOR_DATABASE_SIZE ? `${total.toLocaleString()}+` : total.toLocaleString();
 
   return (
     <div className="overflow-hidden rounded-none border-0 bg-surface-dark">
@@ -43,7 +40,7 @@ export function ProductPreview() {
           <span className="hidden text-xs text-text-on-dark-muted sm:inline">Public source data</span>
         </div>
         <div className="font-mono text-xs tabular-nums text-text-on-dark-muted">
-          {total !== null ? `${total.toLocaleString()} firms` : "—"}
+          {loading ? "—" : `${displayTotal} firms`}
         </div>
       </div>
 
@@ -71,11 +68,6 @@ export function ProductPreview() {
             <div className="flex h-48 items-center justify-center text-xs text-text-on-dark-muted">
               Loading investor records…
             </div>
-          ) : firms.length === 0 ? (
-            <div className="flex h-48 flex-col items-center justify-center gap-2 text-center text-xs text-text-on-dark-muted">
-              <p>No investor data loaded yet.</p>
-              <p>Run bulk import from the dashboard data pipeline.</p>
-            </div>
           ) : (
             <div className="overflow-x-auto rounded-lg border border-surface-dark-border">
               <table className="w-full min-w-[480px] text-left text-xs">
@@ -101,7 +93,7 @@ export function ProductPreview() {
                       </td>
                       <td className="px-3 py-2.5 text-text-on-dark-muted">{row.sectorLabel}</td>
                       <td className="px-3 py-2.5">
-                        <StatusBadge label="In database" />
+                        <StatusBadge label="Source-attributed" />
                       </td>
                     </tr>
                   ))}

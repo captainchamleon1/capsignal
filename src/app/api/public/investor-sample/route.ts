@@ -1,11 +1,17 @@
 import { NextResponse } from "next/server";
+import { getDemoInvestorSample } from "@/lib/data/demo-investors";
+import { INVESTOR_DATABASE_SIZE } from "@/lib/match-display";
 import { db } from "@/lib/db";
 
-/** Public sample of real investor firms for marketing UI previews. */
+/** Public sample of investor firms for marketing UI previews. */
 export async function GET() {
   const total = await db.investorFirm.count();
   if (total === 0) {
-    return NextResponse.json({ total: 0, firms: [] });
+    return NextResponse.json({
+      source: "demo",
+      total: INVESTOR_DATABASE_SIZE,
+      firms: getDemoInvestorSample(5),
+    });
   }
 
   const firms = await db.investorFirm.findMany({
@@ -18,6 +24,7 @@ export async function GET() {
   });
 
   return NextResponse.json({
+    source: "database",
     total,
     firms: firms.map((f) => {
       let sectors: string[] = [];

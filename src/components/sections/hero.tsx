@@ -8,36 +8,48 @@ import { ProductShowcase } from "@/components/sections/product-showcase";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden pt-14 pb-0 md:pt-20">
+    <section className="relative overflow-hidden pt-safe pb-0 md:pt-20">
       <Container wide>
-        <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
+        <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
           <Reveal direction="up">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-tertiary">
               Built to get you investors
             </p>
 
-            <h1 className="display-serif mt-7 text-balance text-[2.65rem] font-semibold text-text-primary md:text-[4.5rem]">
+            <h1 className="display-serif mt-5 text-balance text-[2rem] font-semibold leading-[1.08] text-text-primary sm:text-[2.65rem] md:mt-7 md:text-[4.5rem]">
               Investor outreach
               <span className="block text-text-secondary">that gets meetings</span>
             </h1>
 
-            <p className="mt-7 max-w-lg text-[17px] leading-[1.65] text-text-secondary">
+            <p className="mt-5 max-w-lg text-[16px] leading-[1.65] text-text-secondary md:mt-7 md:text-[17px]">
               Match with investors deploying in your space. Send thesis-aware
               sequences from your inbox. Track every reply in an investor CRM
               and share diligence through a built-in data room—all the way to
               close.
             </p>
 
-            <div className="mt-9 flex flex-wrap items-center gap-x-6 gap-y-3">
-              <Button variant="primary" href="/request-access">
-                Request access
+            <div className="mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-3">
+              <Button
+                variant="primary"
+                href="/start#apply"
+                className="min-h-[48px] w-full bg-brand border-brand hover:bg-brand/90 sm:w-auto"
+              >
+                Build your raise profile
               </Button>
-              <TextLink href="#product">See how it works</TextLink>
+              <TextLink
+                href="#product"
+                className="inline-flex min-h-[44px] items-center justify-center sm:justify-start"
+              >
+                See how it works
+              </TextLink>
             </div>
           </Reveal>
 
           <Reveal delay={150} direction="left">
-            <RevealStagger stagger={120} className="grid grid-cols-2 gap-x-8 gap-y-6 border-t border-border pt-8 lg:border-t-0 lg:pt-0">
+            <RevealStagger
+              stagger={120}
+              className="grid grid-cols-2 gap-x-6 gap-y-5 border-t border-border pt-8 sm:gap-x-8 sm:gap-y-6 lg:border-t-0 lg:pt-0"
+            >
               {stats.map((stat) => (
                 <div key={stat.label} className="reveal-stagger-item">
                   <dt className="font-mono text-xl font-medium tracking-tight text-text-primary md:text-2xl">
@@ -51,7 +63,7 @@ export function Hero() {
         </div>
       </Container>
 
-      <Reveal delay={200} direction="scale" blur className="mt-12 md:mt-16">
+      <Reveal delay={200} direction="scale" blur className="mt-10 md:mt-16">
         <div className="bleed-x border-y border-border bg-surface-elevated">
           <Container wide className="py-1">
             <ProductShowcase className="border-0" />
@@ -61,12 +73,15 @@ export function Hero() {
 
       <Container wide>
         <Reveal delay={280}>
-          <RevealStagger stagger={60} className="flex flex-wrap items-center gap-x-5 gap-y-2 py-10 md:py-14">
+          <RevealStagger
+            stagger={60}
+            className="flex flex-wrap items-center gap-x-4 gap-y-2 py-8 md:gap-x-5 md:py-14"
+          >
             <span className="reveal-stagger-item font-mono text-[10px] uppercase tracking-[0.16em] text-text-tertiary">
               Referred from
             </span>
             {logos.map((name, i) => (
-              <span key={name} className="reveal-stagger-item flex items-center gap-5">
+              <span key={name} className="reveal-stagger-item flex items-center gap-4 md:gap-5">
                 {i > 0 && (
                   <span className="hidden text-border sm:inline" aria-hidden="true">
                     /

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Panel } from "@/components/ui/panel";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { submitLead } from "@/lib/leads/submit";
 import { getStoredUtm } from "@/lib/analytics/utm";
@@ -10,9 +10,35 @@ import { trackLeadConversion } from "@/lib/analytics";
 import type { MatchPreview } from "@/lib/leads/match-types";
 import type { LeadPayload } from "@/lib/leads/types";
 import { MatchPreviewModal } from "@/components/forms/match-preview-modal";
+import { IndustryPicker } from "@/components/onboarding/industry-picker";
+import {
+  MobileProfileStrip,
+  ProfilePreviewPanel,
+  SelectableCard,
+  WizardProgress,
+  WizardStepHeader,
+  WizardStickyActions,
+  WizardTrustFooter,
+} from "@/components/onboarding/wizard-primitives";
+import {
+  PREVIEW_TOP_COUNT,
+  PREVIEW_VISIBLE_COUNT,
+} from "@/lib/match-display";
+import {
+  businessDescriptionExample,
+  onboardingMeta,
+  roleOptions,
+  segmentOptions,
+} from "@/lib/content/onboarding";
+import {
+  industryLabelToKey,
+  keyToSectorLabel,
+  keyToStageLabel,
+  saveRaiseProfile,
+  stageToKey,
+} from "@/lib/raise-profile";
 
 const stages = ["Pre-seed", "Seed", "Series A", "Series B"] as const;
-const sectors = ["B2B SaaS", "Fintech", "Healthtech", "Climate", "Deep tech", "Other"] as const;
 const tractionOptions = [
   "Pre-revenue, strong design partners",
   "$10K–50K MRR",
@@ -22,60 +48,96 @@ const tractionOptions = [
 ] as const;
 const timelineOptions = ["ASAP — round open now", "Next 30 days", "1–3 months", "Exploring options"] as const;
 const raiseOptions = ["$500K–$1.5M", "$1.5M–$3M", "$3M–$6M", "$6M–$15M", "$15M+"] as const;
-
-const steps = [
-  { id: 1, label: "You" },
-  { id: 2, label: "Company" },
-  { id: 3, label: "Raise" },
+const priorFundingOptions = [
+  "None — first institutional raise",
+  "Friends & family / angels (< $500K)",
+  "$500K–$2M raised",
+  "$2M–$10M raised",
+  "$10M+ raised",
 ] as const;
+const exitOptions = [
+  "No prior exit",
+  "Yes — acquired",
+  "Yes — IPO",
+  "Yes — other liquidity event",
+] as const;
+
+const TOTAL_STEPS = onboardingMeta.stepsCount;
 
 type WizardData = {
   name: string;
   email: string;
+  role: string;
   company: string;
   website: string;
   sector: string;
+  segment: string;
+  businessDescription: string;
+  priorFunding: string;
+  hadExit: string;
   stage: string;
   raise: string;
   traction: string;
   timeline: string;
   priorOutreach: string;
-  message: string;
 };
 
 const emptyData: WizardData = {
   name: "",
   email: "",
+  role: "",
   company: "",
   website: "",
   sector: "",
+  segment: "",
+  businessDescription: "",
+  priorFunding: "",
+  hadExit: "",
   stage: "",
   raise: "",
   traction: "",
   timeline: "",
   priorOutreach: "",
-  message: "",
 };
 
 type LeadWizardProps = {
   source?: string;
   id?: string;
-  hidePricing?: boolean;
 };
 
-export function LeadWizard({ source = "lp-start", id, hidePricing = false }: LeadWizardProps) {
+export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [data, setData] = useState<WizardData>(emptyData);
   const [error, setError] = useState<string | null>(null);
-  const [submitted, setSubmitted] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalLoading, setModalLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [preview, setPreview] = useState<MatchPreview | null>(null);
+  const [animating, setAnimating] = useState(false);
+
+  useEffect(() => {
+    const sectorKey = searchParams.get("sector");
+    const stageKey = searchParams.get("stage");
+    if (sectorKey && keyToSectorLabel[sectorKey]) {
+      setData((d) => ({ ...d, sector: keyToSectorLabel[sectorKey] }));
+    }
+    if (stageKey && keyToStageLabel[stageKey]) {
+      setData((d) => ({ ...d, stage: keyToStageLabel[stageKey] }));
+    }
+  }, [searchParams]);
 
   function update(field: keyof WizardData, value: string) {
     setData((d) => ({ ...d, [field]: value }));
     setError(null);
+  }
+
+  function goToStep(target: number) {
+    setAnimating(true);
+    setTimeout(() => {
+      setStep(target);
+      setAnimating(false);
+    }, 150);
   }
 
   function validateStep(): boolean {
@@ -91,13 +153,25 @@ export function LeadWizard({ source = "lp-start", id, hidePricing = false }: Lea
     }
     if (step === 2) {
       if (!data.company.trim() || !data.sector) {
-        setError("Company name and sector are required.");
+        setError("Company name and industry are required.");
         return false;
       }
     }
     if (step === 3) {
+      if (!data.segment || data.businessDescription.trim().length < 40) {
+        setError("Select a segment and write at least 2–3 sentences about your business.");
+        return false;
+      }
+    }
+    if (step === 4) {
+      if (!data.priorFunding || !data.hadExit) {
+        setError("Tell us about your funding history and any prior exits.");
+        return false;
+      }
+    }
+    if (step === 5) {
       if (!data.stage || !data.raise || !data.traction || !data.timeline) {
-        setError("Complete all raise details to see your matches.");
+        setError("Complete all raise details to continue.");
         return false;
       }
     }
@@ -106,8 +180,8 @@ export function LeadWizard({ source = "lp-start", id, hidePricing = false }: Lea
 
   function goNext() {
     if (!validateStep()) return;
-    if (step < 3) {
-      setStep((s) => s + 1);
+    if (step < TOTAL_STEPS) {
+      goToStep(step + 1);
       return;
     }
     openPreview();
@@ -117,47 +191,42 @@ export function LeadWizard({ source = "lp-start", id, hidePricing = false }: Lea
     setModalOpen(true);
     setModalLoading(true);
 
-    const stageMap: Record<string, string> = {
-      "Pre-seed": "pre_seed",
-      Seed: "seed",
-      "Series A": "series_a",
-      "Series B": "series_b",
-    };
-    const sectorMap: Record<string, string> = {
-      "B2B SaaS": "b2b_saas",
-      Fintech: "fintech",
-      Healthtech: "healthtech",
-      Climate: "climate",
-      "Deep tech": "deep_tech",
-      Consumer: "consumer",
-      Other: "b2b_saas",
-    };
-
-    const stage = stageMap[data.stage] ?? "seed";
-    const sector = sectorMap[data.sector] ?? "b2b_saas";
+    const stage = stageToKey[data.stage] ?? "seed";
+    const sector = industryLabelToKey(data.sector);
 
     try {
       const res = await fetch("/api/match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ stage, sector, company: data.company }),
+        body: JSON.stringify({ stage, sector, company: data.company, limit: PREVIEW_TOP_COUNT }),
       });
       if (res.ok) {
         const api = await res.json();
-        if (api.source === "database" && api.topInvestors?.length > 0) {
-          const total = api.totalMatches;
+        if ((api.source === "database" || api.source === "demo") && api.topInvestors?.length > 0) {
           setPreview({
-            totalMatches: total,
+            estimatedMatches: api.estimatedMatches ?? api.totalMatches ?? 0,
+            databaseSize: api.databaseSize,
             topInvestors: api.topInvestors.map(
               (
-                inv: { firm: string; partner: string | null; score: number; rationale: string },
+                inv: {
+                  firm: string;
+                  partner: string | null;
+                  score: number;
+                  rationale: string;
+                  fundSize?: string;
+                  checkSize?: string;
+                  investments?: string[];
+                },
                 i: number,
               ) => ({
                 firm: inv.firm,
                 partner: inv.partner,
                 score: inv.score,
                 reason: inv.rationale,
-                blurred: i >= 3,
+                fundSize: inv.fundSize,
+                checkSize: inv.checkSize,
+                investments: inv.investments,
+                blurred: i >= PREVIEW_VISIBLE_COUNT,
               }),
             ),
           });
@@ -166,41 +235,45 @@ export function LeadWizard({ source = "lp-start", id, hidePricing = false }: Lea
         }
 
         setPreview({
-          totalMatches: 0,
+          estimatedMatches: 0,
           topInvestors: [],
           emptyMessage:
             api.source === "empty"
-              ? "Investor database is not loaded yet. Submit your profile and we will match you once data is available."
-              : "No investors in our database matched your stage and sector with enough source data. Submit your profile and we will review manually.",
+              ? "Investor database is loading. We'll build your shortlist manually from your profile."
+              : "No strong automated matches yet. Our team will review your profile and curate a shortlist.",
         });
         setModalLoading(false);
         return;
       }
     } catch {
       setPreview({
-        totalMatches: 0,
+        estimatedMatches: 0,
         topInvestors: [],
-        emptyMessage: "Could not load matches right now. Submit your profile and we will send your shortlist within one business day.",
+        emptyMessage: "Could not score matches right now. Your profile is saved — we'll follow up within one business day.",
       });
       setModalLoading(false);
       return;
     }
 
     setPreview({
-      totalMatches: 0,
+      estimatedMatches: 0,
       topInvestors: [],
-      emptyMessage: "No matches available. Submit your profile and we will build your shortlist manually.",
+      emptyMessage: "We'll build your shortlist from your profile.",
     });
     setModalLoading(false);
   }
 
   function buildPayload(): LeadPayload {
     const parts = [
+      data.role && `Role: ${data.role}`,
+      data.segment && `Segment: ${data.segment}`,
+      data.businessDescription && `Business: ${data.businessDescription.trim()}`,
+      data.priorFunding && `Prior funding: ${data.priorFunding}`,
+      data.hadExit && `Prior exit: ${data.hadExit}`,
       data.traction && `Traction: ${data.traction}`,
       data.timeline && `Timeline: ${data.timeline}`,
       data.priorOutreach && `Prior outreach: ${data.priorOutreach}`,
       data.website && `Website: ${data.website}`,
-      data.message,
     ].filter(Boolean);
 
     return {
@@ -219,279 +292,403 @@ export function LeadWizard({ source = "lp-start", id, hidePricing = false }: Lea
   async function handleConfirm() {
     setSubmitting(true);
     setError(null);
+
+    const stageKey = stageToKey[data.stage] ?? "seed";
+    const sectorKey = industryLabelToKey(data.sector);
+
     try {
       await submitLead(buildPayload());
       trackLeadConversion({ source, ...getStoredUtm() });
+
+      saveRaiseProfile({
+        ...data,
+        matchCount: preview?.estimatedMatches,
+        stageKey,
+        sectorKey,
+        source,
+      });
+
       setModalOpen(false);
-      setSubmitted(true);
+      window.location.href = "/start/plan";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
-    } finally {
       setSubmitting(false);
     }
   }
 
-  if (submitted) {
-    return (
-      <Panel muted className="text-center">
-        <p className="text-lg font-medium text-text-primary">You&apos;re on the list</p>
-        <p className="mt-2 text-sm leading-relaxed text-text-secondary">
-          {hidePricing
-            ? `We'll send your full ${preview?.totalMatches ?? ""} investor shortlist within one business day — with fit scores and rationale for every match.`
-            : `We'll send your full ${preview?.totalMatches ?? ""} investor shortlist within one business day — with fit scores, rationale, and recommended pricing.`}
-        </p>
-        <p className="mt-4 font-mono text-xs text-text-tertiary">Check {data.email} for next steps.</p>
-      </Panel>
-    );
-  }
-
   const labelClass = "mb-2 block text-sm font-medium text-text-primary";
   const hintClass = "mt-1.5 text-xs text-text-tertiary";
+  const descLen = data.businessDescription.trim().length;
+  const descQuality =
+    descLen >= 120 ? "strong" : descLen >= 40 ? "good" : descLen > 0 ? "weak" : "empty";
+
+  const reviewSections = [
+    { label: "About you", step: 1, rows: [[data.name, data.email], [data.role].filter(Boolean)] },
+    {
+      label: "Company",
+      step: 2,
+      rows: [[data.company, data.website].filter(Boolean), [data.sector].filter(Boolean)],
+    },
+    {
+      label: "Business",
+      step: 3,
+      rows: [[data.segment], [data.businessDescription.slice(0, 120) + (data.businessDescription.length > 120 ? "…" : "")]],
+    },
+    {
+      label: "Track record",
+      step: 4,
+      rows: [[data.priorFunding], [data.hadExit]],
+    },
+    {
+      label: "This round",
+      step: 5,
+      rows: [
+        [data.stage, data.raise].filter(Boolean),
+        [data.traction].filter(Boolean),
+        [data.timeline, data.priorOutreach].filter(Boolean),
+      ],
+    },
+  ];
 
   return (
     <>
-      <div id={id}>
-        <div className="mb-6 flex items-center gap-0">
-          {steps.map((s, i) => (
-            <div key={s.id} className="flex flex-1 items-center">
-              <div className="flex flex-col items-center gap-1.5">
-                <span
-                  className={cn(
-                    "flex h-7 w-7 items-center justify-center font-mono text-[11px] transition-colors",
-                    step >= s.id
-                      ? "bg-brand text-white"
-                      : "border border-border bg-surface-muted text-text-tertiary",
-                  )}
-                >
-                  {s.id}
-                </span>
-                <span
-                  className={cn(
-                    "font-mono text-[10px] uppercase tracking-wider",
-                    step >= s.id ? "text-text-primary" : "text-text-tertiary",
-                  )}
-                >
-                  {s.label}
-                </span>
-              </div>
-              {i < steps.length - 1 && (
-                <div
-                  className={cn(
-                    "mx-2 mb-5 h-px flex-1 transition-colors",
-                    step > s.id ? "bg-brand" : "bg-border",
-                  )}
-                />
+      <div id={id} className="grid gap-8 lg:grid-cols-[1fr_280px] lg:gap-12">
+        <div className="min-w-0 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-0">
+          <WizardProgress step={step} />
+          <MobileProfileStrip
+            step={step}
+            data={{
+              name: data.name,
+              company: data.company,
+              sector: data.sector,
+              stage: data.stage,
+            }}
+          />
+
+          <div
+            className={cn(
+              "mt-8 transition-opacity duration-150",
+              animating ? "opacity-0" : "opacity-100",
+            )}
+          >
+            <WizardStepHeader step={step} />
+
+            <div className="mt-8 space-y-5">
+              {step === 1 && (
+                <>
+                  <div>
+                    <label htmlFor="wiz-name" className={labelClass}>
+                      Full name
+                    </label>
+                    <input
+                      id="wiz-name"
+                      value={data.name}
+                      onChange={(e) => update("name", e.target.value)}
+                      className="field-input"
+                      placeholder="Jane Founder"
+                      autoComplete="name"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="wiz-email" className={labelClass}>
+                      Work email
+                    </label>
+                    <input
+                      id="wiz-email"
+                      type="email"
+                      value={data.email}
+                      onChange={(e) => update("email", e.target.value)}
+                      className="field-input"
+                      placeholder="jane@company.com"
+                      autoComplete="email"
+                    />
+                    <p className={hintClass}>Where we send your shortlist and account invite.</p>
+                  </div>
+                  <div>
+                    <label className={labelClass}>Your role</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {roleOptions.map((r) => (
+                        <SelectableCard
+                          key={r}
+                          compact
+                          selected={data.role === r}
+                          onClick={() => update("role", r)}
+                          title={r}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {step === 2 && (
+                <>
+                  <div>
+                    <label htmlFor="wiz-company" className={labelClass}>
+                      Company name
+                    </label>
+                    <input
+                      id="wiz-company"
+                      value={data.company}
+                      onChange={(e) => update("company", e.target.value)}
+                      className="field-input"
+                      placeholder="Acme Inc."
+                      autoComplete="organization"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="wiz-website" className={labelClass}>
+                      Website
+                    </label>
+                    <input
+                      id="wiz-website"
+                      value={data.website}
+                      onChange={(e) => update("website", e.target.value)}
+                      className="field-input"
+                      placeholder="acme.com"
+                    />
+                  </div>
+                  <div>
+                    <label className={labelClass}>Industry</label>
+                    <IndustryPicker value={data.sector} onChange={(v) => update("sector", v)} />
+                  </div>
+                </>
+              )}
+
+              {step === 3 && (
+                <>
+                  <div>
+                    <label className={labelClass}>Customer segment</label>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {segmentOptions.map((s) => (
+                        <SelectableCard
+                          key={s.value}
+                          selected={data.segment === s.value}
+                          onClick={() => update("segment", s.value)}
+                          title={s.value}
+                          description={s.description}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="mb-2 flex items-end justify-between gap-4">
+                      <label htmlFor="wiz-desc" className={labelClass}>
+                        Describe your business
+                      </label>
+                      <span
+                        className={cn(
+                          "font-mono text-[10px] uppercase tracking-wider",
+                          descQuality === "strong"
+                            ? "text-brand"
+                            : descQuality === "good"
+                              ? "text-text-secondary"
+                              : "text-text-tertiary",
+                        )}
+                      >
+                        {descLen} chars · {descQuality === "strong" ? "Strong" : descQuality === "good" ? "Good" : "Add detail"}
+                      </span>
+                    </div>
+                    <textarea
+                      id="wiz-desc"
+                      value={data.businessDescription}
+                      onChange={(e) => update("businessDescription", e.target.value)}
+                      className="field-input min-h-[140px] resize-y"
+                      placeholder={businessDescriptionExample}
+                      rows={6}
+                    />
+                    <p className={hintClass}>
+                      Include what you sell, who buys, traction metrics, and why now. This drives
+                      thesis matching and outreach copy.
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {step === 4 && (
+                <>
+                  <div>
+                    <label className={labelClass}>Funding raised to date</label>
+                    <div className="space-y-2">
+                      {priorFundingOptions.map((option) => (
+                        <SelectableCard
+                          key={option}
+                          compact
+                          selected={data.priorFunding === option}
+                          onClick={() => update("priorFunding", option)}
+                          title={option}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>Have you had a prior exit?</label>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {exitOptions.map((option) => (
+                        <SelectableCard
+                          key={option}
+                          compact
+                          selected={data.hadExit === option}
+                          onClick={() => update("hadExit", option)}
+                          title={option}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {step === 5 && (
+                <>
+                  <div>
+                    <label className={labelClass}>Current stage</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {stages.map((s) => (
+                        <SelectableCard
+                          key={s}
+                          compact
+                          selected={data.stage === s}
+                          onClick={() => update("stage", s)}
+                          title={s}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>Target raise</label>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                      {raiseOptions.map((r) => (
+                        <SelectableCard
+                          key={r}
+                          compact
+                          selected={data.raise === r}
+                          onClick={() => update("raise", r)}
+                          title={r}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>Current traction</label>
+                    <div className="space-y-2">
+                      {tractionOptions.map((t) => (
+                        <SelectableCard
+                          key={t}
+                          compact
+                          selected={data.traction === t}
+                          onClick={() => update("traction", t)}
+                          title={t}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>When do you need to be in market?</label>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {timelineOptions.map((t) => (
+                        <SelectableCard
+                          key={t}
+                          compact
+                          selected={data.timeline === t}
+                          onClick={() => update("timeline", t)}
+                          title={t}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>Prior outreach this round?</label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {["Not yet", "Some manual", "Ran a campaign"].map((o) => (
+                        <SelectableCard
+                          key={o}
+                          compact
+                          selected={data.priorOutreach === o}
+                          onClick={() => update("priorOutreach", o)}
+                          title={o}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {step === 6 && (
+                <div className="space-y-4">
+                  {reviewSections.map((section) => (
+                    <div
+                      key={section.label}
+                      className="border border-border bg-surface-muted p-4"
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="font-mono text-[10px] uppercase tracking-wider text-text-tertiary">
+                          {section.label}
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => goToStep(section.step)}
+                          className="flex items-center gap-1 text-[11px] text-brand hover:underline"
+                        >
+                          <Pencil className="h-3 w-3" />
+                          Edit
+                        </button>
+                      </div>
+                      <div className="mt-3 space-y-1.5">
+                        {section.rows.map((row, i) => (
+                          <p key={i} className="text-sm text-text-primary">
+                            {row.join(" · ")}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                  <p className="text-xs leading-relaxed text-text-tertiary">
+                    By continuing, you confirm this information is accurate. We use it to score
+                    investors and draft outreach — inaccurate profiles produce weaker matches.
+                  </p>
+                </div>
               )}
             </div>
-          ))}
+
+            <div className="mt-8 hidden lg:block">
+              <WizardStickyActions
+                step={step}
+                totalSteps={TOTAL_STEPS}
+                onBack={() => goToStep(step - 1)}
+                onNext={goNext}
+                nextLabel={step === TOTAL_STEPS ? "Score my investor matches" : "Continue"}
+                error={error}
+              />
+              <WizardTrustFooter />
+            </div>
+          </div>
         </div>
 
-        {step === 1 && (
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="wiz-name" className={labelClass}>
-                Full name
-              </label>
-              <input
-                id="wiz-name"
-                value={data.name}
-                onChange={(e) => update("name", e.target.value)}
-                className="field-input"
-                placeholder="Jane Founder"
-                autoComplete="name"
-              />
-            </div>
-            <div>
-              <label htmlFor="wiz-email" className={labelClass}>
-                Work email
-              </label>
-              <input
-                id="wiz-email"
-                type="email"
-                value={data.email}
-                onChange={(e) => update("email", e.target.value)}
-                className="field-input"
-                placeholder="jane@company.com"
-                autoComplete="email"
-              />
-              <p className={hintClass}>We&apos;ll send your shortlist here — no mailing lists.</p>
-            </div>
-          </div>
-        )}
+        <ProfilePreviewPanel
+          step={step}
+          data={{
+            name: data.name,
+            email: data.email,
+            company: data.company,
+            sector: data.sector,
+            segment: data.segment,
+            stage: data.stage,
+            raise: data.raise,
+            priorFunding: data.priorFunding,
+          }}
+        />
+      </div>
 
-        {step === 2 && (
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="wiz-company" className={labelClass}>
-                Company name
-              </label>
-              <input
-                id="wiz-company"
-                value={data.company}
-                onChange={(e) => update("company", e.target.value)}
-                className="field-input"
-                placeholder="Acme Inc."
-                autoComplete="organization"
-              />
-            </div>
-            <div>
-              <label htmlFor="wiz-website" className={labelClass}>
-                Website <span className="font-normal text-text-tertiary">(optional)</span>
-              </label>
-              <input
-                id="wiz-website"
-                value={data.website}
-                onChange={(e) => update("website", e.target.value)}
-                className="field-input"
-                placeholder="acme.com"
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Sector</label>
-              <div className="flex flex-wrap gap-2">
-                {sectors.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => update("sector", s)}
-                    className={cn(
-                      "border px-3 py-2 text-xs font-medium transition-colors",
-                      data.sector === s
-                        ? "border-brand bg-brand-tint text-brand"
-                        : "border-border text-text-secondary hover:border-border-strong",
-                    )}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="space-y-5">
-            <div>
-              <label className={labelClass}>Stage</label>
-              <div className="grid grid-cols-2 gap-2">
-                {stages.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => update("stage", s)}
-                    className={cn(
-                      "border px-3 py-2.5 text-left text-sm transition-colors",
-                      data.stage === s
-                        ? "border-brand bg-brand-tint font-medium text-brand"
-                        : "border-border text-text-secondary hover:border-border-strong",
-                    )}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className={labelClass}>Target raise</label>
-              <div className="flex flex-wrap gap-2">
-                {raiseOptions.map((r) => (
-                  <button
-                    key={r}
-                    type="button"
-                    onClick={() => update("raise", r)}
-                    className={cn(
-                      "border px-3 py-2 text-xs font-medium transition-colors",
-                      data.raise === r
-                        ? "border-brand bg-brand-tint text-brand"
-                        : "border-border text-text-secondary hover:border-border-strong",
-                    )}
-                  >
-                    {r}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className={labelClass}>Current traction</label>
-              <div className="space-y-1.5">
-                {tractionOptions.map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => update("traction", t)}
-                    className={cn(
-                      "flex w-full border px-3 py-2.5 text-left text-sm transition-colors",
-                      data.traction === t
-                        ? "border-brand bg-brand-tint text-text-primary"
-                        : "border-border text-text-secondary hover:border-border-strong",
-                    )}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className={labelClass}>When do you need to be in market?</label>
-              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
-                {timelineOptions.map((t) => (
-                  <button
-                    key={t}
-                    type="button"
-                    onClick={() => update("timeline", t)}
-                    className={cn(
-                      "border px-3 py-2.5 text-left text-xs transition-colors",
-                      data.timeline === t
-                        ? "border-brand bg-brand-tint text-text-primary"
-                        : "border-border text-text-secondary hover:border-border-strong",
-                    )}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label className={labelClass}>Have you already started outreach?</label>
-              <div className="grid grid-cols-3 gap-2">
-                {["Not yet", "Some manual", "Ran a campaign"].map((o) => (
-                  <button
-                    key={o}
-                    type="button"
-                    onClick={() => update("priorOutreach", o)}
-                    className={cn(
-                      "border px-2 py-2 text-center text-xs transition-colors",
-                      data.priorOutreach === o
-                        ? "border-brand bg-brand-tint text-brand"
-                        : "border-border text-text-secondary hover:border-border-strong",
-                    )}
-                  >
-                    {o}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-
-        <div className="mt-6 flex gap-3">
-          {step > 1 && (
-            <Button type="button" variant="secondary" className="flex-1" onClick={() => setStep((s) => s - 1)}>
-              Back
-            </Button>
-          )}
-          <Button type="button" variant="primary" className="flex-1" onClick={goNext}>
-            {step === 3 ? "See my matches" : "Continue"}
-          </Button>
-        </div>
-
-        <p className="mt-4 text-center text-xs leading-relaxed text-text-tertiary">
-          {step === 3
-            ? "We'll score investors in your space — takes about 5 seconds."
-            : `Step ${step} of 3 · No credit card required`}
-        </p>
+      {/* Mobile sticky footer */}
+      <div className="wizard-sticky-bar fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface-elevated/95 px-4 py-3 backdrop-blur-md lg:hidden pb-safe">
+        <WizardStickyActions
+          step={step}
+          totalSteps={TOTAL_STEPS}
+          onBack={() => goToStep(step - 1)}
+          onNext={goNext}
+          nextLabel={step === TOTAL_STEPS ? "Score matches" : "Continue"}
+          error={error}
+        />
       </div>
 
       {preview && (
@@ -505,6 +702,14 @@ export function LeadWizard({ source = "lp-start", id, hidePricing = false }: Lea
           submitting={submitting}
           onClose={() => setModalOpen(false)}
           onConfirm={handleConfirm}
+          confirmLabel="Unlock contact details"
+          profileSummary={{
+            name: data.name,
+            company: data.company,
+            sector: data.sector,
+            stage: data.stage,
+            raise: data.raise,
+          }}
         />
       )}
     </>

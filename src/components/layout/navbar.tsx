@@ -62,14 +62,14 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-300",
+        "sticky top-0 z-50 border-b pt-safe transition-[background-color,border-color,backdrop-filter] duration-300",
         scrolled
           ? "border-border bg-surface-elevated/95 backdrop-blur-md"
           : "border-transparent bg-surface-page/80 backdrop-blur-sm",
       )}
     >
       <Container>
-        <nav className="relative flex h-16 items-center justify-between">
+        <nav className="relative flex h-14 min-h-[56px] items-center justify-between sm:h-16">
           <Logo />
 
           <div className="hidden items-center gap-7 lg:flex">
@@ -92,11 +92,16 @@ export function Navbar() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" href="/login" className="hidden sm:inline-flex">
+            <Button variant="ghost" href="/login" className="hidden min-h-[44px] sm:inline-flex">
               Sign in
             </Button>
-            <Button variant="primary" href="/request-access" className="hidden sm:inline-flex">
-              Request access
+            <Button
+              variant="primary"
+              href="/start#apply"
+              className="inline-flex min-h-[44px] shrink-0 px-3 text-sm bg-brand border-brand hover:bg-brand/90 sm:px-4"
+            >
+              <span className="sm:hidden">Start</span>
+              <span className="hidden sm:inline">Get started</span>
             </Button>
             <MobileNav />
           </div>

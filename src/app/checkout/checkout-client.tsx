@@ -1,0 +1,121 @@
+"use client";
+
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { guarantee, selfServePricing } from "@/lib/content/guarantee";
+import { capsignalPlan } from "@/lib/content/pricing";
+import { loadRaiseProfile } from "@/lib/raise-profile";
+import { formatInvestorCount } from "@/lib/match-display";
+import { UnlockSignalPreview } from "@/components/checkout/unlock-signal-preview";
+import { Container } from "@/components/ui/container";
+import { Button } from "@/components/ui/button";
+
+export function CheckoutClient() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const stage = searchParams.get("stage");
+  const sector = searchParams.get("sector");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [ready, setReady] = useState(false);
+  const [profile, setProfile] = useState<ReturnType<typeof loadRaiseProfile>>(null);
+
+  useEffect(() => {
+    const saved = loadRaiseProfile();
+    if (!saved?.email) {
+      router.replace("/start#apply");
+      return;
+    }
+    setProfile(saved);
+    setReady(true);
+  }, [router]);
+
+  if (!ready || !profile) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center text-sm text-text-tertiary">
+        Loading checkout…
+      </div>
+    );
+  }
+
+  const priceDisplay = selfServePricing.priceFull;
+  const stageLabel = profile.stage ?? stage?.replace(/_/g, "-");
+  const sectorLabel = profile.sector ?? sector?.replace(/_/g, " ");
+
+  async function startCheckout() {
+    if (!profile) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan: selfServePricing.plan,
+          stage: profile.stageKey ?? stage ?? undefined,
+          sector: profile.sectorKey ?? sector ?? undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error ?? "Checkout unavailable");
+      }
+      window.location.href = data.url;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.");
+      setLoading(false);
+    }
+  }
+
+  return (
+    <Container narrow className="px-4 py-8 pb-safe sm:px-5 md:py-(--spacing-section-sm)">
+      <div className="mx-auto max-w-md">
+        <UnlockSignalPreview
+          company={profile.company}
+          stage={stageLabel}
+          sector={sectorLabel}
+        />
+
+        <div className="mt-8">
+          {profile.matchCount ? (
+            <p className="text-center text-sm text-text-secondary">
+              <span className="font-medium text-text-primary">
+                {formatInvestorCount(profile.matchCount)}
+              </span>{" "}
+              investors match · unlock the rest
+            </p>
+          ) : (
+            <p className="text-center text-sm text-text-secondary">
+              Unlock verified contacts for your ranked shortlist
+            </p>
+          )}
+
+          <div className="mt-6 flex items-baseline justify-center gap-2">
+            <span className="font-mono text-3xl font-medium tabular-nums text-text-primary">
+              {priceDisplay}
+            </span>
+            <span className="text-sm text-text-tertiary">/mo</span>
+          </div>
+          <p className="mt-1 text-center text-xs text-text-tertiary">Cancel anytime</p>
+
+          {error && <p className="mt-4 text-center text-sm text-red-600">{error}</p>}
+
+          <Button
+            type="button"
+            variant="primary"
+            className="mt-6 min-h-[52px] w-full bg-brand border-brand text-base hover:bg-brand/90"
+            disabled={loading}
+            onClick={startCheckout}
+          >
+            {loading ? "Redirecting to Stripe…" : selfServePricing.cta}
+          </Button>
+
+          <p className="mt-4 text-center text-[11px] leading-relaxed text-text-tertiary">
+            {guarantee.short} · Secure payment via Stripe
+          </p>
+        </div>
+      </div>
+    </Container>
+  );
+}

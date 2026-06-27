@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { pricingComparison, pricingFaqs } from "@/lib/content/pricing";
+import { guarantee, selfServePricing } from "@/lib/content/guarantee";
+import { openvcComparison } from "@/lib/content/openvc-compare";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageSection } from "@/components/ui/page-section";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -8,7 +10,7 @@ import { FaqList } from "@/components/ui/faq-list";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "Launch, Scale, and Full Service tiers for structured fundraising.",
+  description: "One simple plan for structured fundraising — no success fees.",
 };
 
 function CellValue({ value }: { value: boolean | string }) {
@@ -22,33 +24,58 @@ export default function PricingPage() {
     <>
       <PageHeader
         label="Pricing"
-        title="Simple monthly plans. No success fees."
-        description="Launch, Scale, and Full Service from $49.99/mo. No per-seat pricing, no carry, no percentage of capital raised."
+        title="One plan. No success fees."
+        description={`${selfServePricing.priceFull}/mo · ${guarantee.short}. No per-seat pricing, no carry, no percentage of capital raised.`}
       />
 
       <PageSection border="bottom">
-        <PricingCards />
+        <div className="mx-auto max-w-lg">
+          <PricingCards />
+        </div>
       </PageSection>
 
       <PageSection>
-        <SectionHeading label="Compare" title="Feature comparison" />
+        <SectionHeading label="Compare" title={openvcComparison.title} />
+        <p className="mt-3 max-w-xl text-sm text-text-secondary">{openvcComparison.subtitle}</p>
         <div className="data-table-wrap mt-8">
           <table className="data-table min-w-[560px]">
             <thead>
               <tr>
                 <th>Feature</th>
-                <th>Launch</th>
-                <th>Scale</th>
-                <th>Full service</th>
+                <th>{openvcComparison.columns.free}</th>
+                <th className="bg-brand-tint/50">{openvcComparison.columns.capsignal}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {openvcComparison.rows.map((row) => (
+                <tr key={row.feature}>
+                  <td className="font-medium text-text-primary">{row.feature}</td>
+                  <td className="text-text-tertiary">❌ {row.free}</td>
+                  <td className="bg-brand-tint/30 font-medium text-text-primary">✅ {row.capsignal}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </PageSection>
+
+      <PageSection>
+        <SectionHeading label="Included" title="What's in CapSignal" />
+        <div className="data-table-wrap mt-8">
+          <table className="data-table min-w-[400px]">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th className="bg-brand-tint/50">CapSignal</th>
               </tr>
             </thead>
             <tbody>
               {pricingComparison.map((row) => (
                 <tr key={row.feature}>
                   <td className="font-medium text-text-primary">{row.feature}</td>
-                  <td><CellValue value={row.launch} /></td>
-                  <td className="bg-surface-muted/50"><CellValue value={row.scale} /></td>
-                  <td><CellValue value={row.full} /></td>
+                  <td className="bg-brand-tint/30">
+                    <CellValue value={row.capsignal} />
+                  </td>
                 </tr>
               ))}
             </tbody>

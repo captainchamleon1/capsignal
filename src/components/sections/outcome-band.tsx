@@ -6,7 +6,6 @@ import { SectionLabel } from "@/components/ui/section-label";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { Reveal, RevealStagger } from "@/components/ui/reveal";
-import { TextLink } from "@/components/ui/text-link";
 import { cn } from "@/lib/utils";
 
 const MANUAL_RATE = 2.5;
@@ -99,20 +98,20 @@ export function OutcomeBand() {
             </p>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-2">
+          <div className="mt-8 flex gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
             {outcomeScenarios.map((s) => (
               <button
                 key={s.id}
                 type="button"
                 onClick={() => setActiveId(s.id)}
                 className={cn(
-                  "border px-4 py-2 font-mono text-[11px] uppercase tracking-wider transition-colors",
+                  "shrink-0 border px-3 py-2.5 font-mono text-[10px] uppercase tracking-wider transition-colors min-h-[44px] sm:px-4 sm:text-[11px]",
                   activeId === s.id
                     ? "border-brand bg-brand-tint text-brand"
                     : "border-border bg-surface-elevated text-text-secondary hover:border-border-strong",
                 )}
               >
-                {s.label} · {s.investors} investors
+                {s.label} · {s.investors}
               </button>
             ))}
           </div>
@@ -191,18 +190,18 @@ export function OutcomeBand() {
           </div>
         </RevealStagger>
 
-        <Reveal delay={120} className="mt-8 flex flex-col gap-6 border border-border bg-surface-elevated p-6 md:flex-row md:items-center md:justify-between md:p-8">
+        <Reveal delay={120} className="mt-8 flex flex-col gap-6 border border-border bg-surface-elevated p-5 pb-safe md:flex-row md:items-center md:justify-between md:p-8">
           <p className="max-w-xl text-[15px] leading-relaxed text-text-secondary">
-            <span className="font-medium text-text-primary">Scale is $99.99/mo.</span> Manual costs
-            you {scenario.manualHours} hours you could spend closing—CapSignal runs the outreach
-            system while you take the meetings.
+            Manual costs you {scenario.manualHours} hours you could spend closing—CapSignal runs
+            the outreach system while you take the meetings.
           </p>
-          <div className="flex shrink-0 flex-wrap gap-3">
-            <Button variant="primary" href="/request-access">
-              Request access
-            </Button>
-            <TextLink href="/pricing">View pricing</TextLink>
-          </div>
+          <Button
+            variant="primary"
+            href="/start#apply"
+            className="min-h-[48px] w-full shrink-0 bg-brand border-brand hover:bg-brand/90 md:w-auto"
+          >
+            Build your raise profile
+          </Button>
         </Reveal>
       </Container>
     </section>

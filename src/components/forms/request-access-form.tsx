@@ -1,5 +1,5 @@
-import { LeadWizard } from "@/components/forms/lead-wizard";
+import { LeadWizardWithParams } from "@/components/forms/lead-wizard-with-params";
 
 export function RequestAccessForm() {
-  return <LeadWizard source="request-access" />;
+  return <LeadWizardWithParams source="request-access" />;
 }
