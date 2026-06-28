@@ -1,0 +1,488 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0086722CAD735E05AAF91F17 /* SnakeBetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1C085D8FEC85B484CCE54E2 /* SnakeBetApp.swift */; };
+		01E9E3064B129607B01E4D4B /* WalletService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D942E16AF20CD3363A63C3F4 /* WalletService.swift */; };
+		06637EF058F71EBADCA9601A /* StateInterpolator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EC2F9F53AE5072AA810F4BE /* StateInterpolator.swift */; };
+		09A4E906CAC3F4F0B0AA6AE0 /* HexGridBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37BB96C2C40EE82B31FF20FE /* HexGridBackground.swift */; };
+		2456FF92A8D0341E638237DC /* BotController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FB14946620903F6574E280 /* BotController.swift */; };
+		269E5332220B049B96EBD156 /* FoodRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 595F0770398B6DB804731D01 /* FoodRenderer.swift */; };
+		2D352B7098D84DB0D9B6817E /* MainMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E90D2317F217EBCE00149603 /* MainMenuView.swift */; };
+		3E3648575291DD43B658ECD5 /* TournamentEconomics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CA46DB1A46B4BEE3F82CA9 /* TournamentEconomics.swift */; };
+		404885DBC35D79D352B5B778 /* BattleRoyaleMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8658E326D5FFBF4B3463CC8 /* BattleRoyaleMode.swift */; };
+		4332DB87B415405FFD7018BF /* MaxPointsMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE31ECC288FE50FDDF315F /* MaxPointsMode.swift */; };
+		481902792597A93042F99B2F /* Arena.swift in Sources */ = {isa = PBXBuildFile; fileRef = A61698B077161764332E1922 /* Arena.swift */; };
+		4AD970B33CE90701F6989385 /* SnakeRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D08A238CFC16986406A1FA /* SnakeRenderer.swift */; };
+		4C3A4B6FF8D0330005A29ED0 /* CollisionSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE8CC01E97900EDB4707DAD /* CollisionSystem.swift */; };
+		592AC5439B11AE6957A97023 /* Vector2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E1202A909E3934A214F1BA /* Vector2.swift */; };
+		5C48F2566EB6887146448F78 /* GameContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37948F613BB8DC6AFC6D1C15 /* GameContainerView.swift */; };
+		6786D17A306AF1396EB8E775 /* FoodOrb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 362836CE4BAFBD458FB14269 /* FoodOrb.swift */; };
+		67B369DCDC4996A204EC014B /* GameStateMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F241768AAD9CA60F74585290 /* GameStateMessage.swift */; };
+		6C90802F8C7ED934AC5B5F90 /* GameSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B39D5FB185ABB76170709FD /* GameSocketClient.swift */; };
+		8D77D4EEE674409DD2B9F444 /* PaymentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5271497320376077B62E793B /* PaymentProvider.swift */; };
+		90E09C2F89599CA24A6E639E /* GameMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = E943A59429C354A6C10C8004 /* GameMode.swift */; };
+		993630BB0D4F528F795003F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E48D72C38D3C9F2D4B5DF77C /* Assets.xcassets */; };
+		9CA8D12A1814723CD78CF33F /* InputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7F5130C9FBA7E230BB47054 /* InputController.swift */; };
+		B36BB708AD5114CB9FC95005 /* MatchmakingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D83C3CE6CD13CB2F0FD41FB /* MatchmakingService.swift */; };
+		C4E5E5B77654CF01EBC9F32F /* NetworkConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13ECE762E72D368A8EFEEDA9 /* NetworkConfig.swift */; };
+		DE5CF75D77B9AD2F24F546AA /* Snake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 306CA81260158261F3E783A2 /* Snake.swift */; };
+		E43CE05205A6032AB206CB45 /* GameConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF7A4277C71633C76F337752 /* GameConstants.swift */; };
+		EC53192DD5593EE015278AE0 /* HUDOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC89813AEF6C1BE00E9CEB40 /* HUDOverlay.swift */; };
+		F2D49BAC4ECC183D5287398D /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF92E1AD4D12F20FB8EE0ED /* GameScene.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		04D08A238CFC16986406A1FA /* SnakeRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnakeRenderer.swift; sourceTree = "<group>"; };
+		04E1202A909E3934A214F1BA /* Vector2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vector2.swift; sourceTree = "<group>"; };
+		0B39D5FB185ABB76170709FD /* GameSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSocketClient.swift; sourceTree = "<group>"; };
+		13ECE762E72D368A8EFEEDA9 /* NetworkConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConfig.swift; sourceTree = "<group>"; };
+		1EC2F9F53AE5072AA810F4BE /* StateInterpolator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateInterpolator.swift; sourceTree = "<group>"; };
+		2D83C3CE6CD13CB2F0FD41FB /* MatchmakingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchmakingService.swift; sourceTree = "<group>"; };
+		306CA81260158261F3E783A2 /* Snake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snake.swift; sourceTree = "<group>"; };
+		362836CE4BAFBD458FB14269 /* FoodOrb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodOrb.swift; sourceTree = "<group>"; };
+		37948F613BB8DC6AFC6D1C15 /* GameContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameContainerView.swift; sourceTree = "<group>"; };
+		37BB96C2C40EE82B31FF20FE /* HexGridBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexGridBackground.swift; sourceTree = "<group>"; };
+		49CA46DB1A46B4BEE3F82CA9 /* TournamentEconomics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TournamentEconomics.swift; sourceTree = "<group>"; };
+		51FB14946620903F6574E280 /* BotController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotController.swift; sourceTree = "<group>"; };
+		5271497320376077B62E793B /* PaymentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentProvider.swift; sourceTree = "<group>"; };
+		595F0770398B6DB804731D01 /* FoodRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodRenderer.swift; sourceTree = "<group>"; };
+		71EE31ECC288FE50FDDF315F /* MaxPointsMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaxPointsMode.swift; sourceTree = "<group>"; };
+		8330FACF3D42078CB646D45A /* SnakeBet.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SnakeBet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9FF92E1AD4D12F20FB8EE0ED /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		A61698B077161764332E1922 /* Arena.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Arena.swift; sourceTree = "<group>"; };
+		B7F5130C9FBA7E230BB47054 /* InputController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputController.swift; sourceTree = "<group>"; };
+		CC89813AEF6C1BE00E9CEB40 /* HUDOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUDOverlay.swift; sourceTree = "<group>"; };
+		D8658E326D5FFBF4B3463CC8 /* BattleRoyaleMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BattleRoyaleMode.swift; sourceTree = "<group>"; };
+		D942E16AF20CD3363A63C3F4 /* WalletService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletService.swift; sourceTree = "<group>"; };
+		E1C085D8FEC85B484CCE54E2 /* SnakeBetApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnakeBetApp.swift; sourceTree = "<group>"; };
+		E48D72C38D3C9F2D4B5DF77C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E90D2317F217EBCE00149603 /* MainMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenuView.swift; sourceTree = "<group>"; };
+		E943A59429C354A6C10C8004 /* GameMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameMode.swift; sourceTree = "<group>"; };
+		EBE8CC01E97900EDB4707DAD /* CollisionSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionSystem.swift; sourceTree = "<group>"; };
+		F241768AAD9CA60F74585290 /* GameStateMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameStateMessage.swift; sourceTree = "<group>"; };
+		FF7A4277C71633C76F337752 /* GameConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameConstants.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		18F614775754317DDF55261C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8330FACF3D42078CB646D45A /* SnakeBet.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2835110F29895703F2C9AE7A /* SnakeBet */ = {
+			isa = PBXGroup;
+			children = (
+				E48D72C38D3C9F2D4B5DF77C /* Assets.xcassets */,
+				80B9B1715589FB9862E46E41 /* App */,
+				FA443DD8B90FC22A695C3E79 /* Game */,
+				C8B6604B5E5744D97E726F8A /* Network */,
+				98B3CFF25F04883BAA2C6622 /* Payments */,
+				BA36E5B9A3BB871F3DE3815C /* UI */,
+			);
+			path = SnakeBet;
+			sourceTree = "<group>";
+		};
+		34F6D1FAAD22B47C74D44571 /* Modes */ = {
+			isa = PBXGroup;
+			children = (
+				D8658E326D5FFBF4B3463CC8 /* BattleRoyaleMode.swift */,
+				E943A59429C354A6C10C8004 /* GameMode.swift */,
+				71EE31ECC288FE50FDDF315F /* MaxPointsMode.swift */,
+			);
+			path = Modes;
+			sourceTree = "<group>";
+		};
+		7195A73465DA68091046B09A /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				595F0770398B6DB804731D01 /* FoodRenderer.swift */,
+				37BB96C2C40EE82B31FF20FE /* HexGridBackground.swift */,
+				04D08A238CFC16986406A1FA /* SnakeRenderer.swift */,
+			);
+			path = Rendering;
+			sourceTree = "<group>";
+		};
+		80B9B1715589FB9862E46E41 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				E1C085D8FEC85B484CCE54E2 /* SnakeBetApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		9097EF822BDAF5EC30D912C7 = {
+			isa = PBXGroup;
+			children = (
+				2835110F29895703F2C9AE7A /* SnakeBet */,
+				18F614775754317DDF55261C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		98B3CFF25F04883BAA2C6622 /* Payments */ = {
+			isa = PBXGroup;
+			children = (
+				5271497320376077B62E793B /* PaymentProvider.swift */,
+				49CA46DB1A46B4BEE3F82CA9 /* TournamentEconomics.swift */,
+				D942E16AF20CD3363A63C3F4 /* WalletService.swift */,
+			);
+			path = Payments;
+			sourceTree = "<group>";
+		};
+		A38BF72341CD85E6CFE5EE72 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				A61698B077161764332E1922 /* Arena.swift */,
+				EBE8CC01E97900EDB4707DAD /* CollisionSystem.swift */,
+				362836CE4BAFBD458FB14269 /* FoodOrb.swift */,
+				FF7A4277C71633C76F337752 /* GameConstants.swift */,
+				9FF92E1AD4D12F20FB8EE0ED /* GameScene.swift */,
+				B7F5130C9FBA7E230BB47054 /* InputController.swift */,
+				306CA81260158261F3E783A2 /* Snake.swift */,
+				04E1202A909E3934A214F1BA /* Vector2.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		B6634016F1B0DD09C763C3E3 /* AI */ = {
+			isa = PBXGroup;
+			children = (
+				51FB14946620903F6574E280 /* BotController.swift */,
+			);
+			path = AI;
+			sourceTree = "<group>";
+		};
+		BA36E5B9A3BB871F3DE3815C /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				37948F613BB8DC6AFC6D1C15 /* GameContainerView.swift */,
+				CC89813AEF6C1BE00E9CEB40 /* HUDOverlay.swift */,
+				E90D2317F217EBCE00149603 /* MainMenuView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		C8B6604B5E5744D97E726F8A /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				0B39D5FB185ABB76170709FD /* GameSocketClient.swift */,
+				F241768AAD9CA60F74585290 /* GameStateMessage.swift */,
+				2D83C3CE6CD13CB2F0FD41FB /* MatchmakingService.swift */,
+				13ECE762E72D368A8EFEEDA9 /* NetworkConfig.swift */,
+				1EC2F9F53AE5072AA810F4BE /* StateInterpolator.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		FA443DD8B90FC22A695C3E79 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				B6634016F1B0DD09C763C3E3 /* AI */,
+				A38BF72341CD85E6CFE5EE72 /* Core */,
+				34F6D1FAAD22B47C74D44571 /* Modes */,
+				7195A73465DA68091046B09A /* Rendering */,
+			);
+			path = Game;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5998028E483E8953F77845E5 /* SnakeBet */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AFA76507E2DA01F2B642A57F /* Build configuration list for PBXNativeTarget "SnakeBet" */;
+			buildPhases = (
+				EE8681BB873A41111DFD99BD /* Sources */,
+				84907A84123540F335C9048C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SnakeBet;
+			packageProductDependencies = (
+			);
+			productName = SnakeBet;
+			productReference = 8330FACF3D42078CB646D45A /* SnakeBet.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B24740DE80D192269043C89D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					5998028E483E8953F77845E5 = {
+						DevelopmentTeam = "";
+					};
+				};
+			};
+			buildConfigurationList = 78EBECBEC2710727753BE13F /* Build configuration list for PBXProject "SnakeBet" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9097EF822BDAF5EC30D912C7;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 18F614775754317DDF55261C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5998028E483E8953F77845E5 /* SnakeBet */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		84907A84123540F335C9048C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				993630BB0D4F528F795003F3 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EE8681BB873A41111DFD99BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				481902792597A93042F99B2F /* Arena.swift in Sources */,
+				404885DBC35D79D352B5B778 /* BattleRoyaleMode.swift in Sources */,
+				2456FF92A8D0341E638237DC /* BotController.swift in Sources */,
+				4C3A4B6FF8D0330005A29ED0 /* CollisionSystem.swift in Sources */,
+				6786D17A306AF1396EB8E775 /* FoodOrb.swift in Sources */,
+				269E5332220B049B96EBD156 /* FoodRenderer.swift in Sources */,
+				E43CE05205A6032AB206CB45 /* GameConstants.swift in Sources */,
+				5C48F2566EB6887146448F78 /* GameContainerView.swift in Sources */,
+				90E09C2F89599CA24A6E639E /* GameMode.swift in Sources */,
+				F2D49BAC4ECC183D5287398D /* GameScene.swift in Sources */,
+				6C90802F8C7ED934AC5B5F90 /* GameSocketClient.swift in Sources */,
+				67B369DCDC4996A204EC014B /* GameStateMessage.swift in Sources */,
+				EC53192DD5593EE015278AE0 /* HUDOverlay.swift in Sources */,
+				09A4E906CAC3F4F0B0AA6AE0 /* HexGridBackground.swift in Sources */,
+				9CA8D12A1814723CD78CF33F /* InputController.swift in Sources */,
+				2D352B7098D84DB0D9B6817E /* MainMenuView.swift in Sources */,
+				B36BB708AD5114CB9FC95005 /* MatchmakingService.swift in Sources */,
+				4332DB87B415405FFD7018BF /* MaxPointsMode.swift in Sources */,
+				C4E5E5B77654CF01EBC9F32F /* NetworkConfig.swift in Sources */,
+				8D77D4EEE674409DD2B9F444 /* PaymentProvider.swift in Sources */,
+				DE5CF75D77B9AD2F24F546AA /* Snake.swift in Sources */,
+				0086722CAD735E05AAF91F17 /* SnakeBetApp.swift in Sources */,
+				4AD970B33CE90701F6989385 /* SnakeRenderer.swift in Sources */,
+				06637EF058F71EBADCA9601A /* StateInterpolator.swift in Sources */,
+				3E3648575291DD43B658ECD5 /* TournamentEconomics.swift in Sources */,
+				592AC5439B11AE6957A97023 /* Vector2.swift in Sources */,
+				01E9E3064B129607B01E4D4B /* WalletService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5509A3BB8959A64BF7A9CE75 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		5AB792E9044F5FFEFEAD7C24 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = SnakeBet;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.snakebet.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C022DB9115FFCC0E73EAF65E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = SnakeBet;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.snakebet.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		E49FB70EA7121F9DECDB7CDB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIStatusBarHidden = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		78EBECBEC2710727753BE13F /* Build configuration list for PBXProject "SnakeBet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E49FB70EA7121F9DECDB7CDB /* Debug */,
+				5509A3BB8959A64BF7A9CE75 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AFA76507E2DA01F2B642A57F /* Build configuration list for PBXNativeTarget "SnakeBet" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5AB792E9044F5FFEFEAD7C24 /* Debug */,
+				C022DB9115FFCC0E73EAF65E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B24740DE80D192269043C89D /* Project object */;
+}
