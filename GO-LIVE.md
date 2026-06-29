@@ -41,13 +41,18 @@ Or push to the connected Git branch and Vercel auto-deploys.
 | `NEXT_PUBLIC_SITE_URL` | `https://getcapsignal.com` | **[done]** now the default |
 | `STRIPE_SECRET_KEY` | `sk_live_...` or `sk_test_...` | Step 4b |
 | `STRIPE_PRICE_CAPSIGNAL` | `price_...` | Step 4b |
+| `STRIPE_WEBHOOK_SECRET` | `whsec_...` | Step 4c |
 | `BETTER_AUTH_SECRET` | random 32+ chars | `openssl rand -base64 32` |
 | `BETTER_AUTH_URL` | `https://getcapsignal.com` | same as site URL |
 | `NEXT_PUBLIC_GTM_ID` | `GTM-XXXXXXX` | Step 5 |
 | `NEXT_PUBLIC_META_PIXEL_ID` | `1234567890` | Step 6 |
 | `LEAD_WEBHOOK_URL` | your Zapier/Slack/Formspree URL | so leads reach your inbox |
 
-**Stripe (Step 4b):** In [Stripe Dashboard](https://dashboard.stripe.com) → **Product catalog** → add product **CapSignal** at **$99.99/month** recurring. Copy the **Price ID** (`price_...`) into `STRIPE_PRICE_CAPSIGNAL`. Copy **Secret key** from Developers → API keys into `STRIPE_SECRET_KEY`. Use **test keys** first (`sk_test_`, test mode price); switch to live when ready. Checkout redirects to `/checkout/success` — no webhook required for MVP.
+**Stripe (Step 4b):** In [Stripe Dashboard](https://dashboard.stripe.com) → **Product catalog** → add product **CapSignal** at **$99.99/month** recurring. Copy the **Price ID** (`price_...`) into `STRIPE_PRICE_CAPSIGNAL`. Copy **Secret key** from Developers → API keys into `STRIPE_SECRET_KEY`. Use **test keys** first (`sk_test_`, test mode price); switch to live when ready.
+
+**Stripe webhook (Step 4c — recommended):** Developers → **Webhooks** → **Add endpoint** → URL `https://getcapsignal.com/api/stripe/webhook` (or your Vercel URL while testing). Events: `checkout.session.completed`. Copy the **Signing secret** (`whsec_...`) into `STRIPE_WEBHOOK_SECRET`. Successful checkouts also post to `LEAD_WEBHOOK_URL` if set (type `stripe_checkout_completed`).
+
+**Test checkout:** `/start` → complete profile → plan → checkout. Card `4242 4242 4242 4242`, any future expiry, any CVC. Success lands on `/checkout/success`.
 
 **Redeploy after changing any env var.**
 
@@ -97,5 +102,6 @@ https://getcapsignal.com/start?utm_source=meta&utm_medium=paid_social&utm_campai
 - [ ] GTM live, `generate_lead` → Google Ads conversion verified **[you]**
 - [ ] Meta Pixel `Lead` event verified in Test Events **[you]**
 - [ ] `STRIPE_SECRET_KEY` + `STRIPE_PRICE_CAPSIGNAL` set → test checkout on `/checkout` **[you]**
+- [ ] `STRIPE_WEBHOOK_SECRET` set → webhook shows 200 in Stripe dashboard **[you]**
 - [ ] `BETTER_AUTH_SECRET` set **[you]**
 - [ ] Campaigns built per `AD-CAMPAIGNS.md`, paused, ready to launch **[you]**

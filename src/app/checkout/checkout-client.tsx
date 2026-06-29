@@ -53,6 +53,9 @@ export function CheckoutClient() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           plan: selfServePricing.plan,
+          email: profile.email,
+          name: profile.name,
+          company: profile.company,
           stage: profile.stageKey ?? stage ?? undefined,
           sector: profile.sectorKey ?? sector ?? undefined,
         }),
