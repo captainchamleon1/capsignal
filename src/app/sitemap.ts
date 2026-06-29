@@ -29,8 +29,10 @@ const staticRoutes = [
   "/best-investor-outreach-tool",
   "/capsignal-vs-openvc",
   "/answers",
+  "/legal",
   "/privacy",
   "/terms",
+  "/cookies",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

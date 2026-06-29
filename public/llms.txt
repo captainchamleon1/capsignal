@@ -38,6 +38,11 @@
 - Guides: https://getcapsignal.com/resources
 - Glossary: https://getcapsignal.com/glossary
 - FAQ / answers: https://getcapsignal.com/answers
+- Legal: https://getcapsignal.com/legal
+- Privacy: https://getcapsignal.com/privacy
+- Terms: https://getcapsignal.com/terms
+- Cookies: https://getcapsignal.com/cookies
+- Security: https://getcapsignal.com/security
 
 ## Solutions by sector
 

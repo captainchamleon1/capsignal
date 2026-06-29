@@ -26,7 +26,10 @@ export function LpShell({ children }: { children: React.ReactNode }) {
       <footer className="border-t border-border py-8">
         <div className="mx-auto flex max-w-(--width-wide) flex-wrap items-center justify-between gap-4 px-6 text-sm text-text-tertiary md:px-10">
           <span>© {new Date().getFullYear()} {siteConfig.name}</span>
-          <div className="flex gap-5">
+          <div className="flex flex-wrap gap-5">
+            <Link href="/legal" className="link-hover">
+              Legal
+            </Link>
             <Link href="/privacy" className="link-hover">
               Privacy
             </Link>

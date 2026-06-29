@@ -90,8 +90,10 @@ export const footerNav = {
     { label: "Request access", href: "/request-access" },
   ],
   Legal: [
+    { label: "Legal overview", href: "/legal" },
     { label: "Privacy", href: "/privacy" },
     { label: "Terms", href: "/terms" },
+    { label: "Cookies", href: "/cookies" },
   ],
 } as const;
 
@@ -119,7 +121,9 @@ export const allRoutes = [
   "/about",
   "/security",
   "/request-access",
+  "/legal",
   "/privacy",
   "/terms",
+  "/cookies",
   ...["ai", "b2b-saas", "fintech", "deep-tech", "climate"].map((s) => `/solutions/${s}`),
 ] as const;
