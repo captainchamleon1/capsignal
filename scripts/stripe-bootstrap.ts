@@ -46,7 +46,7 @@ async function main() {
     }));
 
   console.log("\nAdd to Vercel (Production env):\n");
-  console.log(`STRIPE_SECRET_KEY=${key.startsWith("sk_") ? "(your secret key)" : key}`);
+  console.log(`STRIPE_SECRET_KEY=(your secret key)`);
   console.log(`STRIPE_PRICE_CAPSIGNAL=${price.id}`);
   console.log("\nWebhook endpoint (after deploy):");
   console.log("  https://getcapsignal.com/api/stripe/webhook");
