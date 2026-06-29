@@ -1,4 +1,6 @@
-export const glossaryTerms = [
+import { additionalGlossaryTerms } from "./glossary-additional";
+
+const coreGlossaryTerms = [
   { term: "Deployment signal", definition: "Evidence an investor is actively writing checks—recent investments, follow-ons, or fund close announcements." },
   { term: "Thesis fit", definition: "Alignment between an investor's stated sector/stage focus and your company's category and round." },
   { term: "Match score", definition: "CapSignal's 0–100 ranking of investor fit for your specific raise, with written rationale." },
@@ -20,3 +22,5 @@ export const glossaryTerms = [
   { term: "Exclusion list", definition: "Investors flagged to never receive outreach—conflicts, prior passes, existing relationships." },
   { term: "Campaign", definition: "One fundraising outreach effort with defined shortlist, sequences, and timeline." },
 ] as const;
+
+export const glossaryTerms = [...coreGlossaryTerms, ...additionalGlossaryTerms];

@@ -5,6 +5,7 @@ import { siteConfig } from "@/lib/content/site";
 import { AppShell } from "@/components/layout/app-shell";
 import { AnalyticsScripts } from "@/components/analytics/analytics-scripts";
 import { AnalyticsCapture } from "@/components/analytics/analytics-capture";
+import { SiteJsonLd } from "@/components/seo/site-json-ld";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -61,6 +62,7 @@ export default function RootLayout({
     >
       <body className="min-h-full max-w-full overflow-x-clip font-sans antialiased">
         <AnalyticsScripts />
+        <SiteJsonLd />
         <Suspense fallback={null}>
           <AnalyticsCapture />
         </Suspense>

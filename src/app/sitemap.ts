@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { productModules } from "@/lib/content/product";
 import { guides } from "@/lib/content/resources";
+import { faqEntries } from "@/lib/content/answers";
 import { caseStudies } from "@/lib/content/customers";
 import { sectors } from "@/lib/content/sectors";
 import { docs } from "@/lib/content/docs";
@@ -24,6 +25,10 @@ const staticRoutes = [
   "/about",
   "/security",
   "/request-access",
+  "/for-ai-founders",
+  "/best-investor-outreach-tool",
+  "/capsignal-vs-openvc",
+  "/answers",
   "/privacy",
   "/terms",
 ];
@@ -37,6 +42,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "weekly" as const,
       priority: path === "" ? 1 : path === "/start" ? 0.95 : 0.8,
+    })),
+    ...faqEntries.map((e) => ({
+      url: `${base}/answers/${e.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.75,
     })),
     ...productModules.map((m) => ({
       url: `${base}/product/${m.id}`,

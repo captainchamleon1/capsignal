@@ -14,8 +14,8 @@ export default function CustomersPage() {
     <>
       <PageHeader
         label="Customers"
-        title="Verified outcomes"
-        description="We publish case studies only from real customer campaigns with permission."
+        title="Customer outcomes"
+        description="Representative outcomes from CapSignal campaigns. Company names and details are illustrative composites for privacy."
       />
 
       <PageSection>

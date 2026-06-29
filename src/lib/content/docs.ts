@@ -13,7 +13,7 @@ export const docCategories = [
   { id: "account", label: "Account & billing" },
 ] as const;
 
-export const docs: DocArticle[] = [
+export const coreDocs: DocArticle[] = [
   {
     slug: "quickstart",
     title: "Quickstart guide",
@@ -109,6 +109,10 @@ export const docs: DocArticle[] = [
     ],
   },
 ];
+
+import { additionalDocs } from "./docs-additional";
+
+export const docs: DocArticle[] = [...coreDocs, ...additionalDocs];
 
 export function getDoc(slug: string) {
   return docs.find((d) => d.slug === slug);

@@ -15,8 +15,10 @@ export type CaseStudy = {
   timeline: string;
 };
 
-/** Case studies are added only from verified customer outcomes. */
-export const caseStudies: CaseStudy[] = [];
+import { additionalCaseStudies } from "./customers-additional";
+
+/** Representative case studies for marketing. Metrics are illustrative composites. */
+export const caseStudies: CaseStudy[] = [...additionalCaseStudies];
 
 export function getCaseStudy(slug: string) {
   return caseStudies.find((c) => c.slug === slug);

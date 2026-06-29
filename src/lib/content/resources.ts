@@ -20,7 +20,7 @@ export const guideCategories = [
   "Data & targeting",
 ] as const;
 
-export const guides: Guide[] = [
+export const coreGuides: Guide[] = [
   {
     slug: "investor-outreach-that-gets-replies",
     title: "Investor outreach that gets replies",
@@ -218,6 +218,11 @@ export const guides: Guide[] = [
     ],
   },
 ];
+
+import { additionalGuides } from "./guides-additional";
+
+/** Full guide catalog (core + extended). */
+export const guides: Guide[] = [...coreGuides, ...additionalGuides];
 
 export function getGuide(slug: string) {
   return guides.find((g) => g.slug === slug);

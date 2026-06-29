@@ -11,6 +11,29 @@ export type Sector = {
 
 export const sectors: Sector[] = [
   {
+    slug: "ai",
+    name: "AI & ML",
+    headline: "The fundraising platform AI founders use to reach active investors",
+    description:
+      "Match on AI infra, vertical AI, agents, and dev tools — scored by recent deployment activity, not generic 'AI' tags on a website.",
+    stats: [
+      { label: "AI sector tagging", value: "From source data" },
+      { label: "Sub-segments", value: "Infra · Vertical · Agents · Dev tools" },
+      { label: "Typical reply rate", value: "6–12% on Seed campaigns" },
+    ],
+    challenges: [
+      "Every fund claims AI — few show recent deals in your sub-sector",
+      "Wrapper fatigue — investors want data moats, workflow depth, or infra differentiation",
+      "Wrong list — foundation model funds vs. vertical AI vs. agent platforms need different partners",
+    ],
+    approach: [
+      "Segment shortlist: infra, vertical AI, agents, or dev tools — not one blended list",
+      "Thesis hooks reference portfolio AI companies and recent follow-ons",
+      "Outreach leads with traction investors expect: inference economics, design partners, or benchmarks",
+    ],
+    exampleInvestors: ["a16z", "Sequoia", "Index Ventures", "Conviction", "Radical Ventures", "Bloomberg Beta"],
+  },
+  {
     slug: "b2b-saas",
     name: "B2B SaaS",
     headline: "Reach Seed and Series A investors deploying in software",

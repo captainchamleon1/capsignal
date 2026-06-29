@@ -25,7 +25,9 @@ export const mainNav: NavGroup[] = [
     label: "Solutions",
     items: [
       { label: "Founders", href: "/founders", description: "Seed through Series B" },
+      { label: "AI founders", href: "/for-ai-founders", description: "AI / ML fundraising" },
       { label: "Partners", href: "/partners", description: "Referral program" },
+      { label: "AI & ML", href: "/solutions/ai", description: "Infra, vertical AI, agents" },
       { label: "B2B SaaS", href: "/solutions/b2b-saas", description: "Software raises" },
       { label: "Fintech", href: "/solutions/fintech", description: "Financial services" },
       { label: "Deep tech", href: "/solutions/deep-tech", description: "Technical risk" },
@@ -36,6 +38,7 @@ export const mainNav: NavGroup[] = [
     label: "Resources",
     items: [
       { label: "Guides", href: "/resources", description: "Fundraising strategy & outreach" },
+      { label: "Answers", href: "/answers", description: "FAQ for founders" },
       { label: "Documentation", href: "/docs", description: "Product help center" },
       { label: "Case studies", href: "/customers", description: "Results from recent raises" },
       { label: "Glossary", href: "/glossary", description: "Fundraising terms" },
@@ -64,7 +67,9 @@ export const footerNav = {
   ],
   Solutions: [
     { label: "Founders", href: "/founders" },
+    { label: "AI founders", href: "/for-ai-founders" },
     { label: "Partners", href: "/partners" },
+    { label: "AI & ML", href: "/solutions/ai" },
     { label: "B2B SaaS", href: "/solutions/b2b-saas" },
     { label: "Fintech", href: "/solutions/fintech" },
     { label: "Deep tech", href: "/solutions/deep-tech" },
@@ -72,6 +77,7 @@ export const footerNav = {
   ],
   Resources: [
     { label: "Guides", href: "/resources" },
+    { label: "Answers", href: "/answers" },
     { label: "Documentation", href: "/docs" },
     { label: "Case studies", href: "/customers" },
     { label: "Glossary", href: "/glossary" },
@@ -101,6 +107,10 @@ export const allRoutes = [
   "/pricing",
   "/customers",
   "/compare",
+  "/answers",
+  "/best-investor-outreach-tool",
+  "/capsignal-vs-openvc",
+  "/for-ai-founders",
   "/resources",
   "/docs",
   "/glossary",
@@ -111,5 +121,5 @@ export const allRoutes = [
   "/request-access",
   "/privacy",
   "/terms",
-  ...["b2b-saas", "fintech", "deep-tech", "climate"].map((s) => `/solutions/${s}`),
+  ...["ai", "b2b-saas", "fintech", "deep-tech", "climate"].map((s) => `/solutions/${s}`),
 ] as const;

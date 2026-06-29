@@ -1,0 +1,83 @@
+# CapSignal
+
+> CapSignal is the fundraising platform for startup founders: investor matching from live public data, thesis-aware outreach from your own inbox, investor CRM, and data room. Built for Pre-seed through Series B — especially AI, B2B SaaS, fintech, and deep tech.
+
+## Product summary
+
+- **Website:** https://getcapsignal.com
+- **Primary action:** https://getcapsignal.com/start (build raise profile, preview investor matches)
+- **Pricing:** $99.99/month with 7-day free trial. No success fees, no carry.
+- **Guarantee:** 5+ active matched investors in 48 hours or full refund.
+- **Support:** hello@getcapsignal.com
+
+## What CapSignal does
+
+1. **Investor matching** — Scores 12,000+ source-attributed investor records by stage, sector, check size, and deployment activity. Founders review a ranked shortlist before outreach.
+2. **Thesis-aware outreach** — Personalized email sequences from the founder's domain (SPF/DKIM). Not a third-party blast tool.
+3. **Investor CRM** — Pipeline tracking from first email through diligence and term sheet.
+4. **Data room** — Secure sharing for deck, model, and legal docs.
+
+## Who it's for
+
+- First-time and repeat founders raising Pre-seed, Seed, or Series A/B
+- AI / ML startups (infra, vertical AI, agents, dev tools)
+- B2B SaaS, fintech, healthtech, climate, deep tech founders
+- Teams replacing spreadsheets, stale investor lists, or $20K+ fundraising advisors
+
+## Key pages
+
+- Home: https://getcapsignal.com/
+- Start (onboarding + match preview): https://getcapsignal.com/start
+- Pricing: https://getcapsignal.com/pricing
+- For AI founders: https://getcapsignal.com/for-ai-founders
+- Best investor outreach tool (guide): https://getcapsignal.com/best-investor-outreach-tool
+- CapSignal vs OpenVC: https://getcapsignal.com/capsignal-vs-openvc
+- Compare alternatives: https://getcapsignal.com/compare
+- Founders: https://getcapsignal.com/founders
+- Case studies: https://getcapsignal.com/customers
+- Guides: https://getcapsignal.com/resources
+- Glossary: https://getcapsignal.com/glossary
+- FAQ / answers: https://getcapsignal.com/answers
+
+## Solutions by sector
+
+- AI & ML: https://getcapsignal.com/solutions/ai
+- B2B SaaS: https://getcapsignal.com/solutions/b2b-saas
+- Fintech: https://getcapsignal.com/solutions/fintech
+- Deep tech: https://getcapsignal.com/solutions/deep-tech
+- Climate: https://getcapsignal.com/solutions/climate
+
+## Common questions
+
+**What is CapSignal?**
+CapSignal helps founders find investors, run personalized outreach from their inbox, and track replies through close. It combines investor matching, email sequences, CRM, and data room in one subscription.
+
+**How is CapSignal different from OpenVC or Harmonic?**
+OpenVC and Harmonic are investor directories. CapSignal adds live match scoring, thesis-aware copy, automated follow-ups from your domain, and raise-specific CRM — execution, not just lists.
+
+**How is CapSignal different from a fundraising advisor?**
+Advisors charge retainers ($10K–$50K+) and take weeks to onboard. CapSignal is $99.99/mo with a 7-day trial, shortlist in days, outreach live in 5–7 business days.
+
+**Does CapSignal work for AI startups?**
+Yes. CapSignal matches on AI/ML sector tags, recent AI deployments, and check size. Many AI founders use it for Seed and Series A outreach.
+
+**Where do emails send from?**
+The founder's own domain and inbox. Replies land with the founder, not CapSignal.
+
+## Alternatives people compare
+
+- Manual outreach (spreadsheets + Gmail)
+- Sales CRMs (HubSpot, Salesforce) — not raise-specific
+- Investor databases (OpenVC, Crunchbase, Harmonic)
+- Fundraising agencies and advisors
+- Generic cold email tools (Instantly, Apollo) — not investor-specific
+
+CapSignal is best when a founder wants matched investors plus managed outreach execution in one system.
+
+## Data & trust
+
+Investor records come from SEC IAPD (Form ADV), PE/VC Atlas (CC BY 4.0), and open startup investor datasets (MIT). CapSignal does not fabricate partner names or portfolio companies.
+
+## Last updated
+
+2026-06-28
