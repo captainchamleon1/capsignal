@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Lock } from "lucide-react";
+import { Lock, SearchCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { formatInvestorCount } from "@/lib/match-display";
 import type { MatchPreview } from "@/lib/leads/match-types";
@@ -121,15 +121,38 @@ export function MatchPreviewModal({
             <MatchScanLoader company={company} city={city} sector={sector} stage={stage} />
           ) : isEmpty ? (
             <>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-gold">
-                Shortlist preview
+              {profileSummary && (
+                <div className="mb-5 flex flex-wrap gap-2">
+                  {[
+                    profileSummary.company,
+                    profileSummary.city,
+                    profileSummary.stage,
+                    profileSummary.sector,
+                    profileSummary.raise,
+                  ]
+                    .filter(Boolean)
+                    .map((chip) => (
+                      <span
+                        key={chip}
+                        className="border border-surface-dark-border px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-text-on-dark-muted"
+                      >
+                        {chip}
+                      </span>
+                    ))}
+                </div>
+              )}
+              <p className="font-mono text-xs uppercase tracking-[0.18em] text-brand-gold">
+                Profile received
               </p>
-              <h2 id="match-preview-title" className="mt-2 text-xl font-semibold leading-snug md:text-2xl">
-                Manual review recommended
+              <h2
+                id="match-preview-title"
+                className="display-serif mt-3 text-2xl font-semibold leading-tight text-text-on-dark sm:text-3xl"
+              >
+                Our team will curate your shortlist
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-text-on-dark-muted">
+              <p className="mt-4 text-base leading-relaxed text-text-on-dark-muted sm:text-[17px]">
                 {preview.emptyMessage ??
-                  "We could not score investors automatically from current source data."}
+                  "We could not auto-score every investor from current source data — a human review produces a sharper shortlist for niche profiles."}
               </p>
             </>
           ) : (
@@ -257,27 +280,59 @@ export function MatchPreviewModal({
         )}
 
         {!loading && isEmpty && (
-          <div className="shrink-0 border-t border-border bg-surface-muted px-4 py-4 pb-safe sm:px-6 md:px-8 md:py-5">
-            <button
-              type="button"
-              onClick={onConfirm}
-              disabled={submitting}
-              className={cn(
-                "flex min-h-[48px] w-full items-center justify-center bg-brand text-sm font-medium text-white transition-colors hover:bg-brand/90",
-                submitting && "opacity-70",
-              )}
-            >
-              {submitting ? "Saving…" : "Continue — we'll curate your shortlist"}
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              disabled={submitting}
-              className="mt-2 w-full py-2 text-center text-xs text-text-tertiary hover:text-text-secondary"
-            >
-              Back to edit profile
-            </button>
-          </div>
+          <>
+            <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-6 sm:px-6 md:px-8 md:py-8 [-webkit-overflow-scrolling:touch]">
+              <div className="mx-auto max-w-lg text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center border border-border bg-brand-tint">
+                  <SearchCheck className="h-8 w-8 text-brand" aria-hidden="true" />
+                </div>
+                <p className="mt-6 text-lg font-semibold text-text-primary">
+                  White-glove shortlist in progress
+                </p>
+                <p className="mt-3 text-[15px] leading-relaxed text-text-secondary">
+                  A fundraising specialist reviews your raise profile, filters 12,000+ investor
+                  records, and builds a ranked list — usually within one business day.
+                </p>
+                <ul className="mt-8 space-y-4 border border-border bg-surface-muted p-5 text-left sm:p-6">
+                  {[
+                    "Stage, sector, and check-size fit verified by hand",
+                    city
+                      ? `Regional investors near ${city} prioritized first`
+                      : "Regional investors in your metro prioritized first",
+                    "Outreach angles drafted from your business description",
+                  ].map((item) => (
+                    <li key={item} className="flex items-start gap-3 text-sm leading-snug text-text-secondary">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="shrink-0 border-t border-border bg-surface-muted px-4 py-5 pb-safe sm:px-6 md:px-8 md:py-6">
+              <button
+                type="button"
+                onClick={onConfirm}
+                disabled={submitting}
+                className={cn(
+                  "flex min-h-[52px] w-full items-center justify-center bg-brand text-base font-medium text-white transition-colors hover:bg-brand/90",
+                  submitting && "opacity-70",
+                )}
+              >
+                {submitting ? "Saving…" : "Continue — unlock your shortlist"}
+              </button>
+              {showGuarantee && <GuaranteeLine className="mt-4" />}
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={submitting}
+                className="mt-3 w-full py-2 text-center text-sm text-text-tertiary hover:text-text-secondary"
+              >
+                Back to edit profile
+              </button>
+            </div>
+          </>
         )}
       </div>
     </div>

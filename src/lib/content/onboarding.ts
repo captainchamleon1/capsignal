@@ -107,7 +107,7 @@ export function buildScoringPhases(city?: string): string[] {
 }
 
 /** Minimum time the scan loader runs so the scoring step feels substantive. */
-export const MATCH_SCAN_MIN_MS = 4800;
+export const MATCH_SCAN_MIN_MS = 7000;
 
 export const unlockMilestones = [
   { step: 1, label: "Account identity" },
