@@ -14,8 +14,8 @@ export function formatInvestorCount(count: number): string {
 }
 
 /** Deterministic, profile-specific pool size — reads like filtering a 12k+ database. */
-export function estimateMatchPool(stage: string, sector: string, company?: string): number {
-  const input = `${stage}|${sector}|${company?.trim().toLowerCase() ?? ""}`;
+export function estimateMatchPool(stage: string, sector: string, company?: string, city?: string): number {
+  const input = `${stage}|${sector}|${company?.trim().toLowerCase() ?? ""}|${city?.trim().toLowerCase() ?? ""}`;
   let hash = 0;
   for (let i = 0; i < input.length; i++) {
     hash = (hash * 31 + input.charCodeAt(i)) >>> 0;
@@ -28,8 +28,9 @@ export function resolveDisplayMatchCount(
   sector: string,
   company?: string,
   qualifiedCount?: number,
+  city?: string,
 ): number {
-  const estimated = estimateMatchPool(stage, sector, company);
+  const estimated = estimateMatchPool(stage, sector, company, city);
   if (qualifiedCount === undefined) return estimated;
   return Math.max(estimated, qualifiedCount);
 }

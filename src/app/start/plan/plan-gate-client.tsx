@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { guarantee, selfServePricing } from "@/lib/content/guarantee";
+import { selfServePricing } from "@/lib/content/guarantee";
+import { GuaranteeLine } from "@/components/ui/guarantee-line";
 import { capsignalPlan } from "@/lib/content/pricing";
 import { loadRaiseProfile, type RaiseProfileDraft } from "@/lib/raise-profile";
 import { formatInvestorCount } from "@/lib/match-display";
@@ -68,6 +69,7 @@ export function PlanGateClient() {
           <div className="mt-8">
             <UnlockSignalPreview
               company={profile.company}
+              city={profile.city}
               stage={profile.stage}
               sector={profile.sector}
             />
@@ -90,9 +92,7 @@ export function PlanGateClient() {
               {selfServePricing.cta}
             </Button>
 
-            <p className="mt-4 text-[11px] leading-relaxed text-text-tertiary">
-              {guarantee.short}
-            </p>
+            <GuaranteeLine className="mt-4" />
           </div>
         </div>
       </Container>

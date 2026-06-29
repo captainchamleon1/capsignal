@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { guarantee } from "@/lib/content/guarantee";
+import { GuaranteeLine } from "@/components/ui/guarantee-line";
 import type { MatchPreviewInvestor } from "@/lib/leads/match-types";
 
 const sectors = [
@@ -240,7 +240,7 @@ export function InvestorSearchPreview({ className }: { className?: string }) {
                   >
                     Complete your raise profile to unlock contacts
                   </Button>
-                  <p className="mt-3 text-xs text-text-tertiary">{guarantee.short}</p>
+                  <GuaranteeLine className="mt-3" />
                 </div>
               )}
             </>

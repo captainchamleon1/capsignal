@@ -3,6 +3,7 @@ export type RaiseProfileDraft = {
   email: string;
   role?: string;
   company: string;
+  city: string;
   website: string;
   sector: string;
   segment: string;

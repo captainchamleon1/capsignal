@@ -1,5 +1,5 @@
 import { capsignalPlan } from "@/lib/content/pricing";
-import { guarantee } from "@/lib/content/guarantee";
+import { GuaranteeLine } from "@/components/ui/guarantee-line";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -49,9 +49,7 @@ export function PricingTeaser() {
               <Button variant="primary" href="/start#apply" className="mt-8 w-full bg-brand border-brand hover:bg-brand/90">
                 Get started
               </Button>
-              <TextLink href="/start#apply" className="mt-3 inline-block w-full text-center text-xs">
-                {guarantee.short}
-              </TextLink>
+              <GuaranteeLine className="mt-3 w-full" />
             </div>
           </Reveal>
         </div>

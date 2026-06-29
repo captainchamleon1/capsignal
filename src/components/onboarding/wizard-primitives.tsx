@@ -142,6 +142,7 @@ type MobileProfileStripProps = {
   data: {
     name?: string;
     company?: string;
+    city?: string;
     sector?: string;
     stage?: string;
   };
@@ -151,6 +152,7 @@ export function MobileProfileStrip({ step, data }: MobileProfileStripProps) {
   const chips = [
     data.name,
     data.company,
+    data.city,
     data.sector,
     data.stage,
   ].filter(Boolean) as string[];
@@ -190,6 +192,7 @@ type ProfilePreviewPanelProps = {
     name?: string;
     email?: string;
     company?: string;
+    city?: string;
     sector?: string;
     segment?: string;
     stage?: string;
@@ -202,6 +205,7 @@ export function ProfilePreviewPanel({ step, data }: ProfilePreviewPanelProps) {
   const rows = [
     data.name && { label: "Founder", value: data.name },
     data.company && { label: "Company", value: data.company },
+    data.city && { label: "City", value: data.city },
     data.sector && { label: "Industry", value: data.sector },
     data.segment && { label: "Segment", value: data.segment },
     data.stage && { label: "Stage", value: data.stage },

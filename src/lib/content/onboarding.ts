@@ -22,8 +22,9 @@ export const onboardingSteps = [
     key: "company",
     label: "Company",
     title: "Tell us about your company",
-    subtitle: "Industry and positioning help us filter 12,000+ firms down to who actually deploys in your space.",
-    why: "Stage and sector are the strongest predictors of investor fit in our scoring model.",
+    subtitle:
+      "Industry and city help us surface investors who deploy in your space — starting with firms active in your area.",
+    why: "Founders who lead with local warm paths close faster. We prioritize investors near you, then expand nationally.",
     eta: "45 sec",
   },
   {
@@ -86,12 +87,27 @@ export const roleOptions = [
 ] as const;
 
 export const scoringPhases = [
-  "Parsing your raise profile…",
-  "Filtering by stage and check size…",
-  "Matching sector and thesis signals…",
-  "Ranking 12,000+ investor records…",
-  "Building your shortlist…",
+  "Scanning 12,000+ source-attributed investor records…",
+  "Prioritizing investors active in your metro…",
+  "Filtering by stage, check size, and sector fit…",
+  "Matching thesis signals and recent deployment activity…",
+  "Ranking your shortlist by fit score…",
 ] as const;
+
+/** City-aware copy for the match scan loader. */
+export function buildScoringPhases(city?: string): string[] {
+  const metro = city?.trim() || "your metro";
+  return [
+    `Scanning 12,000+ source-attributed investor records…`,
+    `Mapping ${metro} and regional investor activity…`,
+    `Filtering by stage, check size, and sector fit…`,
+    `Matching thesis signals and recent deployment data…`,
+    `Ranking your shortlist by fit score…`,
+  ];
+}
+
+/** Minimum time the scan loader runs so the scoring step feels substantive. */
+export const MATCH_SCAN_MIN_MS = 4800;
 
 export const unlockMilestones = [
   { step: 1, label: "Account identity" },

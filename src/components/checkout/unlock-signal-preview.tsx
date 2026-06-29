@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 
 type UnlockSignalPreviewProps = {
   company?: string;
+  city?: string;
   stage?: string;
   sector?: string;
   className?: string;
@@ -219,12 +220,13 @@ const viewPanels: Record<ViewId, typeof ContactsView> = {
 
 export function UnlockSignalPreview({
   company,
+  city,
   stage,
   sector,
   className,
 }: UnlockSignalPreviewProps) {
   const [active, setActive] = useState<ViewId>("contacts");
-  const profileLabel = [company, sector, stage].filter(Boolean).join(" · ");
+  const profileLabel = [company, city, sector, stage].filter(Boolean).join(" · ");
   const Panel = viewPanels[active];
 
   const cycle = useCallback(() => {

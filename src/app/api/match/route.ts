@@ -14,6 +14,7 @@ const schema = z.object({
   stage: z.enum(["pre_seed", "seed", "series_a", "series_b"]),
   sector: z.string().min(1),
   company: z.string().optional(),
+  city: z.string().optional(),
   query: z.string().optional(),
   limit: z.number().int().min(1).max(100).optional(),
 });
@@ -32,12 +33,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   }
 
-  const { stage, sector, company, limit = PREVIEW_TOP_COUNT } = body.data;
+  const { stage, sector, company, city, limit = PREVIEW_TOP_COUNT } = body.data;
   const firmCount = await db.investorFirm.count();
 
   if (firmCount === 0) {
     const demo = getDemoMatches(stage, sector, limit);
-    const estimatedMatches = resolveDisplayMatchCount(stage, sector, company);
+    const estimatedMatches = resolveDisplayMatchCount(stage, sector, company, undefined, city);
     return NextResponse.json({
       source: "demo",
       databaseSize: INVESTOR_DATABASE_SIZE,
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
     { stage, sector },
     limit,
   );
-  const estimatedMatches = resolveDisplayMatchCount(stage, sector, company, qualifiedCount);
+  const estimatedMatches = resolveDisplayMatchCount(stage, sector, company, qualifiedCount, city);
 
   const firmIds = matches.map((m) => m.firmId);
   const firms = await db.investorFirm.findMany({

@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Lock, Sparkles } from "lucide-react";
+import { Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { guarantee } from "@/lib/content/guarantee";
-import { scoringPhases } from "@/lib/content/onboarding";
 import { formatInvestorCount } from "@/lib/match-display";
 import type { MatchPreview } from "@/lib/leads/match-types";
+import { MatchScanLoader } from "@/components/forms/match-scan-loader";
+import { GuaranteeLine } from "@/components/ui/guarantee-line";
 
 type ProfileSummary = {
   name: string;
   company: string;
+  city?: string;
   sector: string;
   stage: string;
   raise: string;
@@ -21,6 +22,7 @@ type MatchPreviewModalProps = {
   open: boolean;
   preview: MatchPreview;
   company: string;
+  city?: string;
   sector: string;
   stage: string;
   loading: boolean;
@@ -36,6 +38,7 @@ export function MatchPreviewModal({
   open,
   preview,
   company,
+  city,
   sector,
   stage,
   loading,
@@ -47,21 +50,9 @@ export function MatchPreviewModal({
   profileSummary,
 }: MatchPreviewModalProps) {
   const [revealed, setRevealed] = useState(0);
-  const [phaseIndex, setPhaseIndex] = useState(0);
   const isEmpty = preview.topInvestors.length === 0;
   const poolSize = preview.estimatedMatches;
   const remainingMatches = Math.max(0, poolSize - preview.topInvestors.length);
-
-  useEffect(() => {
-    if (!open || !loading) {
-      setPhaseIndex(0);
-      return;
-    }
-    const interval = window.setInterval(() => {
-      setPhaseIndex((i) => (i + 1) % scoringPhases.length);
-    }, 900);
-    return () => clearInterval(interval);
-  }, [open, loading]);
 
   useEffect(() => {
     if (!open || loading || isEmpty) {
@@ -107,7 +98,13 @@ export function MatchPreviewModal({
         <div className="shrink-0 border-b border-border bg-surface-dark px-4 py-5 text-text-on-dark sm:px-6 md:px-8 md:py-6">
           {profileSummary && !loading && (
             <div className="mb-5 flex flex-wrap gap-2">
-              {[profileSummary.company, profileSummary.stage, profileSummary.sector, profileSummary.raise]
+              {[
+                profileSummary.company,
+                profileSummary.city,
+                profileSummary.stage,
+                profileSummary.sector,
+                profileSummary.raise,
+              ]
                 .filter(Boolean)
                 .map((chip) => (
                   <span
@@ -121,21 +118,7 @@ export function MatchPreviewModal({
           )}
 
           {loading ? (
-            <div className="py-8 text-center">
-              <div className="relative mx-auto h-12 w-12">
-                <div className="absolute inset-0 animate-spin rounded-full border-2 border-surface-dark-border border-t-brand-gold" />
-                <Sparkles className="absolute inset-0 m-auto h-5 w-5 text-brand-gold" />
-              </div>
-              <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.16em] text-brand-gold">
-                Scoring investors
-              </p>
-              <p className="mt-3 text-sm text-text-on-dark-muted transition-opacity duration-300">
-                {scoringPhases[phaseIndex]}
-              </p>
-              <p className="mt-2 text-xs text-text-on-dark-muted/70">
-                Matching {company} against 12,000+ source-attributed records
-              </p>
-            </div>
+            <MatchScanLoader company={company} city={city} sector={sector} stage={stage} />
           ) : isEmpty ? (
             <>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand-gold">
@@ -159,8 +142,9 @@ export function MatchPreviewModal({
               </h2>
               <p className="mt-3 text-sm text-text-on-dark-muted">
                 {formatInvestorCount(poolSize)} investors in our database match your {stage}{" "}
-                {sector} raise. Ranked by stage fit, sector overlap, check size, and deployment
-                signals — contact details unlock after subscription.
+                {sector} raise
+                {city ? ` near ${city}` : ""}. Ranked by stage fit, sector overlap, check size, and
+                deployment signals — contact details unlock after subscription.
               </p>
             </>
           )}
@@ -259,11 +243,7 @@ export function MatchPreviewModal({
               >
                 {submitting ? "Saving profile…" : confirmLabel}
               </button>
-              {showGuarantee && (
-                <p className="mt-3 text-center text-[11px] leading-relaxed text-text-tertiary">
-                  {guarantee.short}
-                </p>
-              )}
+              {showGuarantee && <GuaranteeLine className="mt-3" />}
               <button
                 type="button"
                 onClick={onClose}

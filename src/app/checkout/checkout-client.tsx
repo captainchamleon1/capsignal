@@ -2,7 +2,8 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { guarantee, selfServePricing } from "@/lib/content/guarantee";
+import { selfServePricing } from "@/lib/content/guarantee";
+import { GuaranteeLine } from "@/components/ui/guarantee-line";
 import { capsignalPlan } from "@/lib/content/pricing";
 import { loadRaiseProfile } from "@/lib/raise-profile";
 import { formatInvestorCount } from "@/lib/match-display";
@@ -114,9 +115,7 @@ export function CheckoutClient() {
             {loading ? "Redirecting to Stripe…" : selfServePricing.cta}
           </Button>
 
-          <p className="mt-4 text-center text-[11px] leading-relaxed text-text-tertiary">
-            {guarantee.short} · Secure payment via Stripe
-          </p>
+          <GuaranteeLine className="mt-4" suffix="Secure payment via Stripe" />
         </div>
       </div>
     </Container>

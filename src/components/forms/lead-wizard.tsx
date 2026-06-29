@@ -27,6 +27,7 @@ import {
 import {
   businessDescriptionExample,
   onboardingMeta,
+  MATCH_SCAN_MIN_MS,
   roleOptions,
   segmentOptions,
 } from "@/lib/content/onboarding";
@@ -69,6 +70,7 @@ type WizardData = {
   email: string;
   role: string;
   company: string;
+  city: string;
   website: string;
   sector: string;
   segment: string;
@@ -87,6 +89,7 @@ const emptyData: WizardData = {
   email: "",
   role: "",
   company: "",
+  city: "",
   website: "",
   sector: "",
   segment: "",
@@ -98,6 +101,11 @@ const emptyData: WizardData = {
   traction: "",
   timeline: "",
   priorOutreach: "",
+};
+
+const EMPTY_PREVIEW: MatchPreview = {
+  estimatedMatches: 0,
+  topInvestors: [],
 };
 
 type LeadWizardProps = {
@@ -152,8 +160,8 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
       }
     }
     if (step === 2) {
-      if (!data.company.trim() || !data.sector) {
-        setError("Company name and industry are required.");
+      if (!data.company.trim() || !data.city.trim() || !data.sector) {
+        setError("Company name, city, and industry are required.");
         return false;
       }
     }
@@ -190,16 +198,30 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
   async function openPreview() {
     setModalOpen(true);
     setModalLoading(true);
+    setPreview(null);
 
     const stage = stageToKey[data.stage] ?? "seed";
     const sector = industryLabelToKey(data.sector);
+    const scanStarted = Date.now();
 
     try {
       const res = await fetch("/api/match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ stage, sector, company: data.company, limit: PREVIEW_TOP_COUNT }),
+        body: JSON.stringify({
+          stage,
+          sector,
+          company: data.company,
+          city: data.city.trim(),
+          limit: PREVIEW_TOP_COUNT,
+        }),
       });
+
+      const elapsed = Date.now() - scanStarted;
+      if (elapsed < MATCH_SCAN_MIN_MS) {
+        await new Promise((resolve) => window.setTimeout(resolve, MATCH_SCAN_MIN_MS - elapsed));
+      }
+
       if (res.ok) {
         const api = await res.json();
         if ((api.source === "database" || api.source === "demo") && api.topInvestors?.length > 0) {
@@ -246,6 +268,10 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
         return;
       }
     } catch {
+      const elapsed = Date.now() - scanStarted;
+      if (elapsed < MATCH_SCAN_MIN_MS) {
+        await new Promise((resolve) => window.setTimeout(resolve, MATCH_SCAN_MIN_MS - elapsed));
+      }
       setPreview({
         estimatedMatches: 0,
         topInvestors: [],
@@ -266,6 +292,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
   function buildPayload(): LeadPayload {
     const parts = [
       data.role && `Role: ${data.role}`,
+      data.city && `City: ${data.city.trim()}`,
       data.segment && `Segment: ${data.segment}`,
       data.businessDescription && `Business: ${data.businessDescription.trim()}`,
       data.priorFunding && `Prior funding: ${data.priorFunding}`,
@@ -327,7 +354,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
     {
       label: "Company",
       step: 2,
-      rows: [[data.company, data.website].filter(Boolean), [data.sector].filter(Boolean)],
+      rows: [[data.company, data.city, data.website].filter(Boolean), [data.sector].filter(Boolean)],
     },
     {
       label: "Business",
@@ -360,6 +387,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
             data={{
               name: data.name,
               company: data.company,
+              city: data.city,
               sector: data.sector,
               stage: data.stage,
             }}
@@ -435,6 +463,22 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                       placeholder="Acme Inc."
                       autoComplete="organization"
                     />
+                  </div>
+                  <div>
+                    <label htmlFor="wiz-city" className={labelClass}>
+                      City
+                    </label>
+                    <input
+                      id="wiz-city"
+                      value={data.city}
+                      onChange={(e) => update("city", e.target.value)}
+                      className="field-input"
+                      placeholder="San Francisco"
+                      autoComplete="address-level2"
+                    />
+                    <p className={hintClass}>
+                      We look for investors in your area first — local warm paths close faster.
+                    </p>
                   </div>
                   <div>
                     <label htmlFor="wiz-website" className={labelClass}>
@@ -670,6 +714,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
             name: data.name,
             email: data.email,
             company: data.company,
+            city: data.city,
             sector: data.sector,
             segment: data.segment,
             stage: data.stage,
@@ -691,21 +736,26 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
         />
       </div>
 
-      {preview && (
+      {modalOpen && (
         <MatchPreviewModal
           open={modalOpen}
-          preview={preview}
+          preview={preview ?? EMPTY_PREVIEW}
           company={data.company}
+          city={data.city}
           sector={data.sector}
           stage={data.stage}
           loading={modalLoading}
           submitting={submitting}
-          onClose={() => setModalOpen(false)}
+          onClose={() => {
+            setModalOpen(false);
+            setModalLoading(false);
+          }}
           onConfirm={handleConfirm}
           confirmLabel="Unlock contact details"
           profileSummary={{
             name: data.name,
             company: data.company,
+            city: data.city,
             sector: data.sector,
             stage: data.stage,
             raise: data.raise,

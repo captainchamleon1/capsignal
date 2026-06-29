@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { guarantee } from "@/lib/content/guarantee";
+import { GuaranteeLine } from "@/components/ui/guarantee-line";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 
@@ -37,7 +38,7 @@ export function CheckoutSuccessClient() {
           ? "Your subscription is active. Create your account to unlock verified contacts and launch outreach."
           : "Thanks for subscribing. Create your account to get started — payment may take a moment to confirm."}
       </p>
-      <p className="mx-auto mt-4 max-w-md text-xs text-text-tertiary">{guarantee.short}</p>
+      <GuaranteeLine className="mx-auto mt-4 max-w-md" />
       <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
         <Button variant="primary" href="/signup" className="min-h-[48px] w-full bg-brand border-brand hover:bg-brand/90 sm:w-auto">
           Create your account
