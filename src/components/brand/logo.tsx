@@ -15,9 +15,9 @@ export function Logo({ className, showMark = true, href = "/" }: LogoProps) {
         <Image
           src="/brand/logo.png"
           alt=""
-          width={32}
-          height={32}
-          className="h-8 w-8 shrink-0 object-contain"
+          width={1024}
+          height={558}
+          className="h-8 w-auto shrink-0 object-contain"
           priority
         />
       )}

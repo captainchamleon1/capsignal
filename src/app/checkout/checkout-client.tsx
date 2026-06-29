@@ -3,8 +3,8 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { selfServePricing } from "@/lib/content/guarantee";
+import { trackFunnelMilestone } from "@/lib/analytics";
 import { GuaranteeLine } from "@/components/ui/guarantee-line";
-import { capsignalPlan } from "@/lib/content/pricing";
 import { loadRaiseProfile } from "@/lib/raise-profile";
 import { formatInvestorCount } from "@/lib/match-display";
 import { UnlockSignalPreview } from "@/components/checkout/unlock-signal-preview";
@@ -30,6 +30,10 @@ export function CheckoutClient() {
     }
     setProfile(saved);
     setReady(true);
+    trackFunnelMilestone("checkout_view", {
+      company: saved.company,
+      matchCount: saved.matchCount,
+    });
   }, [router]);
 
   if (!ready || !profile) {
@@ -40,7 +44,6 @@ export function CheckoutClient() {
     );
   }
 
-  const priceDisplay = selfServePricing.priceFull;
   const stageLabel = profile.stage ?? stage?.replace(/_/g, "-");
   const sectorLabel = profile.sector ?? sector?.replace(/_/g, " ");
 
@@ -48,6 +51,7 @@ export function CheckoutClient() {
     if (!profile) return;
     setLoading(true);
     setError(null);
+    trackFunnelMilestone("checkout_start", { company: profile.company });
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -95,13 +99,20 @@ export function CheckoutClient() {
             </p>
           )}
 
-          <div className="mt-6 flex items-baseline justify-center gap-2">
-            <span className="font-mono text-3xl font-medium tabular-nums text-text-primary">
-              {priceDisplay}
-            </span>
-            <span className="text-sm text-text-tertiary">/mo</span>
+          <div className="mt-6 text-center">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
+              {selfServePricing.trialLabel}
+            </p>
+            <div className="mt-2 flex items-baseline justify-center gap-2">
+              <span className="font-mono text-3xl font-medium tabular-nums text-text-primary">
+                $0
+              </span>
+              <span className="text-sm text-text-tertiary">today</span>
+            </div>
+            <p className="mt-2 text-sm text-text-secondary">
+              then {selfServePricing.priceFull}/mo · cancel anytime
+            </p>
           </div>
-          <p className="mt-1 text-center text-xs text-text-tertiary">Cancel anytime</p>
 
           {error && <p className="mt-4 text-center text-sm text-red-600">{error}</p>}
 
@@ -115,7 +126,7 @@ export function CheckoutClient() {
             {loading ? "Redirecting to Stripe…" : selfServePricing.cta}
           </Button>
 
-          <GuaranteeLine className="mt-4" suffix="Secure payment via Stripe" />
+          <GuaranteeLine className="mt-4" suffix="Card required · secure checkout via Stripe" />
         </div>
       </div>
     </Container>

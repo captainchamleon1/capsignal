@@ -25,7 +25,7 @@ export default function PricingPage() {
       <PageHeader
         label="Pricing"
         title="One plan. No success fees."
-        description={`${selfServePricing.priceFull}/mo · ${guarantee.short}. No per-seat pricing, no carry, no percentage of capital raised.`}
+        description={`${selfServePricing.trialLabel}, then ${selfServePricing.priceFull}/mo · ${guarantee.short}. No per-seat pricing, no carry, no percentage of capital raised.`}
       />
 
       <PageSection border="bottom">

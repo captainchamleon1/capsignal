@@ -8,6 +8,7 @@ import { formatInvestorCount } from "@/lib/match-display";
 import type { MatchPreview } from "@/lib/leads/match-types";
 import { MatchScanLoader } from "@/components/forms/match-scan-loader";
 import { GuaranteeLine } from "@/components/ui/guarantee-line";
+import { selfServePricing } from "@/lib/content/guarantee";
 
 type ProfileSummary = {
   name: string;
@@ -45,7 +46,7 @@ export function MatchPreviewModal({
   submitting,
   onClose,
   onConfirm,
-  confirmLabel = "Unlock contact details",
+  confirmLabel = selfServePricing.cta,
   showGuarantee = true,
   profileSummary,
 }: MatchPreviewModalProps) {

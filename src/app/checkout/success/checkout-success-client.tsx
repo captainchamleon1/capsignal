@@ -3,7 +3,8 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { guarantee } from "@/lib/content/guarantee";
+import { guarantee, selfServePricing } from "@/lib/content/guarantee";
+import { trackFunnelMilestone } from "@/lib/analytics";
 import { GuaranteeLine } from "@/components/ui/guarantee-line";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ export function CheckoutSuccessClient() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
   const [status, setStatus] = useState<"loading" | "verified" | "pending" | "error">("loading");
+  const [trialing, setTrialing] = useState(false);
 
   useEffect(() => {
     if (!sessionId) {
@@ -21,22 +23,39 @@ export function CheckoutSuccessClient() {
 
     fetch(`/api/checkout/verify?session_id=${encodeURIComponent(sessionId)}`)
       .then((res) => res.json())
-      .then((data) => setStatus(data.ok ? "verified" : "pending"))
+      .then((data) => {
+        setTrialing(Boolean(data.trialing));
+        setStatus(data.ok ? "verified" : "pending");
+        if (data.ok) {
+          trackFunnelMilestone("checkout_success");
+          if (data.trialing) {
+            trackFunnelMilestone("trial_start");
+          }
+        }
+      })
       .catch(() => setStatus("error"));
   }, [sessionId]);
 
   return (
     <Container narrow className="px-4 py-8 pb-safe text-center md:py-(--spacing-section-sm)">
       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
-        {status === "loading" ? "Confirming payment…" : "Payment confirmed"}
+        {status === "loading"
+          ? "Confirming checkout…"
+          : trialing
+            ? `${selfServePricing.trialLabel} started`
+            : "Payment confirmed"}
       </p>
       <h1 className="display-serif mt-4 text-2xl font-semibold text-text-primary sm:text-3xl">
-        You&apos;re in — let&apos;s build your shortlist
+        {trialing ? "Your trial is live — let's build your shortlist" : "You're in — let's build your shortlist"}
       </h1>
       <p className="mx-auto mt-4 max-w-md text-[15px] leading-relaxed text-text-secondary">
         {status === "verified"
-          ? "Your subscription is active. Create your account to unlock verified contacts and launch outreach."
-          : "Thanks for subscribing. Create your account to get started — payment may take a moment to confirm."}
+          ? trialing
+            ? `You're all set for ${selfServePricing.trialDays} days free. Create your account to unlock verified contacts and launch outreach — billing starts after the trial unless you cancel.`
+            : "Your subscription is active. Create your account to unlock verified contacts and launch outreach."
+          : trialing
+            ? "Thanks for starting your trial. Create your account to get started — checkout may take a moment to confirm."
+            : "Thanks for subscribing. Create your account to get started — payment may take a moment to confirm."}
       </p>
       <GuaranteeLine className="mx-auto mt-4 max-w-md" />
       <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">

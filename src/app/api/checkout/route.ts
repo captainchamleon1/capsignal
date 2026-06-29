@@ -6,6 +6,7 @@ import {
   getStripe,
   planDetails,
   stripePriceId,
+  TRIAL_DAYS,
 } from "@/lib/stripe";
 
 const schema = z.object({
@@ -54,6 +55,7 @@ export async function POST(request: Request) {
     client_reference_id: email,
     metadata,
     subscription_data: {
+      trial_period_days: TRIAL_DAYS,
       metadata,
     },
     line_items: [

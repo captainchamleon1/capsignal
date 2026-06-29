@@ -4,7 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { siteConfig } from "@/lib/content/site";
 import { AppShell } from "@/components/layout/app-shell";
 import { AnalyticsScripts } from "@/components/analytics/analytics-scripts";
-import { UtmCapture } from "@/components/analytics/utm-capture";
+import { AnalyticsCapture } from "@/components/analytics/analytics-capture";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -62,7 +62,7 @@ export default function RootLayout({
       <body className="min-h-full max-w-full overflow-x-clip font-sans antialiased">
         <AnalyticsScripts />
         <Suspense fallback={null}>
-          <UtmCapture />
+          <AnalyticsCapture />
         </Suspense>
         <AppShell>{children}</AppShell>
       </body>

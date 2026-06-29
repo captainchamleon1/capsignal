@@ -15,7 +15,8 @@ export function GuaranteeBanner() {
               {guarantee.body}
             </p>
             <p className="text-xs text-text-tertiary">
-              {selfServePricing.priceFull}/mo · Cancel anytime · {guarantee.email}
+              {selfServePricing.trialLabel} · then {selfServePricing.priceFull}/mo · Cancel anytime ·{" "}
+              {guarantee.email}
             </p>
           </div>
         </Reveal>

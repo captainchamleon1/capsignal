@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getStripe } from "@/lib/stripe";
+import { getStripe, TRIAL_DAYS } from "@/lib/stripe";
 
 export async function GET(request: Request) {
   const sessionId = new URL(request.url).searchParams.get("session_id");
@@ -13,13 +13,26 @@ export async function GET(request: Request) {
   }
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const paid = session.payment_status === "paid" || session.status === "complete";
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["subscription"],
+    });
+    const subscription =
+      typeof session.subscription === "object" && session.subscription !== null
+        ? session.subscription
+        : null;
+    const trialing = subscription?.status === "trialing";
+    const paid =
+      trialing ||
+      session.payment_status === "paid" ||
+      session.payment_status === "no_payment_required" ||
+      session.status === "complete";
 
     return NextResponse.json({
       ok: paid,
+      trialing,
+      trialDays: trialing ? TRIAL_DAYS : undefined,
       email: session.customer_details?.email ?? session.customer_email,
-      subscriptionId: session.subscription,
+      subscriptionId: subscription?.id ?? session.subscription,
     });
   } catch {
     return NextResponse.json({ ok: false, error: "Invalid session" }, { status: 404 });

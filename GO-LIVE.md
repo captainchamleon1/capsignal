@@ -47,6 +47,7 @@ Or push to the connected Git branch and Vercel auto-deploys.
 | `NEXT_PUBLIC_GTM_ID` | `GTM-XXXXXXX` | Step 5 |
 | `NEXT_PUBLIC_META_PIXEL_ID` | `1234567890` | Step 6 |
 | `LEAD_WEBHOOK_URL` | your Zapier/Slack/Formspree URL | so leads reach your inbox |
+| `RESEND_API_KEY` | `re_...` | lead emails + visitor session reports (same key) |
 
 **Stripe (Step 4b):** In [Stripe Dashboard](https://dashboard.stripe.com) → **Product catalog** → add product **CapSignal** at **$99.99/month** recurring. Copy the **Price ID** (`price_...`) into `STRIPE_PRICE_CAPSIGNAL`. Copy **Secret key** from Developers → API keys into `STRIPE_SECRET_KEY`. Use **test keys** first (`sk_test_`, test mode price); switch to live when ready.
 
@@ -90,6 +91,48 @@ Site fires `fbq('track', 'Lead')` on submit and `PageView` on load — **[done]*
 https://getcapsignal.com/start?utm_source=google&utm_medium=cpc&utm_campaign={campaign}&utm_content={creative}
 https://getcapsignal.com/start?utm_source=meta&utm_medium=paid_social&utm_campaign={campaign}&utm_content={creative}
 ```
+
+---
+
+## 8. Visitor analytics — friction & conversion — **[done in code]**
+
+The site logs every page view, click, scroll milestone, and funnel step during a visit. When the visitor **closes the tab or leaves the site**, a full session report is emailed via **Resend**.
+
+### What you get
+
+| Signal | Where to see it |
+|--------|-----------------|
+| **End-of-session email** | Same `RESEND_API_KEY` + `LEAD_NOTIFY_EMAIL` as leads — full event timeline when they close the tab |
+| **Clicks & scroll heatmaps** | [Microsoft Clarity](https://clarity.microsoft.com) (free) → `NEXT_PUBLIC_CLARITY_ID` |
+| **Funnel drop-off** | GTM → GA4, or read the session emails |
+| **Session recordings** | Clarity — watch exactly where users stall |
+
+### Events logged (and included in the email)
+
+| Event | When |
+|-------|------|
+| `session_start` | Tab opened |
+| `page_view` | Every route change |
+| `click` | Any link or button click |
+| `scroll_depth` | 25 / 50 / 75 / 100% on each page |
+| `funnel_step_view` | Onboarding wizard step shown (steps 1–6) |
+| `funnel_step_complete` | User clicks Continue on a wizard step |
+| `funnel_milestone` | `match_scan_start`, `match_preview_open`, `plan_view`, `checkout_view`, `checkout_start`, `checkout_success`, `trial_start` |
+| `generate_lead` | Profile submitted (existing) |
+
+Email subject line summarizes how far they got, e.g. `Visitor session — Saw investor matches (/start)`.
+
+### Setup (≈10 min)
+
+**[you]:**
+
+1. **Already wired:** Visitor reports use your existing `RESEND_API_KEY` and `LEAD_NOTIFY_EMAIL` — same inbox as leads. Deploy latest `master`, then test.
+
+2. **Test:** Incognito → browse the site → **close the tab** (not just navigate away within the site). One email with the full event log should arrive within seconds.
+
+3. **Clarity (optional):** clarity.microsoft.com → Project ID → `NEXT_PUBLIC_CLARITY_ID` for heatmaps and recordings.
+
+4. **Find friction:** Sort emails by subject — sessions that stop at `Onboarding step 3/6` or `Viewed plan` without checkout are your drop-off points. Cross-check with Clarity recordings.
 
 ---
 

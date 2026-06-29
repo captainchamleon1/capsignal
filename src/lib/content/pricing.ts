@@ -47,6 +47,10 @@ export const pricingFaqs = [
     a: "If you don't find at least 5 active, highly matched investors for your exact startup stage within your first 48 hours, email hello@getcapsignal.com and we'll refund your subscription instantly. No questions asked.",
   },
   {
+    q: "Is there a free trial?",
+    a: "Yes — start with a 7-day free trial at checkout. Your card is saved but you won't be charged until the trial ends. Cancel anytime before then.",
+  },
+  {
     q: "What payment methods do you accept?",
     a: "Credit card and ACH, billed monthly. Cancel anytime from your account settings.",
   },

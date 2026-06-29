@@ -6,7 +6,13 @@ import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { submitLead } from "@/lib/leads/submit";
 import { getStoredUtm } from "@/lib/analytics/utm";
-import { trackLeadConversion } from "@/lib/analytics";
+import {
+  trackFunnelMilestone,
+  trackFunnelStepComplete,
+  trackFunnelStepView,
+  trackLeadConversion,
+} from "@/lib/analytics";
+import { FUNNELS, onboardingStepKey } from "@/lib/analytics/funnel";
 import type { MatchPreview } from "@/lib/leads/match-types";
 import type { LeadPayload } from "@/lib/leads/types";
 import { MatchPreviewModal } from "@/components/forms/match-preview-modal";
@@ -31,6 +37,7 @@ import {
   roleOptions,
   segmentOptions,
 } from "@/lib/content/onboarding";
+import { selfServePricing } from "@/lib/content/guarantee";
 import {
   industryLabelToKey,
   keyToSectorLabel,
@@ -125,6 +132,13 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
   const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
+    const stepKey = onboardingStepKey(step);
+    if (stepKey) {
+      trackFunnelStepView(FUNNELS.onboarding, step, stepKey);
+    }
+  }, [step]);
+
+  useEffect(() => {
     const sectorKey = searchParams.get("sector");
     const stageKey = searchParams.get("stage");
     if (sectorKey && keyToSectorLabel[sectorKey]) {
@@ -166,8 +180,8 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
       }
     }
     if (step === 3) {
-      if (!data.segment || data.businessDescription.trim().length < 40) {
-        setError("Select a segment and write at least 2–3 sentences about your business.");
+      if (!data.segment) {
+        setError("Select a customer segment to continue.");
         return false;
       }
     }
@@ -188,6 +202,14 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
 
   function goNext() {
     if (!validateStep()) return;
+
+    const stepKey = onboardingStepKey(step);
+    if (stepKey) {
+      trackFunnelStepComplete(FUNNELS.onboarding, step, stepKey, {
+        skipped_description: step === 3 && !data.businessDescription.trim() ? true : undefined,
+      });
+    }
+
     if (step < TOTAL_STEPS) {
       goToStep(step + 1);
       return;
@@ -195,10 +217,25 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
     openPreview();
   }
 
+  function skipBusinessDescription() {
+    if (!data.segment) {
+      setError("Select a customer segment to continue.");
+      return;
+    }
+    setError(null);
+    trackFunnelStepComplete(FUNNELS.onboarding, 3, "business", { skipped_description: true });
+    goToStep(4);
+  }
+
   async function openPreview() {
     setModalOpen(true);
     setModalLoading(true);
     setPreview(null);
+    trackFunnelMilestone("match_scan_start", {
+      company: data.company,
+      sector: data.sector,
+      stage: data.stage,
+    });
 
     const stage = stageToKey[data.stage] ?? "seed";
     const sector = industryLabelToKey(data.sector);
@@ -252,6 +289,9 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
               }),
             ),
           });
+          trackFunnelMilestone("match_preview_open", {
+            matchCount: api.estimatedMatches ?? api.totalMatches ?? 0,
+          });
           setModalLoading(false);
           return;
         }
@@ -264,6 +304,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
               ? "Investor database is loading. We'll build your shortlist manually from your profile."
               : "No strong automated matches yet. Our team will review your profile and curate a shortlist.",
         });
+        trackFunnelMilestone("match_preview_open", { matchCount: 0, empty: true });
         setModalLoading(false);
         return;
       }
@@ -359,7 +400,12 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
     {
       label: "Business",
       step: 3,
-      rows: [[data.segment], [data.businessDescription.slice(0, 120) + (data.businessDescription.length > 120 ? "…" : "")]],
+      rows: [
+        [data.segment],
+        data.businessDescription.trim()
+          ? [data.businessDescription.slice(0, 120) + (data.businessDescription.length > 120 ? "…" : "")]
+          : ["Skipped — add later in your profile"],
+      ],
     },
     {
       label: "Track record",
@@ -518,20 +564,28 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                   <div>
                     <div className="mb-2 flex items-end justify-between gap-4">
                       <label htmlFor="wiz-desc" className={labelClass}>
-                        Describe your business
+                        Describe your business{" "}
+                        <span className="font-normal text-text-tertiary">(optional)</span>
                       </label>
-                      <span
-                        className={cn(
-                          "font-mono text-[10px] uppercase tracking-wider",
-                          descQuality === "strong"
-                            ? "text-brand"
+                      {descLen > 0 && (
+                        <span
+                          className={cn(
+                            "font-mono text-[10px] uppercase tracking-wider",
+                            descQuality === "strong"
+                              ? "text-brand"
+                              : descQuality === "good"
+                                ? "text-text-secondary"
+                                : "text-text-tertiary",
+                          )}
+                        >
+                          {descLen} chars ·{" "}
+                          {descQuality === "strong"
+                            ? "Strong"
                             : descQuality === "good"
-                              ? "text-text-secondary"
-                              : "text-text-tertiary",
-                        )}
-                      >
-                        {descLen} chars · {descQuality === "strong" ? "Strong" : descQuality === "good" ? "Good" : "Add detail"}
-                      </span>
+                              ? "Good"
+                              : "Add detail"}
+                        </span>
+                      )}
                     </div>
                     <textarea
                       id="wiz-desc"
@@ -542,9 +596,16 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                       rows={6}
                     />
                     <p className={hintClass}>
-                      Include what you sell, who buys, traction metrics, and why now. This drives
-                      thesis matching and outreach copy.
+                      Include what you sell, who buys, traction metrics, and why now — or skip and
+                      add this later in your profile.
                     </p>
+                    <button
+                      type="button"
+                      onClick={skipBusinessDescription}
+                      className="mt-3 text-sm text-text-secondary underline-offset-2 hover:text-text-primary hover:underline"
+                    >
+                      Skip for now — I&apos;ll add this later
+                    </button>
                   </div>
                 </>
               )}
@@ -751,7 +812,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
             setModalLoading(false);
           }}
           onConfirm={handleConfirm}
-          confirmLabel="Unlock contact details"
+          confirmLabel={selfServePricing.cta}
           profileSummary={{
             name: data.name,
             company: data.company,

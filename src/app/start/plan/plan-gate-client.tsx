@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { selfServePricing } from "@/lib/content/guarantee";
+import { trackFunnelMilestone } from "@/lib/analytics";
 import { GuaranteeLine } from "@/components/ui/guarantee-line";
 import { capsignalPlan } from "@/lib/content/pricing";
 import { loadRaiseProfile, type RaiseProfileDraft } from "@/lib/raise-profile";
@@ -24,6 +25,10 @@ export function PlanGateClient() {
     }
     setProfile(saved);
     setReady(true);
+    trackFunnelMilestone("plan_view", {
+      company: saved.company,
+      matchCount: saved.matchCount,
+    });
   }, [router]);
 
   if (!ready || !profile) {
@@ -76,13 +81,18 @@ export function PlanGateClient() {
           </div>
 
           <div className="mt-8 text-center">
-            <div className="flex items-baseline justify-center gap-2">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
+              {selfServePricing.trialLabel}
+            </p>
+            <div className="mt-2 flex items-baseline justify-center gap-2">
               <span className="font-mono text-3xl font-medium tabular-nums text-text-primary">
-                {capsignalPlan.price}
+                $0
               </span>
-              <span className="text-sm text-text-tertiary">/mo</span>
+              <span className="text-sm text-text-tertiary">today</span>
             </div>
-            <p className="mt-1 text-xs text-text-tertiary">Cancel anytime</p>
+            <p className="mt-2 text-sm text-text-secondary">
+              then {capsignalPlan.price}/mo · cancel anytime
+            </p>
 
             <Button
               variant="primary"

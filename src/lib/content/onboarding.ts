@@ -32,7 +32,8 @@ export const onboardingSteps = [
     key: "business",
     label: "Business",
     title: "Describe what you're building",
-    subtitle: "This is the most important step — it powers thesis matching and personalized outreach copy.",
+    subtitle:
+      "Pick your customer segment now — add a business description if you want sharper thesis matching and outreach copy.",
     why: "Generic blasts get ignored. Specific thesis hooks get replies.",
     eta: "1 min",
   },
@@ -121,8 +122,8 @@ export const unlockMilestones = [
 export const planNextSteps = [
   {
     step: "01",
-    title: "Subscribe & create account",
-    body: "Instant access to verified contacts, CRM, and data room.",
+    title: "Start your free trial & create account",
+    body: "7 days free, then $99.99/mo. Instant access to verified contacts, CRM, and data room.",
   },
   {
     step: "02",

@@ -11,6 +11,8 @@ export const selfServePricing = {
   price: "$99.99",
   priceFull: "$99.99",
   period: "per month",
-  cta: "Unlock contact details",
-  ctaShort: "Unlock contacts",
+  trialDays: 7,
+  trialLabel: "7-day free trial",
+  cta: "Start 7-day free trial",
+  ctaShort: "Start free trial",
 } as const;

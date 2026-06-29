@@ -2,6 +2,8 @@ import Stripe from "stripe";
 
 export type CheckoutPlan = "capsignal";
 
+export const TRIAL_DAYS = 7;
+
 export const planDetails: Record<
   CheckoutPlan,
   { name: string; amountCents: number; description: string }
