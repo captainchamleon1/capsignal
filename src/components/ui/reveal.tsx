@@ -16,10 +16,10 @@ type RevealProps = {
 };
 
 const hiddenTransforms: Record<RevealDirection, string> = {
-  up: "translate-y-8",
-  down: "-translate-y-8",
-  left: "translate-x-10",
-  right: "-translate-x-10",
+  up: "translate-y-8 max-md:translate-x-0",
+  down: "-translate-y-8 max-md:translate-x-0",
+  left: "translate-x-4 md:translate-x-10",
+  right: "-translate-x-4 md:-translate-x-10",
   scale: "scale-[0.96]",
   none: "",
 };
@@ -68,7 +68,7 @@ export function Reveal({
     <div
       ref={ref}
       className={cn(
-        "transition-[opacity,transform,filter] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,transform]",
+        "min-w-0 max-w-full overflow-x-clip transition-[opacity,transform,filter] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[opacity,transform]",
         inView ? "translate-x-0 translate-y-0 scale-100 opacity-100 blur-0" : cn("opacity-0", hiddenTransforms[direction], blur && "blur-[6px]"),
         className,
       )}

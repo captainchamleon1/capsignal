@@ -21,8 +21,7 @@ export function ScrollProgress() {
 
   return (
     <div
-      className="pointer-events-none fixed top-1 left-0 z-[60] h-0.5 bg-brand/20"
-      style={{ width: "100vw" }}
+      className="pointer-events-none fixed inset-x-0 top-1 z-[60] h-0.5 w-full bg-brand/20"
       aria-hidden="true"
     >
       <div

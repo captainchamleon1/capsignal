@@ -17,7 +17,7 @@ const indices = ["01", "02", "03"];
 
 export function ProductStory() {
   return (
-    <section id="product" className="bg-surface-elevated hairline-y">
+    <section id="product" className="overflow-x-clip bg-surface-elevated hairline-y">
       {productModules.map((mod, i) => {
         const Preview = previews[mod.id as keyof typeof previews];
         const reversed = i % 2 === 1;
@@ -38,7 +38,7 @@ export function ProductStory() {
 
             <Container>
               <div
-                className={`grid items-start gap-12 lg:grid-cols-2 lg:gap-20 ${
+                className={`grid min-w-0 items-start gap-12 lg:grid-cols-2 lg:gap-20 ${
                   reversed ? "lg:[direction:rtl]" : ""
                 }`}
               >
@@ -48,7 +48,7 @@ export function ProductStory() {
                 >
                   <div className="lg:sticky lg:top-28 lg:pb-8">
                     <SectionLabel index={indices[i]} title={mod.title} />
-                    <h2 className="display-serif mt-6 text-balance text-3xl font-semibold text-text-primary md:text-[2.5rem]">
+                    <h2 className="display-serif mt-6 text-balance break-safe text-3xl font-semibold text-text-primary md:text-[2.5rem]">
                       {mod.headline}
                     </h2>
                     <p className="mt-5 text-[16px] leading-[1.7] text-text-secondary">

@@ -69,7 +69,7 @@ export function Navbar() {
       )}
     >
       <Container>
-        <nav className="relative flex h-14 min-h-[56px] items-center justify-between sm:h-16">
+        <nav className="relative flex h-14 min-h-[56px] min-w-0 items-center justify-between sm:h-16">
           <Logo />
 
           <div className="hidden items-center gap-7 lg:flex">

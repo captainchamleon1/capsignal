@@ -5,9 +5,9 @@ import { onboardingMeta } from "@/lib/content/onboarding";
 
 export function LpShell({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="min-w-0 max-w-full overflow-x-clip">
       <header className="sticky top-0 z-50 border-b border-border bg-surface-page/95 pt-safe backdrop-blur-sm">
-        <div className="mx-auto flex h-14 max-w-(--width-wide) items-center justify-between gap-3 px-4 sm:px-6 md:px-10">
+        <div className="mx-auto flex h-14 max-w-(--width-wide) min-w-0 items-center justify-between gap-3 px-4 sm:px-6 md:px-10">
           <Logo />
           <div className="flex items-center gap-4">
             <span className="hidden font-mono text-[10px] uppercase tracking-wider text-text-tertiary sm:inline">
@@ -36,6 +36,6 @@ export function LpShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }

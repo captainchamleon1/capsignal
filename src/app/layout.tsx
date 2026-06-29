@@ -55,7 +55,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full font-sans">
+      <body className="min-h-full max-w-full overflow-x-clip font-sans antialiased">
         <AnalyticsScripts />
         <Suspense fallback={null}>
           <UtmCapture />

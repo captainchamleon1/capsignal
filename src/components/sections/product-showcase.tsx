@@ -69,8 +69,8 @@ export function ProductShowcase({ className }: ProductShowcaseProps) {
       role="tablist"
       aria-label="Product views"
     >
-      <div className="flex items-center justify-between border-b border-border px-4 py-3 md:px-6">
-        <div className="flex gap-0">
+      <div className="flex min-w-0 items-center justify-between gap-2 border-b border-border px-3 py-3 sm:px-4 md:px-6">
+        <div className="flex min-w-0 flex-1 gap-0 overflow-x-auto [-webkit-overflow-scrolling:touch]">
           {views.map((view, i) => (
             <button
               key={view.id}
@@ -79,7 +79,7 @@ export function ProductShowcase({ className }: ProductShowcaseProps) {
               aria-selected={active === view.id}
               onClick={() => select(view.id)}
               className={cn(
-                "relative px-3 py-1.5 text-[13px] transition-colors md:px-4",
+                "relative shrink-0 px-2.5 py-1.5 text-[12px] transition-colors sm:px-3 sm:text-[13px] md:px-4",
                 active === view.id
                   ? "font-medium text-text-primary"
                   : "text-text-tertiary hover:text-text-secondary",
@@ -96,7 +96,7 @@ export function ProductShowcase({ className }: ProductShowcaseProps) {
           ))}
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex shrink-0 items-center gap-2 pl-2">
           <span
             className="h-1.5 w-1.5 rounded-full bg-emerald-500"
             style={{ animation: "pulse-dot 2s ease-in-out infinite" }}

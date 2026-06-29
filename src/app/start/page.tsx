@@ -43,7 +43,7 @@ export default function StartPage() {
             </p>
           </Reveal>
 
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-16 xl:grid-cols-[minmax(0,380px)_1fr]">
+          <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-16 xl:grid-cols-[minmax(0,380px)_1fr]">
             <Reveal direction="up" className="hidden lg:block">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-brand">
                 Raise profile · {onboardingMeta.timeEstimate}
@@ -95,10 +95,10 @@ export default function StartPage() {
               </ul>
             </Reveal>
 
-            <Reveal delay={100} direction="left">
+            <Reveal delay={100} direction="left" className="min-w-0">
               <div
                 id="apply"
-                className="scroll-mt-20 border border-border bg-surface-elevated p-4 shadow-[0_32px_100px_-32px_rgba(0,0,0,0.15)] sm:p-6 md:scroll-mt-24 lg:p-10"
+                className="min-w-0 scroll-mt-20 border border-border bg-surface-elevated p-4 shadow-[0_32px_100px_-32px_rgba(0,0,0,0.15)] sm:p-6 md:scroll-mt-24 lg:p-10"
               >
                 <LeadWizardWithParams source="lp-start" id="apply-form" />
               </div>

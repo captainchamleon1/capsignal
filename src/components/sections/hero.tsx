@@ -10,7 +10,7 @@ export function Hero() {
   return (
     <section className="relative overflow-hidden pt-safe pb-0 md:pt-20">
       <Container wide>
-        <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
+        <div className="grid min-w-0 gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-16">
           <Reveal direction="up">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-tertiary">
               Built to get you investors
@@ -63,8 +63,8 @@ export function Hero() {
         </div>
       </Container>
 
-      <Reveal delay={200} direction="scale" blur className="mt-10 md:mt-16">
-        <div className="bleed-x border-y border-border bg-surface-elevated">
+      <Reveal delay={200} direction="scale" blur className="mt-10 min-w-0 md:mt-16">
+        <div className="w-full border-y border-border bg-surface-elevated">
           <Container wide className="py-1">
             <ProductShowcase className="border-0" />
           </Container>

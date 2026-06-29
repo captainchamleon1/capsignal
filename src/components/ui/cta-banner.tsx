@@ -25,11 +25,11 @@ export function CtaBanner({
             </h2>
             <p className="mt-3 text-[15px] leading-relaxed text-text-secondary">{description}</p>
           </div>
-          <div className="flex shrink-0 flex-wrap items-center gap-4">
+          <div className="flex min-w-0 shrink-0 flex-wrap items-center gap-4">
             <Button variant="primary" href="/request-access">
               Request access
             </Button>
-            <TextLink href={`mailto:${siteConfig.email}`} className="text-text-tertiary">
+            <TextLink href={`mailto:${siteConfig.email}`} className="break-safe text-text-tertiary">
               {siteConfig.email}
             </TextLink>
           </div>

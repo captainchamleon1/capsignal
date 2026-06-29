@@ -83,7 +83,7 @@ export function OutcomeBand() {
   }, [activeId]);
 
   return (
-    <section className="py-(--spacing-section-sm)">
+    <section className="overflow-x-clip py-(--spacing-section-sm)">
       <Container>
         <Reveal>
           <div className="max-w-2xl">

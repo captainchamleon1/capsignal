@@ -77,11 +77,9 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-  }
-
-  html {
     -webkit-text-size-adjust: 100%;
     touch-action: manipulation;
+    overflow-x: clip;
   }
 
   body {
@@ -93,6 +91,22 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    overflow-x: clip;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* Prevent flex/grid children from forcing horizontal page scroll */
+  main {
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  img,
+  video,
+  svg {
+    max-width: 100%;
   }
 
   ::selection {
@@ -129,6 +143,11 @@
     text-wrap: balance;
   }
 
+  .break-safe {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
   .display-tight {
     letter-spacing: -0.038em;
     line-height: 1.02;
@@ -143,11 +162,10 @@
     box-shadow: inset 0 -1px 0 0 var(--border);
   }
 
+  /* Full-bleed band without 100vw (avoids iOS horizontal scroll) */
   .bleed-x {
-    width: 100vw;
-    max-width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
+    width: 100%;
+    max-width: 100%;
   }
 
   .link-hover {
@@ -408,6 +426,13 @@
   }
   .reveal-stagger-visible .reveal-stagger-item:nth-child(8) {
     transition-delay: calc(var(--stagger, 90ms) * 7);
+  }
+
+  @media (max-width: 768px) {
+    .reveal-stagger[data-direction="left"] .reveal-stagger-item,
+    .reveal-stagger[data-direction="right"] .reveal-stagger-item {
+      transform: translateY(1.25rem);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

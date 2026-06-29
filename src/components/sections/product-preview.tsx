@@ -33,13 +33,13 @@ export function ProductPreview() {
 
   return (
     <div className="overflow-hidden rounded-none border-0 bg-surface-dark">
-      <div className="flex items-center justify-between border-b border-surface-dark-border px-4 py-3">
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-xs text-text-on-dark-muted">investor-database</span>
+      <div className="flex min-w-0 items-center justify-between gap-2 border-b border-surface-dark-border px-3 py-3 sm:px-4">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <span className="truncate font-mono text-[10px] text-text-on-dark-muted sm:text-xs">investor-database</span>
           <span className="hidden h-4 w-px bg-surface-dark-border sm:block" />
           <span className="hidden text-xs text-text-on-dark-muted sm:inline">Public source data</span>
         </div>
-        <div className="font-mono text-xs tabular-nums text-text-on-dark-muted">
+        <div className="shrink-0 font-mono text-[10px] tabular-nums text-text-on-dark-muted sm:text-xs">
           {loading ? "—" : `${displayTotal} firms`}
         </div>
       </div>

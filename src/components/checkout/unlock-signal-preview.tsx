@@ -68,8 +68,8 @@ function ContactsView() {
             </div>
             <span className="font-mono text-sm tabular-nums text-brand-gold">{row.score}</span>
           </div>
-          <div className="flex border-t border-surface-dark-border/80">
-            <div className="relative flex flex-1 items-center gap-1.5 border-r border-surface-dark-border/80 px-3 py-2">
+          <div className="flex flex-col border-t border-surface-dark-border/80 sm:flex-row">
+            <div className="relative flex min-w-0 flex-1 items-center gap-1.5 border-b border-surface-dark-border/80 px-3 py-2 sm:border-b-0 sm:border-r">
               <Mail className="h-3 w-3 shrink-0 text-text-on-dark-muted" aria-hidden="true" />
               <span
                 className={cn(
@@ -83,7 +83,7 @@ function ContactsView() {
                 <Lock className="ml-auto h-3 w-3 shrink-0 text-text-on-dark-muted" aria-hidden="true" />
               )}
             </div>
-            <div className="relative flex flex-1 items-center gap-1.5 px-3 py-2">
+            <div className="relative flex min-w-0 flex-1 items-center gap-1.5 px-3 py-2">
               <Link2 className="h-3 w-3 shrink-0 text-text-on-dark-muted" aria-hidden="true" />
               <span className="select-none blur-[3px] text-[10px] text-text-on-dark">████████</span>
               <Lock className="ml-auto h-3 w-3 shrink-0 text-text-on-dark-muted" aria-hidden="true" />
@@ -174,7 +174,7 @@ function DataRoomView() {
 function CrmView() {
   return (
     <div className="p-3">
-      <div className="grid grid-cols-4 gap-1.5">
+      <div className="grid min-w-0 grid-cols-2 gap-1.5 sm:grid-cols-4">
         {crmStages.map((col) => (
           <div
             key={col.stage}
@@ -241,12 +241,12 @@ export function UnlockSignalPreview({
 
   return (
     <div className={cn("overflow-hidden border border-border bg-surface-dark", className)}>
-      <div className="flex items-center justify-between border-b border-surface-dark-border px-4 py-2.5">
-        <span className="font-mono text-[10px] uppercase tracking-wider text-brand-gold">
+      <div className="flex min-w-0 items-center justify-between gap-2 border-b border-surface-dark-border px-3 py-2.5 sm:px-4">
+        <span className="shrink-0 font-mono text-[10px] uppercase tracking-wider text-brand-gold">
           Signal
         </span>
         {profileLabel && (
-          <span className="truncate font-mono text-[10px] text-text-on-dark-muted">
+          <span className="min-w-0 truncate text-right font-mono text-[10px] text-text-on-dark-muted">
             {profileLabel}
           </span>
         )}
@@ -257,7 +257,7 @@ export function UnlockSignalPreview({
       </div>
 
       <div
-        className="grid grid-cols-4 gap-0 border-t border-surface-dark-border"
+        className="grid min-w-0 grid-cols-2 gap-0 border-t border-surface-dark-border sm:grid-cols-4"
         role="tablist"
         aria-label="Included product areas"
       >
@@ -269,7 +269,7 @@ export function UnlockSignalPreview({
             aria-selected={active === view.id}
             onClick={() => setActive(view.id)}
             className={cn(
-              "py-2.5 font-mono text-[9px] uppercase tracking-wider transition-colors",
+              "min-w-0 px-1 py-2.5 font-mono text-[8px] uppercase tracking-wide transition-colors sm:text-[9px]",
               active === view.id
                 ? "bg-brand/20 text-brand-gold"
                 : "bg-transparent text-text-on-dark-muted hover:bg-white/5 hover:text-text-on-dark",

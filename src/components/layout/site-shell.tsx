@@ -5,12 +5,12 @@ import { ScrollProgress } from "@/components/ui/scroll-progress";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="min-w-0 max-w-full overflow-x-clip">
       <ScrollProgress />
       <Navbar />
       <main>{children}</main>
       <CtaBanner />
       <Footer />
-    </>
+    </div>
   );
 }

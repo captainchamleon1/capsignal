@@ -48,7 +48,7 @@ export function PlanGateClient() {
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
               Profile scored
             </p>
-            <h1 className="display-serif mt-3 text-2xl font-semibold text-text-primary md:text-3xl">
+            <h1 className="display-serif mt-3 break-safe text-balance text-2xl font-semibold text-text-primary md:text-3xl">
               {profile.company}
             </h1>
             {profile.matchCount ? (
