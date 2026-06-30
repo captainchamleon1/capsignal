@@ -122,9 +122,8 @@ export function detectDropOffLead(
       (e) => e.name === "funnel_step_complete" && Number(e.params?.step) >= 1,
     ) || step >= 2;
 
-  const emailCaptured =
-    Boolean(snapshot?.email?.trim()) &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(snapshot.email.trim());
+  const email = snapshot?.email?.trim() ?? "";
+  const emailCaptured = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   if (!completedStep1 && !emailCaptured) return null;
 

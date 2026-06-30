@@ -21,10 +21,11 @@ async function resend<T>(path: string): Promise<T> {
     headers: { Authorization: `Bearer ${KEY}`, "User-Agent": "capsignal-import/1" },
   });
   if (!res.ok) throw new Error(`${path} ${res.status}: ${await res.text()}`);
-  return res.json() as Promise<T>;
+  return (await res.json()) as T;
 }
 
-type ResendList = { data: { id: string; subject: string; created_at: string }[]; has_more: boolean };
+type ResendEmailSummary = { id: string; subject: string; created_at: string };
+type ResendList = { data: ResendEmailSummary[]; has_more: boolean };
 type ResendDetail = { id: string; subject: string; text?: string; created_at: string; reply_to?: string[] };
 
 function field(text: string, key: string): string | undefined {
@@ -127,7 +128,7 @@ function parseSessionText(text: string) {
     endedAt: new Date().toISOString(),
     durationMs,
     landingPath,
-    referrer,
+    referrer: referrer ?? "",
     utm: {},
     userAgent: field(text, "User agent") ?? "",
     events,
@@ -151,11 +152,11 @@ function parseSessionText(text: string) {
   };
 }
 
-async function fetchAllEmails() {
-  const all: ResendList["data"] = [];
+async function fetchAllEmails(): Promise<ResendEmailSummary[]> {
+  const all: ResendEmailSummary[] = [];
   let after: string | null = null;
   for (let page = 0; page < 50; page++) {
-    const data = await resend<ResendList>(
+    const data: ResendList = await resend(
       `/emails?limit=100${after ? `&after=${after}` : ""}`,
     );
     all.push(...(data.data ?? []));
