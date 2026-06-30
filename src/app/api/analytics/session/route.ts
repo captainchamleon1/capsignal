@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { detectDropOffLead } from "@/lib/analytics/dropoff";
+import { shouldExcludeSessionReport } from "@/lib/analytics/exclude-session";
+import { shouldEmailSessionReport } from "@/lib/analytics/google-ads-session";
 import type { SessionReport } from "@/lib/analytics/session-log";
 import { sendFounderDropOffEmail } from "@/lib/email/send-founder-dropoff";
 import { sendSessionReportEmail } from "@/lib/email/session-report-email";
@@ -62,6 +64,15 @@ export async function POST(request: Request) {
   const report = body.data as SessionReport & {
     wizardSnapshot?: z.infer<typeof wizardSnapshotSchema>;
   };
+
+  if (shouldExcludeSessionReport(report, request)) {
+    console.info(
+      "Visitor session report skipped (internal/bot):",
+      JSON.stringify({ sessionId: report.sessionId, landingPath: report.landingPath }),
+    );
+    return NextResponse.json({ ok: true, emailed: false, dropoffEmailed: false, excluded: true });
+  }
+
   const resendKey = process.env.RESEND_API_KEY ?? process.env.Resend;
 
   console.info(
@@ -79,15 +90,22 @@ export async function POST(request: Request) {
   let dropoffEmailed = false;
 
   if (resendKey) {
-    try {
-      const res = await sendSessionReportEmail(report, resendKey);
-      if (res.ok) {
-        sessionEmailed = true;
-      } else {
-        console.error("Session report email failed:", res.status, await res.text());
+    if (shouldEmailSessionReport(report)) {
+      try {
+        const res = await sendSessionReportEmail(report, resendKey);
+        if (res.ok) {
+          sessionEmailed = true;
+        } else {
+          console.error("Session report email failed:", res.status, await res.text());
+        }
+      } catch (err) {
+        console.error("Session report email error:", err);
       }
-    } catch (err) {
-      console.error("Session report email error:", err);
+    } else {
+      console.info(
+        "Visitor session report skipped (not Google Ads):",
+        JSON.stringify({ sessionId: report.sessionId, landingPath: report.landingPath }),
+      );
     }
 
     const dropOff = detectDropOffLead(report, report.wizardSnapshot ?? null);
@@ -146,5 +164,6 @@ export async function POST(request: Request) {
     ok: true,
     emailed: sessionEmailed,
     dropoffEmailed,
+    googleAds: shouldEmailSessionReport(report),
   });
 }

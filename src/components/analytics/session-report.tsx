@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { captureInternalBypassFromUrl } from "@/lib/analytics/internal-traffic";
 import {
   flushSessionReport,
   initSessionMeta,
@@ -30,6 +32,12 @@ function logClick(event: MouseEvent) {
 }
 
 export function SessionReport() {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    captureInternalBypassFromUrl(searchParams.toString());
+  }, [searchParams]);
+
   useEffect(() => {
     initSessionMeta();
 

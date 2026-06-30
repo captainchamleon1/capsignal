@@ -1,5 +1,9 @@
 import type { SessionReport } from "@/lib/analytics/session-log";
 
+function emailSubject(report: SessionReport, summary: string): string {
+  return `Google Ads: Visitor session: ${summary} (${report.landingPath})`;
+}
+
 function formatDuration(ms: number): string {
   const totalSec = Math.round(ms / 1000);
   if (totalSec < 60) return `${totalSec}s`;
@@ -90,7 +94,7 @@ ${utmLines.length > 0 ? `<tr><td style="padding:4px 0;color:#666;vertical-align:
 </body></html>`;
 
   return {
-    subject: `Visitor session: ${summary} (${report.landingPath})`,
+    subject: emailSubject(report, summary),
     text,
     html,
   };

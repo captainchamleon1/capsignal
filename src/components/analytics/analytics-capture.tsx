@@ -12,7 +12,9 @@ export function AnalyticsCapture() {
         <UtmCapture />
       </Suspense>
       <ScrollTracker />
-      <SessionReport />
+      <Suspense fallback={null}>
+        <SessionReport />
+      </Suspense>
     </>
   );
 }
