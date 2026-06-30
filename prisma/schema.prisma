@@ -428,6 +428,29 @@ model DocumentAccess {
   @@index([documentId])
 }
 
+// ─── Onboarding wizard progress (partial sessions) ───────────────────────────
+
+model WizardProgress {
+  id                 String    @id @default(cuid())
+  email              String    @unique
+  resumeToken        String    @unique @default(cuid())
+  step               Int       @default(1)
+  data               String    // JSON WizardProgressData
+  source             String?
+  utmSource          String?
+  utmMedium          String?
+  utmCampaign        String?
+  utmTerm            String?
+  utmContent         String?
+  earlyAlertSentAt   DateTime?
+  dropoffEmailSentAt DateTime?
+  submittedAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([resumeToken])
+}
+
 // ─── Marketing leads ─────────────────────────────────────────────────────────
 
 model Lead {

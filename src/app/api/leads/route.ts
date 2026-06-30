@@ -1,55 +1,14 @@
 import { NextResponse } from "next/server";
 import type { LeadPayload } from "@/lib/leads/types";
 import { db } from "@/lib/db";
+import { sendLeadNotificationEmail } from "@/lib/email/send-lead-emails";
+import { markWizardSubmitted } from "@/lib/wizard/progress-store";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 type Lead = LeadPayload & { submittedAt: string };
-
-function formatLeadText(lead: Lead) {
-  const rows: [string, unknown][] = [
-    ["Name", lead.name],
-    ["Email", lead.email],
-    ["Company", lead.company],
-    ["Stage", lead.stage],
-    ["Sector", lead.sector],
-    ["Target raise", lead.raise],
-    ["Message", lead.message],
-    ["Source", lead.source],
-    ["UTM source", lead.utm_source],
-    ["UTM medium", lead.utm_medium],
-    ["UTM campaign", lead.utm_campaign],
-    ["UTM content", lead.utm_content],
-    ["UTM term", lead.utm_term],
-    ["Submitted", lead.submittedAt],
-  ];
-  return rows
-    .filter(([, v]) => v != null && String(v).trim() !== "")
-    .map(([k, v]) => `${k}: ${v}`)
-    .join("\n");
-}
-
-async function sendViaResend(lead: Lead, apiKey: string) {
-  const to = process.env.LEAD_NOTIFY_EMAIL ?? "christianmyersss@gmail.com";
-  const from = process.env.LEAD_FROM_EMAIL ?? "CapSignal Leads <onboarding@resend.dev>";
-
-  return fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: [to],
-      reply_to: lead.email,
-      subject: `New lead: ${lead.name} — ${lead.company}`,
-      text: formatLeadText(lead),
-    }),
-  });
-}
 
 export async function POST(request: Request) {
   let body: LeadPayload;
@@ -84,7 +43,7 @@ export async function POST(request: Request) {
 
   if (resendKey) {
     try {
-      const res = await sendViaResend(lead, resendKey);
+      const res = await sendLeadNotificationEmail(lead, resendKey);
       if (!res.ok) {
         console.error("Resend failed:", res.status, await res.text());
         return NextResponse.json({ error: failMsg }, { status: 502 });
@@ -132,6 +91,12 @@ export async function POST(request: Request) {
     });
   } catch (err) {
     console.error("Lead persist error:", err);
+  }
+
+  try {
+    await markWizardSubmitted(lead.email);
+  } catch (err) {
+    console.error("Wizard progress mark submitted error:", err);
   }
 
   return NextResponse.json({ ok: true });

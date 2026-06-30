@@ -1,5 +1,6 @@
 import { getAnalyticsSessionId } from "./session";
 import { getStoredUtm, type UtmParams } from "./utm";
+import { readWizardSnapshot, snapshotForSession } from "./wizard-snapshot";
 
 const LOG_KEY = "cs_session_log";
 const META_KEY = "cs_session_meta";
@@ -119,7 +120,11 @@ export function flushSessionReport() {
 
   markSessionReportSent();
 
-  const body = JSON.stringify(report);
+  const snapshot = snapshotForSession(readWizardSnapshot());
+  const body = JSON.stringify({
+    ...report,
+    wizardSnapshot: snapshot ?? undefined,
+  });
   const blob = new Blob([body], { type: "application/json" });
 
   if (navigator.sendBeacon?.("/api/analytics/session", blob)) return;

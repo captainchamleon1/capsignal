@@ -46,7 +46,7 @@ export function buildSessionReportEmail(report: SessionReport) {
     .map(([k, v]) => `${k}: ${v}`);
 
   const text = [
-    `Visitor session — ${summary}`,
+    `Visitor session: ${summary}`,
     "",
     `Session: ${report.sessionId}`,
     `Duration: ${formatDuration(report.durationMs)}`,
@@ -73,7 +73,7 @@ export function buildSessionReportEmail(report: SessionReport) {
     .join("");
 
   const html = `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;color:#111;max-width:640px">
-<h2 style="margin:0 0 4px">Visitor session — ${escapeHtml(summary)}</h2>
+<h2 style="margin:0 0 4px">Visitor session: ${escapeHtml(summary)}</h2>
 <p style="margin:0 0 16px;color:#666">${report.events.length} events · ${formatDuration(report.durationMs)} · landed ${escapeHtml(report.landingPath)}</p>
 <table style="border-collapse:collapse;width:100%;margin-bottom:16px">
 <tr><td style="padding:4px 0;color:#666">Session</td><td style="padding:4px 0"><code>${escapeHtml(report.sessionId)}</code></td></tr>
@@ -90,7 +90,7 @@ ${utmLines.length > 0 ? `<tr><td style="padding:4px 0;color:#666;vertical-align:
 </body></html>`;
 
   return {
-    subject: `Visitor session — ${summary} (${report.landingPath})`,
+    subject: `Visitor session: ${summary} (${report.landingPath})`,
     text,
     html,
   };

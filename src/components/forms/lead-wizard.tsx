@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Pencil } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ import {
   trackFunnelStepView,
   trackLeadConversion,
 } from "@/lib/analytics";
+import { clearWizardSnapshot } from "@/lib/analytics/wizard-snapshot";
 import { FUNNELS, onboardingStepKey } from "@/lib/analytics/funnel";
 import type { MatchPreview } from "@/lib/leads/match-types";
 import type { LeadPayload } from "@/lib/leads/types";
@@ -45,6 +46,8 @@ import {
   saveRaiseProfile,
   stageToKey,
 } from "@/lib/raise-profile";
+import { loadWizardProgress, syncWizardProgress } from "@/lib/wizard/sync-progress";
+import type { WizardProgressData } from "@/lib/wizard/types";
 
 const stages = ["Pre-seed", "Seed", "Series A", "Series B"] as const;
 const tractionOptions = [
@@ -54,10 +57,10 @@ const tractionOptions = [
   "$200K+ MRR",
   "Profitable / bootstrapped",
 ] as const;
-const timelineOptions = ["ASAP — round open now", "Next 30 days", "1–3 months", "Exploring options"] as const;
+const timelineOptions = ["ASAP: round open now", "Next 30 days", "1–3 months", "Exploring options"] as const;
 const raiseOptions = ["$500K–$1.5M", "$1.5M–$3M", "$3M–$6M", "$6M–$15M", "$15M+"] as const;
 const priorFundingOptions = [
-  "None — first institutional raise",
+  "None (first institutional raise)",
   "Friends & family / angels (< $500K)",
   "$500K–$2M raised",
   "$2M–$10M raised",
@@ -65,31 +68,14 @@ const priorFundingOptions = [
 ] as const;
 const exitOptions = [
   "No prior exit",
-  "Yes — acquired",
-  "Yes — IPO",
-  "Yes — other liquidity event",
+  "Yes: acquired",
+  "Yes: IPO",
+  "Yes: other liquidity event",
 ] as const;
 
 const TOTAL_STEPS = onboardingMeta.stepsCount;
 
-type WizardData = {
-  name: string;
-  email: string;
-  role: string;
-  company: string;
-  city: string;
-  website: string;
-  sector: string;
-  segment: string;
-  businessDescription: string;
-  priorFunding: string;
-  hadExit: string;
-  stage: string;
-  raise: string;
-  traction: string;
-  timeline: string;
-  priorOutreach: string;
-};
+type WizardData = WizardProgressData;
 
 const emptyData: WizardData = {
   name: "",
@@ -130,6 +116,48 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
   const [submitting, setSubmitting] = useState(false);
   const [preview, setPreview] = useState<MatchPreview | null>(null);
   const [animating, setAnimating] = useState(false);
+  const [restoredSession, setRestoredSession] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function hydrate() {
+      const resumeToken = searchParams.get("resume");
+      const saved = await loadWizardProgress(resumeToken);
+      if (cancelled) return;
+
+      if (saved) {
+        setData(saved.data);
+        setStep(saved.step);
+        setRestoredSession(true);
+      }
+
+      setHydrated(true);
+    }
+
+    void hydrate();
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams]);
+
+  const persistLocally = useCallback(
+    (nextStep: number, nextData: WizardData) => {
+      if (!nextData.email.trim()) return;
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = setTimeout(() => {
+        void syncWizardProgress({ step: nextStep, data: nextData, source });
+      }, 400);
+    },
+    [source],
+  );
+
+  useEffect(() => {
+    if (!hydrated) return;
+    persistLocally(step, data);
+  }, [hydrated, step, data, persistLocally]);
 
   useEffect(() => {
     const stepKey = onboardingStepKey(step);
@@ -210,6 +238,14 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
       });
     }
 
+    const nextStep = step < TOTAL_STEPS ? step + 1 : step;
+    void syncWizardProgress({
+      step: nextStep,
+      data,
+      source,
+      triggerEarlyAlert: step === 1,
+    });
+
     if (step < TOTAL_STEPS) {
       goToStep(step + 1);
       return;
@@ -224,6 +260,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
     }
     setError(null);
     trackFunnelStepComplete(FUNNELS.onboarding, 3, "business", { skipped_description: true });
+    void syncWizardProgress({ step: 4, data, source });
     goToStep(4);
   }
 
@@ -316,7 +353,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
       setPreview({
         estimatedMatches: 0,
         topInvestors: [],
-        emptyMessage: "Could not score matches right now. Your profile is saved — we'll follow up within one business day.",
+        emptyMessage: "Could not score matches right now. Your profile is saved. We'll follow up within one business day.",
       });
       setModalLoading(false);
       return;
@@ -366,7 +403,15 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
 
     try {
       await submitLead(buildPayload());
-      trackLeadConversion({ source, ...getStoredUtm() });
+      trackLeadConversion({
+        source,
+        lead_name: data.name.trim(),
+        lead_email: data.email.trim().toLowerCase(),
+        lead_company: data.company.trim(),
+        lead_stage: data.stage,
+        lead_sector: data.sector,
+        ...getStoredUtm(),
+      });
 
       saveRaiseProfile({
         ...data,
@@ -376,6 +421,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
         source,
       });
 
+      clearWizardSnapshot();
       setModalOpen(false);
       window.location.href = "/start/plan";
     } catch (err) {
@@ -404,7 +450,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
         [data.segment],
         data.businessDescription.trim()
           ? [data.businessDescription.slice(0, 120) + (data.businessDescription.length > 120 ? "…" : "")]
-          : ["Skipped — add later in your profile"],
+          : ["Skipped. Add later in your profile"],
       ],
     },
     {
@@ -427,6 +473,11 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
     <>
       <div id={id} className="grid gap-8 lg:grid-cols-[1fr_280px] lg:gap-12">
         <div className="min-w-0 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-0">
+          {restoredSession ? (
+            <p className="mb-4 rounded-md border border-brand/20 bg-brand/5 px-3 py-2 text-sm text-text-secondary">
+              Welcome back. We saved your progress. Pick up where you left off.
+            </p>
+          ) : null}
           <WizardProgress step={step} />
           <MobileProfileStrip
             step={step}
@@ -523,7 +574,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                       autoComplete="address-level2"
                     />
                     <p className={hintClass}>
-                      We look for investors in your area first — local warm paths close faster.
+                      We look for investors in your area first. Local warm paths close faster.
                     </p>
                   </div>
                   <div>
@@ -596,7 +647,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                       rows={6}
                     />
                     <p className={hintClass}>
-                      Include what you sell, who buys, traction metrics, and why now — or skip and
+                      Include what you sell, who buys, traction metrics, and why now, or skip and
                       add this later in your profile.
                     </p>
                     <button
@@ -604,7 +655,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                       onClick={skipBusinessDescription}
                       className="mt-3 text-sm text-text-secondary underline-offset-2 hover:text-text-primary hover:underline"
                     >
-                      Skip for now — I&apos;ll add this later
+                      Skip for now. I&apos;ll add this later
                     </button>
                   </div>
                 </>
@@ -749,7 +800,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                   ))}
                   <p className="text-xs leading-relaxed text-text-tertiary">
                     By continuing, you confirm this information is accurate. We use it to score
-                    investors and draft outreach — inaccurate profiles produce weaker matches.
+                    investors and draft outreach. Inaccurate profiles produce weaker matches.
                   </p>
                 </div>
               )}
