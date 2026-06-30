@@ -1,7 +1,7 @@
 /** Site-wide positioning: CapSignal as the new default way to raise. */
 export const raiseMovement = {
   eyebrow: "The new way to raise",
-  heroHeadline: ["Raise capital.", "AI-native all-in-one platform."],
+  heroHeadline: ["Raise funding.", "AI-native all-in-one platform."],
   heroSubhead:
     "Stop juggling spreadsheets, stale investor lists, and $20K advisor retainers. Match VC funds and angels, run outreach from your inbox, and manage the full pipeline to term sheet — in one system built for raises.",
   oldWay: [

@@ -1,6 +1,6 @@
 export const heroContent = {
   eyebrow: "The new way to raise",
-  headline: ["Raise capital.", "AI-native all-in-one platform."],
+  headline: ["Raise funding.", "AI-native all-in-one platform."],
   subhead:
     "Stop juggling spreadsheets, stale lists, and $20K advisor retainers. Match VC funds and angels, run outreach from your inbox, and manage the full pipeline to term sheet — in one system built for raises.",
   cta: "Build your raise profile",
