@@ -1,4 +1,5 @@
 import { getAnalyticsSessionId } from "./session";
+import { shouldSkipSessionAnalytics } from "./internal-traffic";
 import { getStoredUtm, type UtmParams } from "./utm";
 
 const LOG_KEY = "cs_session_log";
@@ -42,6 +43,7 @@ function writeEvents(events: SessionEvent[]) {
 
 export function initSessionMeta() {
   if (typeof window === "undefined" || sessionStorage.getItem(META_KEY)) return;
+  if (shouldSkipSessionAnalytics()) return;
 
   sessionStorage.setItem(
     META_KEY,
@@ -68,6 +70,7 @@ export function initSessionMeta() {
 
 export function logSessionEvent(name: string, params?: Record<string, unknown>) {
   if (typeof window === "undefined") return;
+  if (shouldSkipSessionAnalytics()) return;
   initSessionMeta();
 
   const events = readEvents();
@@ -112,6 +115,7 @@ export function wasSessionReportSent() {
 }
 
 export function flushSessionReport() {
+  if (shouldSkipSessionAnalytics()) return;
   if (wasSessionReportSent()) return;
 
   const report = buildSessionReport();

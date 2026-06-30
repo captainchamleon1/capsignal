@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { shouldExcludeSessionReport } from "@/lib/analytics/exclude-session";
+import { shouldEmailSessionReport } from "@/lib/analytics/google-ads-session";
 import type { SessionReport } from "@/lib/analytics/session-log";
 import { sendSessionReportEmail } from "@/lib/email/session-report-email";
 
@@ -28,6 +30,23 @@ export async function POST(request: Request) {
   }
 
   const report = body.data as SessionReport;
+
+  if (shouldExcludeSessionReport(report, request)) {
+    console.info(
+      "Visitor session report skipped (internal/bot):",
+      JSON.stringify({ sessionId: report.sessionId, landingPath: report.landingPath }),
+    );
+    return NextResponse.json({ ok: true, emailed: false, excluded: true });
+  }
+
+  if (!shouldEmailSessionReport(report)) {
+    console.info(
+      "Visitor session report skipped (not Google Ads):",
+      JSON.stringify({ sessionId: report.sessionId, landingPath: report.landingPath }),
+    );
+    return NextResponse.json({ ok: true, emailed: false, googleAds: false });
+  }
+
   const resendKey = process.env.RESEND_API_KEY ?? process.env.Resend;
 
   console.info(
