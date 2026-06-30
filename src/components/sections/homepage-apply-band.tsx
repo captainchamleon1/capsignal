@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { lpProofStats } from "@/lib/content/lp";
 import { Container } from "@/components/ui/container";
 import { StartApplyButton } from "@/components/ui/start-apply-button";
+import { BookCallButton } from "@/components/book-call/book-call-button";
 import { Reveal } from "@/components/ui/reveal";
 import { Check } from "lucide-react";
 
@@ -21,11 +21,11 @@ export function HomepageApplyBand() {
                 Free raise profile · ~4 min
               </p>
               <h2 className="display-serif mt-4 text-balance text-2xl font-semibold text-text-primary md:text-3xl">
-                See your investor matches before any pricing
+                See your investor matches before you commit
               </h2>
               <p className="mt-4 text-[16px] leading-relaxed text-text-secondary">
-                Six quick steps. We score investors against your stage, sector, and check size —
-                then you choose a plan only if the shortlist looks right.
+                Six quick steps. We score VC funds and angels against your stage, sector, and check
+                size — you only subscribe if the shortlist looks right.
               </p>
 
               <ul className="mt-6 space-y-2">
@@ -60,12 +60,10 @@ export function HomepageApplyBand() {
               >
                 Build your raise profile
               </StartApplyButton>
-              <Link
-                href="/pricing"
-                className="text-center text-sm text-text-secondary hover:text-text-primary"
-              >
-                View pricing first →
-              </Link>
+              <BookCallButton variant="secondary" className="min-h-[48px] w-full" />
+              <p className="text-center text-xs text-text-tertiary">
+                Prefer to talk first? Book 15 minutes — no deck required.
+              </p>
             </div>
           </div>
         </Reveal>

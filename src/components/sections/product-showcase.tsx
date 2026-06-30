@@ -8,9 +8,9 @@ import { SequencesPreview } from "@/components/product/sequences-preview";
 import { AnalyticsPreview } from "@/components/product/analytics-preview";
 
 const views = [
-  { id: "investors", label: "Investors", caption: "Ranked shortlist with live match scores" },
-  { id: "sequences", label: "Sequences", caption: "Per-investor cadence from your domain" },
-  { id: "analytics", label: "CRM", caption: "Track interested investors and share diligence" },
+  { id: "investors", label: "Matching", caption: "Ranked shortlist with live match scores" },
+  { id: "sequences", label: "Outreach", caption: "Thesis-aware sequences from your domain" },
+  { id: "analytics", label: "CRM", caption: "Pipeline, funnel, and data room through close" },
 ] as const;
 
 type ViewId = (typeof views)[number]["id"];
@@ -35,7 +35,7 @@ export function ProductShowcase({ className }: ProductShowcaseProps) {
     window.setTimeout(() => {
       setActive(id);
       setTransitioning(false);
-    }, 150);
+    }, 180);
   }, [active]);
 
   useEffect(() => {
@@ -54,6 +54,16 @@ export function ProductShowcase({ className }: ProductShowcaseProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, [active, select]);
 
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActive((current) => {
+        const idx = views.findIndex((v) => v.id === current);
+        return views[(idx + 1) % views.length].id;
+      });
+    }, 8000);
+    return () => clearInterval(timer);
+  }, []);
+
   const current = views.find((v) => v.id === active)!;
   const Preview = previews[active];
   const { ref, inView } = useInView(0.15);
@@ -62,15 +72,15 @@ export function ProductShowcase({ className }: ProductShowcaseProps) {
     <div
       ref={ref}
       className={cn(
-        "overflow-hidden bg-surface-elevated transition-transform duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]",
-        inView ? "translate-y-0" : "translate-y-4",
+        "overflow-hidden border border-border bg-surface-page shadow-[0_32px_100px_-48px_rgba(0,0,0,0.45)] transition-all duration-1000 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        inView ? "translate-y-0 opacity-100" : "translate-y-6 opacity-90",
         className,
       )}
       role="tablist"
       aria-label="Product views"
     >
-      <div className="flex min-w-0 items-center justify-between gap-2 border-b border-border px-3 py-3 sm:px-4 md:px-6">
-        <div className="flex min-w-0 flex-1 gap-0 overflow-x-auto [-webkit-overflow-scrolling:touch]">
+      <div className="flex min-w-0 items-center justify-between gap-3 border-b border-border bg-surface-elevated px-3 py-3 sm:px-5 md:px-6">
+        <div className="flex min-w-0 flex-1 gap-1 overflow-x-auto [-webkit-overflow-scrolling:touch]">
           {views.map((view, i) => (
             <button
               key={view.id}
@@ -79,50 +89,42 @@ export function ProductShowcase({ className }: ProductShowcaseProps) {
               aria-selected={active === view.id}
               onClick={() => select(view.id)}
               className={cn(
-                "relative shrink-0 px-2.5 py-1.5 text-[12px] transition-colors sm:px-3 sm:text-[13px] md:px-4",
+                "relative shrink-0 px-3 py-2 font-mono text-[11px] uppercase tracking-wider transition-colors sm:px-4",
                 active === view.id
-                  ? "font-medium text-text-primary"
-                  : "text-text-tertiary hover:text-text-secondary",
+                  ? "bg-surface-dark text-text-on-dark"
+                  : "text-text-tertiary hover:bg-surface-muted hover:text-text-secondary",
               )}
             >
-              <span className="mr-1.5 hidden font-mono text-[10px] text-text-tertiary md:inline">
-                {i + 1}
-              </span>
+              <span className="mr-2 text-[9px] text-text-tertiary">{String(i + 1).padStart(2, "0")}</span>
               {view.label}
-              {active === view.id && (
-                <span className="absolute inset-x-3 -bottom-[13px] h-px bg-text-primary md:inset-x-4" />
-              )}
             </button>
           ))}
         </div>
 
-        <div className="flex shrink-0 items-center gap-2 pl-2">
-          <span
-            className="h-1.5 w-1.5 rounded-full bg-emerald-500"
-            style={{ animation: "pulse-dot 2s ease-in-out infinite" }}
-            aria-hidden="true"
-          />
-          <span className="hidden font-mono text-[10px] text-text-tertiary sm:inline">
-            investor-database
+        <span className="hidden shrink-0 items-center gap-2 sm:flex">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand opacity-30" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-brand" />
           </span>
-        </div>
+          <span className="font-mono text-[9px] uppercase tracking-wider text-text-tertiary">
+            Product preview
+          </span>
+        </span>
       </div>
 
       <div
         className={cn(
-          "transition-opacity duration-150 ease-out",
-          transitioning ? "opacity-0" : "opacity-100",
+          "transition-all duration-200 ease-out",
+          transitioning ? "scale-[0.995] opacity-0" : "scale-100 opacity-100",
         )}
         role="tabpanel"
       >
         <Preview />
       </div>
 
-      <div className="flex items-center justify-between border-t border-border px-4 py-2.5 md:px-6">
-        <p className="font-mono text-[11px] text-text-tertiary">{current.caption}</p>
-        <p className="hidden font-mono text-[10px] text-text-tertiary md:block">
-          ← → to switch
-        </p>
+      <div className="flex items-center justify-between border-t border-border bg-surface-elevated px-4 py-3 md:px-6">
+        <p className="font-mono text-[11px] text-text-secondary">{current.caption}</p>
+        <p className="hidden font-mono text-[10px] text-text-tertiary md:block">← → to switch</p>
       </div>
     </div>
   );

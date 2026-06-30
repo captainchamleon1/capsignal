@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/hero";
+import { RaiseMovementBand } from "@/components/sections/raise-movement-band";
 import { ProductStory } from "@/components/sections/product-story";
 import { ProcessBand } from "@/components/sections/process-band";
 import { HomepageApplyBand } from "@/components/sections/homepage-apply-band";
@@ -13,6 +14,7 @@ export default function Home() {
     <>
       <HomeAdsEntryWithParams />
       <Hero />
+      <RaiseMovementBand />
       <ProductStory />
       <ProcessBand />
       <HomepageApplyBand />

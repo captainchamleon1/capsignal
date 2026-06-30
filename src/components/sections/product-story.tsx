@@ -76,7 +76,7 @@ export function ProductStory() {
                   blur
                   className={reversed ? "lg:[direction:ltr]" : ""}
                 >
-                  <div className="border border-border bg-surface-page shadow-[0_24px_80px_-40px_rgba(0,0,0,0.35)]">
+                  <div className="overflow-hidden border border-border shadow-[0_32px_100px_-48px_rgba(0,0,0,0.4)]">
                     {Preview && <Preview />}
                   </div>
                 </Reveal>

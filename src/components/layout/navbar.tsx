@@ -9,6 +9,7 @@ import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { Logo } from "@/components/brand/logo";
+import { BookCallButton } from "@/components/book-call/book-call-button";
 
 function NavDropdown({
   label,
@@ -95,6 +96,7 @@ export function Navbar() {
             <Button variant="ghost" href="/login" className="hidden min-h-[44px] sm:inline-flex">
               Sign in
             </Button>
+            <BookCallButton variant="ghost" className="hidden min-h-[44px] lg:inline-flex" />
             <Button
               variant="primary"
               href="/start#apply"

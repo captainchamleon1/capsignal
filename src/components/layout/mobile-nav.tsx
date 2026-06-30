@@ -5,6 +5,7 @@ import Link from "next/link";
 import { mainNav } from "@/lib/content/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { BookCallButton } from "@/components/book-call/book-call-button";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -61,6 +62,7 @@ export function MobileNav() {
             <Button variant="ghost" href="/login" className="min-h-[48px] w-full">
               Sign in
             </Button>
+            <BookCallButton variant="secondary" className="min-h-[48px] w-full" />
             <Button variant="primary" href="/start#apply" className="min-h-[48px] w-full bg-brand border-brand hover:bg-brand/90">
               Get started
             </Button>
