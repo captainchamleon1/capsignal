@@ -12,6 +12,8 @@
     "lint": "eslint",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
+    "admin:create": "tsx scripts/create-admin.ts",
+    "admin:import-resend": "tsx scripts/import-resend-admin-data.ts",
     "data:ingest": "tsx scripts/ingest.ts",
     "data:bulk-import": "tsx scripts/ingest.ts --bulk",
     "data:signals": "tsx scripts/compute-signals.ts",

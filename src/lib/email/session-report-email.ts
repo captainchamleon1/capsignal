@@ -1,4 +1,5 @@
 import type { SessionReport } from "@/lib/analytics/session-log";
+import { sessionSummary } from "@/lib/analytics/session-summary";
 
 function emailSubject(report: SessionReport, summary: string): string {
   return `Google Ads: Visitor session: ${summary} (${report.landingPath})`;
@@ -21,26 +22,6 @@ function formatEventLine(event: SessionReport["events"][number], index: number):
         .join(", ")
     : "";
   return `${String(index + 1).padStart(2, "0")}. ${time}  ${event.name}${detail ? `  (${detail})` : ""}`;
-}
-
-function sessionSummary(report: SessionReport): string {
-  const milestones = report.events
-    .filter((e) => e.name === "funnel_milestone" || e.name === "generate_lead")
-    .map((e) => String(e.params?.milestone ?? e.name));
-
-  const maxStep = report.events
-    .filter((e) => e.name === "funnel_step_view")
-    .reduce((max, e) => Math.max(max, Number(e.params?.step) || 0), 0);
-
-  if (milestones.includes("trial_start")) return "Started trial";
-  if (milestones.includes("checkout_success")) return "Completed checkout";
-  if (milestones.includes("checkout_start")) return "Started checkout";
-  if (milestones.includes("checkout_view")) return "Viewed checkout";
-  if (milestones.includes("plan_view")) return "Viewed plan";
-  if (milestones.includes("match_preview_open")) return "Saw investor matches";
-  if (milestones.includes("generate_lead")) return "Submitted lead";
-  if (maxStep >= 1) return `Onboarding step ${maxStep}/6`;
-  return "Browsing only";
 }
 
 export function buildSessionReportEmail(report: SessionReport) {

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { outcomeScenarios } from "@/lib/content/home";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Container } from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
+import { StartApplyButton } from "@/components/ui/start-apply-button";
 import { Reveal, RevealStagger } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
 
@@ -195,13 +195,12 @@ export function OutcomeBand() {
             Manual costs you {scenario.manualHours} hours you could spend closing—CapSignal runs
             the outreach system while you take the meetings.
           </p>
-          <Button
+          <StartApplyButton
             variant="primary"
-            href="/start#apply"
             className="min-h-[48px] w-full shrink-0 bg-brand border-brand hover:bg-brand/90 md:w-auto"
           >
             Build your raise profile
-          </Button>
+          </StartApplyButton>
         </Reveal>
       </Container>
     </section>

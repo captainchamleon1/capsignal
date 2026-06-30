@@ -40,13 +40,20 @@ function secondsSinceLastEvent(report: SessionReport, eventName: string): number
   return Math.max(0, (ended - ts) / 1000);
 }
 
+function displayNameFromSnapshot(snapshot: SessionWizardSnapshot): string {
+  const name = snapshot.name?.trim();
+  if (name) return name;
+  const local = snapshot.email.trim().split("@")[0]?.replace(/[._+-]/g, " ").trim();
+  return local ? local.charAt(0).toUpperCase() + local.slice(1) : "Founder";
+}
+
 function leadFromSnapshot(snapshot: SessionWizardSnapshot | null | undefined): DropOffLead | null {
-  if (!snapshot?.email?.trim() || !snapshot.name?.trim()) return null;
+  if (!snapshot?.email?.trim()) return null;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(snapshot.email.trim())) return null;
 
   return {
     kind: "partial",
-    name: snapshot.name.trim(),
+    name: displayNameFromSnapshot(snapshot),
     email: snapshot.email.trim().toLowerCase(),
     company: snapshot.company?.trim() || "your company",
     step: snapshot.step,
@@ -110,13 +117,16 @@ export function detectDropOffLead(
   const partial = leadFromSnapshot(snapshot);
   if (!partial) return null;
 
-  // Need at least step 1 complete (name + email) to follow up.
   const completedStep1 =
     report.events.some(
       (e) => e.name === "funnel_step_complete" && Number(e.params?.step) >= 1,
     ) || step >= 2;
 
-  if (!completedStep1) return null;
+  const emailCaptured =
+    Boolean(snapshot?.email?.trim()) &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(snapshot.email.trim());
 
-  return { ...partial, kind: "partial", step };
+  if (!completedStep1 && !emailCaptured) return null;
+
+  return { ...partial, kind: "partial", step: Math.max(step, 1) };
 }

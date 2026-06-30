@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { markUserSubscribed } from "@/lib/auth/subscription";
 import { getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
@@ -41,6 +42,11 @@ export async function POST(request: Request) {
       stage: meta.stage,
       sector: meta.sector,
     });
+
+    const checkoutEmail = session.customer_details?.email ?? session.customer_email;
+    if (checkoutEmail) {
+      await markUserSubscribed(checkoutEmail, "active");
+    }
 
     const webhookUrl = process.env.LEAD_WEBHOOK_URL;
     if (webhookUrl) {

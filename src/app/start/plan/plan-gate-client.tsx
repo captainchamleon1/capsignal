@@ -2,19 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { selfServePricing } from "@/lib/content/guarantee";
 import { trackFunnelMilestone } from "@/lib/analytics";
-import { GuaranteeLine } from "@/components/ui/guarantee-line";
-import { capsignalPlan } from "@/lib/content/pricing";
-import { loadRaiseProfile, type RaiseProfileDraft } from "@/lib/raise-profile";
-import { formatInvestorCount } from "@/lib/match-display";
-import { UnlockSignalPreview } from "@/components/checkout/unlock-signal-preview";
-import { Container } from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
+import { logServerMilestone } from "@/lib/analytics/log-server-milestone";
+import { loadRaiseProfile } from "@/lib/raise-profile";
+import { PlanGateView } from "@/components/checkout/plan-gate-view";
 
 export function PlanGateClient() {
   const router = useRouter();
-  const [profile, setProfile] = useState<RaiseProfileDraft | null>(null);
+  const [profile, setProfile] = useState<ReturnType<typeof loadRaiseProfile>>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -29,6 +24,13 @@ export function PlanGateClient() {
       company: saved.company,
       matchCount: saved.matchCount,
     });
+    logServerMilestone("plan_view", {
+      pagePath: "/start/plan",
+      leadEmail: saved.email,
+      leadName: saved.name,
+      leadCompany: saved.company,
+      params: { matchCount: saved.matchCount },
+    });
   }, [router]);
 
   if (!ready || !profile) {
@@ -40,72 +42,5 @@ export function PlanGateClient() {
     );
   }
 
-  const checkoutParams = new URLSearchParams({
-    plan: selfServePricing.plan,
-    ...(profile.stageKey ? { stage: profile.stageKey } : {}),
-    ...(profile.sectorKey ? { sector: profile.sectorKey } : {}),
-  });
-
-  return (
-    <div className="border-b border-border bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,var(--brand-tint),transparent)]">
-      <Container wide className="px-4 py-8 pb-safe sm:px-5 md:py-(--spacing-section-sm)">
-        <div className="mx-auto max-w-lg">
-          <div className="text-center">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
-              Profile scored
-            </p>
-            <h1 className="display-serif mt-3 break-safe text-balance text-2xl font-semibold text-text-primary md:text-3xl">
-              {profile.company}
-            </h1>
-            {profile.matchCount ? (
-              <p className="mt-3 text-[15px] text-text-secondary">
-                <span className="font-medium text-text-primary">
-                  {formatInvestorCount(profile.matchCount)}
-                </span>{" "}
-                investors match · your top picks are ready
-              </p>
-            ) : (
-              <p className="mt-3 text-[15px] text-text-secondary">
-                Your shortlist is ready to unlock
-              </p>
-            )}
-          </div>
-
-          <div className="mt-8">
-            <UnlockSignalPreview
-              company={profile.company}
-              city={profile.city}
-              stage={profile.stage}
-              sector={profile.sector}
-            />
-          </div>
-
-          <div className="mt-8 text-center">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
-              {selfServePricing.trialLabel}
-            </p>
-            <div className="mt-2 flex items-baseline justify-center gap-2">
-              <span className="font-mono text-3xl font-medium tabular-nums text-text-primary">
-                $0
-              </span>
-              <span className="text-sm text-text-tertiary">today</span>
-            </div>
-            <p className="mt-2 text-sm text-text-secondary">
-              then {capsignalPlan.price}/mo · cancel anytime
-            </p>
-
-            <Button
-              variant="primary"
-              href={`/checkout?${checkoutParams.toString()}`}
-              className="mt-6 h-12 w-full bg-brand border-brand text-base hover:bg-brand/90"
-            >
-              {selfServePricing.cta}
-            </Button>
-
-            <GuaranteeLine className="mt-4" />
-          </div>
-        </div>
-      </Container>
-    </div>
-  );
+  return <PlanGateView profile={profile} />;
 }

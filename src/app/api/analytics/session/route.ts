@@ -7,6 +7,7 @@ import type { SessionReport } from "@/lib/analytics/session-log";
 import { sendFounderDropOffEmail } from "@/lib/email/send-founder-dropoff";
 import { sendSessionReportEmail } from "@/lib/email/session-report-email";
 import { getWizardProgressByEmail, markDropoffEmailSent, upsertWizardProgress } from "@/lib/wizard/progress-store";
+import { persistVisitorSession } from "@/lib/visitor-sessions/store";
 
 const wizardSnapshotSchema = z
   .object({
@@ -158,6 +159,17 @@ export async function POST(request: Request) {
     }
   } else {
     console.info("Session report events:", JSON.stringify(report.events));
+  }
+
+  try {
+    await persistVisitorSession({
+      report,
+      wizardSnapshot: report.wizardSnapshot ?? null,
+      sessionEmailed,
+      dropoffEmailed,
+    });
+  } catch (err) {
+    console.error("Visitor session persist error:", err);
   }
 
   return NextResponse.json({

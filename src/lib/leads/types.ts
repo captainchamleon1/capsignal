@@ -7,6 +7,7 @@ export type LeadPayload = {
   raise?: string;
   message?: string;
   source?: string;
+  sessionId?: string;
   utm_source?: string;
   utm_medium?: string;
   utm_campaign?: string;

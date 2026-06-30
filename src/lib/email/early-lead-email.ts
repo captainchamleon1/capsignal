@@ -10,7 +10,8 @@ export type EarlyLeadAlert = {
 };
 
 export function buildEarlyLeadAlertEmail(lead: EarlyLeadAlert) {
-  const subject = `Early lead: ${lead.name} (step ${lead.step}/6)`;
+  const label = lead.name.trim() || lead.email;
+  const subject = `Early lead: ${label} (step ${lead.step}/6)`;
 
   const detailRows: [string, string][] = [
     ["Name", lead.name],

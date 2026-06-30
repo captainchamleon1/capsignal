@@ -4,7 +4,8 @@ import { PlanGateClient } from "./plan-gate-client";
 
 export const metadata: Metadata = {
   title: "Choose your plan",
-  description: "Your raise profile is complete. Subscribe to unlock verified investor contacts.",
+  description:
+    "VC funds and angels matched to your raise — outreach, CRM, data room, and deck review. 7-day free trial.",
 };
 
 export default function StartPlanPage() {

@@ -3,13 +3,16 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { selfServePricing } from "@/lib/content/guarantee";
+import { buildRaiseBrief } from "@/lib/plan/raise-brief";
 import { trackFunnelMilestone } from "@/lib/analytics";
-import { GuaranteeLine } from "@/components/ui/guarantee-line";
+import { logServerMilestone } from "@/lib/analytics/log-server-milestone";
 import { loadRaiseProfile } from "@/lib/raise-profile";
-import { formatInvestorCount } from "@/lib/match-display";
 import { UnlockSignalPreview } from "@/components/checkout/unlock-signal-preview";
+import { PlanOfferStack } from "@/components/checkout/plan-offer-stack";
+import { PlanPricingCard } from "@/components/checkout/plan-pricing-card";
+import { PlanCampaignBrief } from "@/components/checkout/plan-campaign-brief";
+import { PlanMatchIntel } from "@/components/checkout/plan-match-intel";
 import { Container } from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
 
 export function CheckoutClient() {
   const searchParams = useSearchParams();
@@ -34,6 +37,12 @@ export function CheckoutClient() {
       company: saved.company,
       matchCount: saved.matchCount,
     });
+    logServerMilestone("checkout_view", {
+      pagePath: "/checkout",
+      leadEmail: saved.email,
+      leadName: saved.name,
+      leadCompany: saved.company,
+    });
   }, [router]);
 
   if (!ready || !profile) {
@@ -44,6 +53,7 @@ export function CheckoutClient() {
     );
   }
 
+  const brief = buildRaiseBrief(profile);
   const stageLabel = profile.stage ?? stage?.replace(/_/g, "-");
   const sectorLabel = profile.sector ?? sector?.replace(/_/g, " ");
 
@@ -52,6 +62,12 @@ export function CheckoutClient() {
     setLoading(true);
     setError(null);
     trackFunnelMilestone("checkout_start", { company: profile.company });
+    logServerMilestone("checkout_start", {
+      pagePath: "/checkout",
+      leadEmail: profile.email,
+      leadName: profile.name,
+      leadCompany: profile.company,
+    });
     try {
       const res = await fetch("/api/checkout", {
         method: "POST",
@@ -77,56 +93,50 @@ export function CheckoutClient() {
   }
 
   return (
-    <Container narrow className="px-4 py-8 pb-safe sm:px-5 md:py-(--spacing-section-sm)">
-      <div className="mx-auto max-w-md">
-        <UnlockSignalPreview
-          company={profile.company}
-          stage={stageLabel}
-          sector={sectorLabel}
-        />
+    <Container wide className="px-4 py-8 pb-safe sm:px-5 md:py-(--spacing-section-sm)">
+      <div className="mx-auto max-w-5xl">
+        <header className="max-w-3xl">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
+            Secure checkout
+          </p>
+          <h1 className="display-serif mt-3 text-2xl font-semibold text-text-primary md:text-3xl">
+            Confirm your {selfServePricing.trialDays}-day trial
+          </h1>
+          <p className="mt-3 text-sm font-medium text-text-primary">{brief.headline}</p>
+          <p className="mt-3 text-[15px] leading-relaxed text-text-secondary">{brief.subhead}</p>
+        </header>
 
-        <div className="mt-8">
-          {profile.matchCount ? (
-            <p className="text-center text-sm text-text-secondary">
-              <span className="font-medium text-text-primary">
-                {formatInvestorCount(profile.matchCount)}
-              </span>{" "}
-              investors match · unlock the rest
-            </p>
-          ) : (
-            <p className="text-center text-sm text-text-secondary">
-              Unlock verified contacts for your ranked shortlist
-            </p>
-          )}
-
-          <div className="mt-6 text-center">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
-              {selfServePricing.trialLabel}
-            </p>
-            <div className="mt-2 flex items-baseline justify-center gap-2">
-              <span className="font-mono text-3xl font-medium tabular-nums text-text-primary">
-                $0
-              </span>
-              <span className="text-sm text-text-tertiary">today</span>
-            </div>
-            <p className="mt-2 text-sm text-text-secondary">
-              then {selfServePricing.priceFull}/mo · cancel anytime
-            </p>
+        <div className="mt-8 grid gap-10 xl:grid-cols-[1fr_360px] xl:items-start xl:gap-12">
+          <div className="min-w-0 space-y-10">
+            <PlanCampaignBrief profile={profile} brief={brief} />
+            <PlanMatchIntel profile={profile} brief={brief} />
+            <PlanOfferStack profile={profile} compact />
+            <UnlockSignalPreview
+              company={profile.company}
+              stage={stageLabel}
+              sector={sectorLabel}
+              className="xl:hidden"
+            />
           </div>
 
-          {error && <p className="mt-4 text-center text-sm text-red-600">{error}</p>}
-
-          <Button
-            type="button"
-            variant="primary"
-            className="mt-6 min-h-[52px] w-full bg-brand border-brand text-base hover:bg-brand/90"
-            disabled={loading}
-            onClick={startCheckout}
-          >
-            {loading ? "Redirecting to Stripe…" : selfServePricing.cta}
-          </Button>
-
-          <GuaranteeLine className="mt-4" suffix="Card required · secure checkout via Stripe" />
+          <aside className="xl:sticky xl:top-20">
+            <UnlockSignalPreview
+              company={profile.company}
+              stage={stageLabel}
+              sector={sectorLabel}
+              className="mb-6 hidden xl:block"
+            />
+            {error ? (
+              <p className="mb-4 text-center text-sm text-red-600 xl:text-left">{error}</p>
+            ) : null}
+            <PlanPricingCard
+              company={profile.company}
+              ctaLabel={brief.ctaLabel}
+              loading={loading}
+              onCheckout={startCheckout}
+              suffix="Card required · secure checkout via Stripe"
+            />
+          </aside>
         </div>
       </div>
     </Container>

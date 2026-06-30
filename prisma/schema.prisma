@@ -15,6 +15,7 @@ model User {
   email         String   @unique
   emailVerified Boolean  @default(false)
   image         String?
+  subscriptionStatus String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -426,6 +427,40 @@ model DocumentAccess {
   person           InvestorPerson?   @relation(fields: [personId], references: [id], onDelete: SetNull)
 
   @@index([documentId])
+}
+
+// ─── Visitor analytics (admin) ───────────────────────────────────────────────
+
+model VisitorSession {
+  id              String   @id @default(cuid())
+  sessionId       String   @unique
+  startedAt       DateTime
+  endedAt         DateTime
+  durationMs      Int
+  landingPath     String
+  referrer        String?
+  userAgent       String?
+  utmSource       String?
+  utmMedium       String?
+  utmCampaign     String?
+  utmTerm         String?
+  utmContent      String?
+  isGoogleAds     Boolean  @default(false)
+  summary         String
+  maxStep         Int      @default(0)
+  leadName        String?
+  leadEmail       String?
+  leadCompany     String?
+  events          String   // JSON SessionEvent[]
+  wizardSnapshot  String?  // JSON
+  sessionEmailed  Boolean  @default(false)
+  dropoffEmailed  Boolean  @default(false)
+  createdAt       DateTime @default(now())
+
+  @@index([endedAt])
+  @@index([leadEmail])
+  @@index([isGoogleAds])
+  @@index([summary])
 }
 
 // ─── Onboarding wizard progress (partial sessions) ───────────────────────────

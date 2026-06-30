@@ -3,6 +3,7 @@ import { onboardingMeta } from "@/lib/content/onboarding";
 import { lpProofStats } from "@/lib/content/lp";
 import { Container } from "@/components/ui/container";
 import { LeadWizardWithParams } from "@/components/forms/lead-wizard-with-params";
+import { StartFormFocus } from "@/components/forms/start-form-focus";
 import { Reveal, RevealStagger } from "@/components/ui/reveal";
 import { Check } from "lucide-react";
 
@@ -24,27 +25,15 @@ const journeySteps = [
 export default function StartPage() {
   return (
     <>
+      <StartFormFocus />
       <section className="relative overflow-hidden border-b border-border pt-safe pb-8 md:pt-10 md:pb-16 lg:pb-20">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_70%_at_50%_-20%,var(--brand-tint),transparent)]"
           aria-hidden="true"
         />
         <Container wide>
-          {/* Mobile: compact intro above wizard */}
-          <Reveal direction="up" className="mb-6 lg:hidden">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-brand">
-              Raise profile · {onboardingMeta.timeEstimate}
-            </p>
-            <h1 className="display-serif mt-3 text-balance text-[1.75rem] font-semibold leading-[1.08] text-text-primary">
-              {onboardingMeta.title}
-            </h1>
-            <p className="mt-3 text-[15px] leading-relaxed text-text-secondary">
-              Six steps — see investor matches before pricing.
-            </p>
-          </Reveal>
-
           <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,340px)_1fr] lg:gap-16 xl:grid-cols-[minmax(0,380px)_1fr]">
-            <Reveal direction="up" className="hidden lg:block">
+            <Reveal direction="up" className="order-2 hidden lg:block">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-brand">
                 Raise profile · {onboardingMeta.timeEstimate}
               </p>
@@ -95,7 +84,10 @@ export default function StartPage() {
               </ul>
             </Reveal>
 
-            <Reveal delay={100} direction="left" className="min-w-0">
+            <Reveal delay={100} direction="left" className="order-1 min-w-0 lg:order-2">
+              <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-brand lg:hidden">
+                Raise profile · {onboardingMeta.timeEstimate}
+              </p>
               <div
                 id="apply"
                 className="min-w-0 scroll-mt-20 border border-border bg-surface-elevated p-4 shadow-[0_32px_100px_-32px_rgba(0,0,0,0.15)] sm:p-6 md:scroll-mt-24 lg:p-10"
@@ -105,8 +97,7 @@ export default function StartPage() {
             </Reveal>
           </div>
 
-          {/* Mobile: collapsible journey below wizard */}
-          <details className="mt-8 border border-border bg-surface-muted p-4 lg:hidden">
+          <details className="order-3 mt-8 border border-border bg-surface-muted p-4 lg:hidden">
             <summary className="cursor-pointer text-sm font-medium text-text-primary">
               What happens after you submit
             </summary>

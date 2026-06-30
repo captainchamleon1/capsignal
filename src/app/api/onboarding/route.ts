@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     data: {
       organizationId: org.id,
       raiseProfileId: raiseProfile.id,
-      name: `${company} — ${stage.replace("_", " ")} raise`,
+      name: `${company} · ${stage.replace("_", " ")} raise`,
       status: "draft",
     },
   });

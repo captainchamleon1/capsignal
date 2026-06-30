@@ -11,7 +11,7 @@ import {
 import type { WizardProgressData } from "@/lib/wizard/types";
 
 const dataSchema = z.object({
-  name: z.string(),
+  name: z.string().optional().default(""),
   email: z.string().email(),
   role: z.string().optional().default(""),
   company: z.string().optional().default(""),
@@ -39,6 +39,7 @@ const postSchema = z.object({
   utm_term: z.string().optional(),
   utm_content: z.string().optional(),
   triggerEarlyAlert: z.boolean().optional(),
+  earlyCapture: z.boolean().optional(),
 });
 
 function siteUrl() {
@@ -112,11 +113,15 @@ export async function POST(request: Request) {
     let earlyAlertSent = false;
     const resendKey = process.env.RESEND_API_KEY ?? process.env.Resend;
 
-    if (payload.triggerEarlyAlert && !record.earlyAlertSentAt && resendKey) {
+    const shouldEarlyAlert =
+      (payload.triggerEarlyAlert || payload.earlyCapture) && !record.earlyAlertSentAt && resendKey;
+
+    if (shouldEarlyAlert) {
       const resumeUrl = `${siteUrl()}/start?resume=${encodeURIComponent(record.resumeToken)}`;
+      const displayName = wizardData.name.trim() || wizardData.email.split("@")[0] || "Founder";
       const res = await sendEarlyLeadAlertEmail(
         {
-          name: wizardData.name.trim(),
+          name: displayName,
           email: wizardData.email.trim().toLowerCase(),
           step: payload.step,
           data: wizardData,

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { LeadPayload } from "@/lib/leads/types";
+import { recordServerFunnelMilestone } from "@/lib/analytics/server-milestone";
 import { db } from "@/lib/db";
 import { sendLeadNotificationEmail } from "@/lib/email/send-lead-emails";
 import { markWizardSubmitted } from "@/lib/wizard/progress-store";
@@ -97,6 +98,26 @@ export async function POST(request: Request) {
     await markWizardSubmitted(lead.email);
   } catch (err) {
     console.error("Wizard progress mark submitted error:", err);
+  }
+
+  if (body.sessionId) {
+    try {
+      await recordServerFunnelMilestone({
+        sessionId: body.sessionId,
+        milestone: "generate_lead",
+        pagePath: "/start",
+        leadEmail: lead.email,
+        leadName: lead.name,
+        leadCompany: lead.company,
+        params: {
+          source: lead.source,
+          lead_stage: lead.stage,
+          lead_sector: lead.sector,
+        },
+      });
+    } catch (err) {
+      console.error("Lead funnel milestone error:", err);
+    }
   }
 
   return NextResponse.json({ ok: true });

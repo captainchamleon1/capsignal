@@ -11,6 +11,8 @@ type SyncOptions = {
   data: WizardProgressData;
   source?: string;
   triggerEarlyAlert?: boolean;
+  /** Save valid email immediately (before step 1 complete) for drop-off recovery. */
+  earlyCapture?: boolean;
 };
 
 export async function loadWizardProgress(resumeToken?: string | null): Promise<{
@@ -52,8 +54,14 @@ export async function loadWizardProgress(resumeToken?: string | null): Promise<{
   };
 }
 
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+}
+
 export async function syncWizardProgress(options: SyncOptions): Promise<string | undefined> {
-  const { step, data, source, triggerEarlyAlert } = options;
+  const { step, data, source, triggerEarlyAlert, earlyCapture } = options;
+
+  if (!isValidEmail(data.email)) return readWizardSnapshot()?.resumeToken;
 
   saveWizardSnapshot({
     step,
@@ -69,7 +77,8 @@ export async function syncWizardProgress(options: SyncOptions): Promise<string |
         step,
         data,
         source,
-        triggerEarlyAlert,
+        triggerEarlyAlert: triggerEarlyAlert ?? (earlyCapture && Boolean(data.name.trim())),
+        earlyCapture,
         ...getStoredUtm(),
       }),
     });

@@ -5,9 +5,13 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { Logo } from "@/components/brand/logo";
+import { authClient } from "@/lib/auth-client";
+import { loadRaiseProfile } from "@/lib/raise-profile";
+import { industryLabelToKey, stageToKey } from "@/lib/raise-profile";
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { data: session } = authClient.useSession();
   const [company, setCompany] = useState("");
   const [stage, setStage] = useState("seed");
   const [sector, setSector] = useState("b2b_saas");
@@ -15,12 +19,30 @@ export default function OnboardingPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const profile = loadRaiseProfile();
+    if (profile?.company) setCompany(profile.company);
+    if (profile?.stageKey) setStage(profile.stageKey);
+    if (profile?.sectorKey) setSector(profile.sectorKey);
+    if (profile?.sector && !profile.sectorKey) {
+      const key = industryLabelToKey(profile.sector);
+      if (key) setSector(key);
+    }
+    if (profile?.stage && !profile?.stageKey) {
+      const key = stageToKey[profile.stage];
+      if (key) setStage(key);
+    }
+
     const saved = sessionStorage.getItem("capsignal_onboarding_company");
-    if (saved) setCompany(saved);
+    if (saved && !profile?.company) setCompany(saved);
   }, []);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!session?.user) {
+      router.push("/login?next=/onboarding");
+      return;
+    }
+
     setLoading(true);
     setError("");
 
@@ -47,14 +69,14 @@ export default function OnboardingPage() {
       <Container className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Logo href="/" className="justify-center" />
-          <h1 className="mt-8 text-xl font-semibold text-text-primary">Set up your raise</h1>
+          <h1 className="mt-8 text-xl font-semibold text-text-primary">Set up your workspace</h1>
           <p className="mt-2 text-sm text-text-secondary">
-            We&apos;ll match you with investors deploying in your space
+            One last step to unlock your investor pipeline
           </p>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-4 rounded-xl border border-border bg-surface-elevated p-6">
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error ? <p className="text-sm text-red-600">{error}</p> : null}
           <div>
             <label className="text-xs font-medium text-text-secondary">Company</label>
             <input
@@ -93,7 +115,7 @@ export default function OnboardingPage() {
             </select>
           </div>
           <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-            {loading ? "Building shortlist…" : "Continue"}
+            {loading ? "Building shortlist…" : "Continue to dashboard"}
           </Button>
         </form>
       </Container>

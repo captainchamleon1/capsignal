@@ -1,6 +1,6 @@
 import { logos, stats } from "@/lib/content/home";
 import { Container } from "@/components/ui/container";
-import { Button } from "@/components/ui/button";
+import { StartApplyButton } from "@/components/ui/start-apply-button";
 import { TextLink } from "@/components/ui/text-link";
 import { Reveal, RevealStagger } from "@/components/ui/reveal";
 import { CountUp } from "@/components/ui/count-up";
@@ -29,13 +29,12 @@ export function Hero() {
             </p>
 
             <div className="mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6 sm:gap-y-3">
-              <Button
+              <StartApplyButton
                 variant="primary"
-                href="/start#apply"
                 className="min-h-[48px] w-full bg-brand border-brand hover:bg-brand/90 sm:w-auto"
               >
                 Build your raise profile
-              </Button>
+              </StartApplyButton>
               <TextLink
                 href="#product"
                 className="inline-flex min-h-[44px] items-center justify-center sm:justify-start"

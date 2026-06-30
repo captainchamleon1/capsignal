@@ -1,3 +1,5 @@
+import type { MatchPreviewInvestor } from "@/lib/leads/match-types";
+
 export type RaiseProfileDraft = {
   name: string;
   email: string;
@@ -16,6 +18,7 @@ export type RaiseProfileDraft = {
   timeline: string;
   priorOutreach: string;
   matchCount?: number; /** Estimated profile match pool shown in funnel copy */
+  topInvestors?: MatchPreviewInvestor[];
   stageKey?: string;
   sectorKey?: string;
   source?: string;

@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { getSession } from "@/lib/auth-server";
+import { markUserSubscribed } from "@/lib/auth/subscription";
 import { getStripe, TRIAL_DAYS } from "@/lib/stripe";
 
 export async function GET(request: Request) {
@@ -27,11 +29,22 @@ export async function GET(request: Request) {
       session.payment_status === "no_payment_required" ||
       session.status === "complete";
 
+    const checkoutEmail = session.customer_details?.email ?? session.customer_email;
+    if (paid && checkoutEmail) {
+      const authSession = await getSession();
+      const status = trialing ? "trialing" : "active";
+      if (authSession?.user.email.toLowerCase() === checkoutEmail.toLowerCase()) {
+        await markUserSubscribed(authSession.user.email, status);
+      } else {
+        await markUserSubscribed(checkoutEmail, status);
+      }
+    }
+
     return NextResponse.json({
       ok: paid,
       trialing,
       trialDays: trialing ? TRIAL_DAYS : undefined,
-      email: session.customer_details?.email ?? session.customer_email,
+      email: checkoutEmail,
       subscriptionId: subscription?.id ?? session.subscription,
     });
   } catch {
