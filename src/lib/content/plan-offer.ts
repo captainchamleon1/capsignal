@@ -15,7 +15,7 @@ export const planOffer = {
   vsCapSignal: {
     label: "CapSignal",
     price: `${selfServePricing.priceFull}/mo`,
-    note: `${selfServePricing.trialDays}-day free trial · live in days, not months`,
+    note: `${selfServePricing.trialDays}-day free trial · go live same business day`,
   },
 } as const;
 
@@ -39,7 +39,7 @@ export const planOfferPillars = [
     title: "Investor CRM",
     description:
       "Every conversation, reply, and meeting in one pipeline built for raises — status tracking, notes, and next steps from first email to term sheet.",
-    highlight: "Shortlist → meeting funnel",
+    highlight: "Match → meeting funnel",
   },
   {
     id: "dataroom",
@@ -67,5 +67,5 @@ export const planOfferPillars = [
 export const planOfferProof = [
   "48-hour match guarantee — 5+ active investors or full refund",
   "Up to 500 investor targets per campaign",
-  "Most founders live in 5–7 business days after approval",
+  "Go live same business day after you subscribe",
 ] as const;

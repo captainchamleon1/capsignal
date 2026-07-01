@@ -2,7 +2,7 @@
 
 Launch-ready. Build these in each platform **paused**, confirm tracking is green (see `GO-LIVE.md`), then turn on. All copy is within current character limits. Everything points to **`/start`** (the dedicated landing page; conversion = the Request Access form).
 
-**The offer, for reference:** match with active investors, thesis-aware outreach from your own inbox, every reply tracked. Pre-seed–Series B founders in B2B SaaS, fintech, healthtech, climate, deep tech. From **$49.99/mo, no success fee, cancel anytime.** Proof points: ~11.4% median reply rate, ~10 investor meetings in 14 days, live in 5–7 days.
+**The offer, for reference:** match with active investors, thesis-aware outreach from your own inbox, every reply tracked. Pre-seed–Series B founders in B2B SaaS, fintech, healthtech, climate, deep tech. From **$49.99/mo, no success fee, cancel anytime.** Proof points: ~11.4% median reply rate, ~10 investor meetings in 14 days, go live same business day.
 
 ---
 
@@ -58,7 +58,7 @@ Keywords (start phrase/exact, watch search-terms report):
 10. Sent From Your Domain
 11. No Success Fees, Ever
 12. Plans From $49.99/mo
-13. Live in 5–7 Days
+13. Go Live Same Business Day
 14. Built for Pre-Seed–Series A
 15. Track Every Investor Reply
 
@@ -66,12 +66,12 @@ Keywords (start phrase/exact, watch search-terms report):
 1. We score active investors in your space and run personalized outreach from your inbox.
 2. Thesis-aware sequences, automated follow-up, every reply tracked. From $49.99/mo.
 3. Pre-seed to Series B in SaaS, fintech, climate, deep tech. No success fee, cancel anytime.
-4. Approve your shortlist, launch in days, book meetings — not months of spreadsheets.
+4. Approve your matches, launch in days, book meetings — not months of spreadsheets.
 
 **Sitelinks:**
 - *How it works* → `/product` · *Pricing* → `/pricing` · *Case studies* → `/customers` · *For founders* → `/founders`
 
-**Callouts:** `No success fee` · `Send from your domain` · `Live in 5–7 days` · `Cancel anytime` · `Reply tracking` · `Founder-built`
+**Callouts:** `No success fee` · `Send from your domain` · `Go live same business day` · `Cancel anytime` · `Reply tracking` · `Founder-built`
 
 **Structured snippet** (Header: *Services*): Investor matching, Personalized outreach, Follow-up automation, Reply tracking, Pitch review
 
@@ -100,11 +100,11 @@ Keywords (start phrase/exact, watch search-terms report):
 **Variant 1 — Pain/relief**
 - *Primary text:* Still copy-pasting investors into a spreadsheet? CapSignal scores active investors in your space and runs personalized outreach from your own inbox — so you book meetings, not busywork. From $49.99/mo, no success fee.
 - *Headline:* 10 investor meetings in 14 days
-- *Description:* Live in 5–7 days. Cancel anytime.
+- *Description:* Go live same business day. Cancel anytime.
 - *CTA:* Sign Up
 
 **Variant 2 — Proof/outcome**
-- *Primary text:* Founders using CapSignal see ~11% reply rates from investors — because outreach is thesis-aware and sent from your domain, not a generic blast. Approve your shortlist, we launch the campaign, you track every reply.
+- *Primary text:* Founders using CapSignal see ~11% reply rates from investors — because outreach is thesis-aware and sent from your domain, not a generic blast. Approve your matches, we launch the campaign, you track every reply.
 - *Headline:* Outreach that actually gets replies
 - *Description:* From $49.99/mo. No success fee.
 - *CTA:* Learn More

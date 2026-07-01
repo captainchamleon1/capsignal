@@ -49,7 +49,7 @@ export const coreGuides: Guide[] = [
   },
   {
     slug: "how-to-build-an-investor-shortlist",
-    title: "How to build an investor shortlist that converts",
+    title: "How to build an investor match list that converts",
     description: "Ranking investors by deployment activity, not database size.",
     category: "Data & targeting",
     readTime: "10 min",
@@ -69,7 +69,7 @@ export const coreGuides: Guide[] = [
       },
       {
         heading: "The exclude list is as important as the include list",
-        body: "Existing relationships, prior rejections, and conflict investors should be flagged before anything sends. A shortlist you trust is one you've edited—not one you imported blindly.",
+        body: "Existing relationships, prior rejections, and conflict investors should be flagged before anything sends. A match pool you trust is one you've edited—not one you imported blindly.",
       },
     ],
   },
@@ -83,7 +83,7 @@ export const coreGuides: Guide[] = [
     sections: [
       {
         heading: "Weeks 1–2: Pipeline build",
-        body: "Raise profile, investor shortlist, messaging approval, domain setup. Most founders underestimate this prep phase. Rushing to send before copy is approved creates rework when replies start coming.",
+        body: "Raise profile, AI-matched investors, messaging approval, domain setup. Most founders underestimate this prep phase. Rushing to send before copy is approved creates rework when replies start coming.",
       },
       {
         heading: "Weeks 3–4: First conversations",
@@ -95,7 +95,7 @@ export const coreGuides: Guide[] = [
       },
       {
         heading: "Weeks 9–12: Close or extend",
-        body: "Most Seed rounds that close do so within 10–14 weeks of first outreach. If you're past week 12 without a lead, revisit positioning and shortlist quality before increasing volume.",
+        body: "Most Seed rounds that close do so within 10–14 weeks of first outreach. If you're past week 12 without a lead, revisit positioning and match quality before increasing volume.",
       },
     ],
   },

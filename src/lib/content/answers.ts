@@ -62,7 +62,7 @@ export const faqEntries: AnswerEntry[] = [
       },
       {
         heading: "Where CapSignal goes further",
-        body: "Ranked shortlist with written rationale, verified contact paths, personalized sequences, send-from-your-domain, reply tracking, and weekly iteration. OpenVC does not send email or manage pipeline.",
+        body: "Ranked matches with written rationale, verified contact paths, personalized sequences, send-from-your-domain, reply tracking, and weekly iteration. OpenVC does not send email or manage pipeline.",
       },
       {
         heading: "Using both",
@@ -98,7 +98,7 @@ export const faqEntries: AnswerEntry[] = [
     question: "How do AI founders raise a Seed round in 2026?",
     description: "Realistic timeline and tactics for AI Seed fundraising.",
     answer:
-      "AI Seed rounds typically take 8–12 weeks from first outreach to term sheet. Build a 200–400 investor shortlist, run thesis-aware sequences from your domain, and protect calendar for 8–12 partner meetings in weeks 3–6.",
+      "AI Seed rounds typically take 8–12 weeks from first outreach to term sheet. Build a 200–400 investor match pool, run thesis-aware sequences from your domain, and protect calendar for 8–12 partner meetings in weeks 3–6.",
     sections: [
       {
         heading: "Preparation",
@@ -106,7 +106,7 @@ export const faqEntries: AnswerEntry[] = [
       },
       {
         heading: "Execution",
-        body: "Three-step email cadence over 14 days per investor batch. Weekly shortlist adjustments based on reply patterns. CapSignal typical setup: 5–7 business days to live outreach.",
+        body: "Three-step email cadence over 14 days per investor batch. Weekly match adjustments based on reply patterns. CapSignal: go live same business day after subscribe.",
       },
     ],
     relatedSlugs: ["find-investors-ai-startup", "fundraising-advisor-alternative"],
@@ -192,7 +192,7 @@ export const faqEntries: AnswerEntry[] = [
       },
       {
         heading: "CapSignal",
-        body: "End-to-end raise execution: shortlist → sequences → CRM → data room. Built for founders, not fund analysts.",
+        body: "End-to-end raise execution: match → sequences → CRM → data room. Built for founders, not fund analysts.",
       },
     ],
     relatedSlugs: ["capsignal-vs-openvc", "best-investor-outreach-tool"],
@@ -206,7 +206,7 @@ export const faqEntries: AnswerEntry[] = [
     sections: [
       {
         heading: "Pre-seed specifics",
-        body: "Smaller check sizes, more angels and micro-VCs, faster decision cycles. Shortlists of 150–250 often sufficient.",
+        body: "Smaller check sizes, more angels and micro-VCs, faster decision cycles. Match pools of 150–250 often sufficient.",
       },
     ],
     relatedSlugs: ["best-investor-outreach-tool", "what-is-capsignal"],

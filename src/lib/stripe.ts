@@ -12,7 +12,7 @@ export const planDetails: Record<
     name: "CapSignal",
     amountCents: 9999,
     description:
-      "Verified investor contacts, ranked shortlist, outreach sequences, and raise support",
+      "Verified investor contacts, AI-ranked matches, outreach sequences, and raise support",
   },
 };
 

@@ -26,7 +26,7 @@ async function main() {
     product = await stripe.products.create({
       name: "CapSignal",
       description:
-        "Verified investor contacts, ranked shortlist, outreach sequences, and raise support",
+        "Verified investor contacts, AI-ranked matches, outreach sequences, and raise support",
     });
     console.log("Created product:", product.id);
   }

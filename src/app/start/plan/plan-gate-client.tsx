@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { trackFunnelMilestone } from "@/lib/analytics";
 import { logServerMilestone } from "@/lib/analytics/log-server-milestone";
-import { loadRaiseProfile } from "@/lib/raise-profile";
+import { loadRaiseProfile, saveRaiseProfile } from "@/lib/raise-profile";
+import { fetchLiveMatchesForProfile } from "@/lib/plan/live-matches";
 import { PlanGateView } from "@/components/checkout/plan-gate-view";
 
 export function PlanGateClient() {
   const router = useRouter();
   const [profile, setProfile] = useState<ReturnType<typeof loadRaiseProfile>>(null);
   const [ready, setReady] = useState(false);
+  const [matchesLoading, setMatchesLoading] = useState(true);
 
   useEffect(() => {
     const saved = loadRaiseProfile();
@@ -31,6 +33,15 @@ export function PlanGateClient() {
       leadCompany: saved.company,
       params: { matchCount: saved.matchCount },
     });
+
+    fetchLiveMatchesForProfile(saved)
+      .then((live) => {
+        if (!live) return;
+        const enriched = { ...saved, matchCount: live.matchCount, topInvestors: live.topInvestors };
+        setProfile(enriched);
+        saveRaiseProfile(enriched);
+      })
+      .finally(() => setMatchesLoading(false));
   }, [router]);
 
   if (!ready || !profile) {
@@ -42,5 +53,5 @@ export function PlanGateClient() {
     );
   }
 
-  return <PlanGateView profile={profile} />;
+  return <PlanGateView profile={profile} matchesLoading={matchesLoading} />;
 }

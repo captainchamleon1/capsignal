@@ -54,7 +54,7 @@ export default async function CampaignDetailPage({ params }: Props) {
 
       <div className="grid gap-3 sm:grid-cols-4">
         {[
-          { label: "Shortlisted", key: "shortlisted" },
+          { label: "Matched", key: "shortlisted" },
           { label: "Contacted", key: "contacted" },
           { label: "Replied", key: "replied" },
           { label: "Meetings", key: "meeting" },

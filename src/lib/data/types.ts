@@ -53,6 +53,10 @@ export type DataConnector = {
 export type RaiseContext = {
   stage: string;
   sector: string;
+  sectorLabel?: string;
+  company?: string;
+  city?: string;
+  raise?: string;
   checkSizeMin?: number;
   checkSizeMax?: number;
   geographies?: string[];

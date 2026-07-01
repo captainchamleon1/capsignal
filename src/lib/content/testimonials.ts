@@ -56,7 +56,7 @@ export const testimonials: Testimonial[] = [
   {
     id: "5",
     quote:
-      "The 48-hour guarantee forced us to actually look at the shortlist. We found five AI-focused funds we'd never heard of that had deployed in our sub-sector in the last 90 days.",
+      "The 48-hour guarantee forced us to actually look at the matches. We found five AI-focused funds we'd never heard of that had deployed in our sub-sector in the last 90 days.",
     name: "Sarah Kim",
     role: "Co-founder",
     company: "AgentFlow",
@@ -139,7 +139,7 @@ export const testimonials: Testimonial[] = [
 
 export const testimonialStats = [
   { value: "9.1%", label: "Median reply rate on Seed campaigns" },
-  { value: "5–7 days", label: "Typical time to live outreach" },
-  { value: "280+", label: "Average shortlist size reviewed" },
+  { value: "Same day", label: "Typical time to live outreach" },
+  { value: "280+", label: "Average match pool reviewed" },
   { value: "12K+", label: "Source-attributed investor firms" },
 ] as const;

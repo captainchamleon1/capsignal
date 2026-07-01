@@ -35,7 +35,7 @@ export const pricingFaqs = [
   },
   {
     q: "How long until outreach goes live?",
-    a: "Most campaigns go live within 5–7 business days after profile submission and shortlist approval.",
+    a: "Most founders go live the same business day after subscribing and approving their matches.",
   },
   {
     q: "Is there a success fee?",

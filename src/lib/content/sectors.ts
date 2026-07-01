@@ -27,7 +27,7 @@ export const sectors: Sector[] = [
       "Wrong list — foundation model funds vs. vertical AI vs. agent platforms need different partners",
     ],
     approach: [
-      "Segment shortlist: infra, vertical AI, agents, or dev tools — not one blended list",
+      "Segment matches: infra, vertical AI, agents, or dev tools — not one blended list",
       "Thesis hooks reference portfolio AI companies and recent follow-ons",
       "Outreach leads with traction investors expect: inference economics, design partners, or benchmarks",
     ],

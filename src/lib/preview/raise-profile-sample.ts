@@ -1,5 +1,6 @@
 import type { RaiseProfileDraft } from "@/lib/raise-profile";
 import { getDemoMatches } from "@/lib/data/demo-investors";
+import { buildMatchRationale } from "@/lib/data/scoring/match-rationale";
 import { resolveDisplayMatchCount } from "@/lib/match-display";
 
 /** Sample profile for /preview/plan — no form required. */
@@ -24,11 +25,24 @@ export const previewRaiseProfile: RaiseProfileDraft = {
   matchCount: resolveDisplayMatchCount("seed", "deep_tech", "Acme AI", undefined, "San Francisco"),
   stageKey: "seed",
   sectorKey: "deep_tech",
-  topInvestors: getDemoMatches("seed", "deep_tech", 6).map((inv, i) => ({
+  topInvestors: getDemoMatches("seed", "deep_tech", 6, "San Francisco").map((inv, i) => ({
     firm: inv.firm,
     partner: inv.partner,
     score: inv.score,
-    reason: inv.reason.replace(/B2B SaaS|enterprise software/i, "AI / ML"),
+    reason: buildMatchRationale({
+      company: "Acme AI",
+      stage: "seed",
+      sector: "deep_tech",
+      sectorLabel: "AI / Machine learning",
+      city: "San Francisco",
+      raise: "$2M",
+      firmName: inv.firm,
+      partner: inv.partner,
+      hqCity: inv.hqCity,
+      checkSizeLabel: inv.checkSize,
+      portfolioCompanies: inv.investments,
+      variantSeed: inv.firm,
+    }),
     fundSize: inv.fundSize,
     checkSize: inv.checkSize,
     investments: inv.investments,

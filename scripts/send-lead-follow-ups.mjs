@@ -81,13 +81,13 @@ function buildEmail(lead) {
     ? ` Based on ${lead.company}'s ${roundParts} profile${lead.raise ? ` (${lead.raise})` : ""}, your matches are ready.`
     : ` Your investor matches for ${lead.company} are ready.`;
 
-  const subject = `Your investor shortlist for ${lead.company}`;
+  const subject = `Your matched investors for ${lead.company}`;
   const text = [
     `Hi ${greeting},`,
     "",
     `Thanks for building your raise profile with CapSignal.${roundLine}`,
     "",
-    "Unlock your shortlist and start outreach:",
+    "Unlock your matches and start outreach:",
     planUrl,
     "",
     "CapSignal gives you scored investor matches, intro-ready outreach, and a pipeline to run your round without cold-blasting hundreds of firms.",

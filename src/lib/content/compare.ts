@@ -36,7 +36,7 @@ export const compareFeatures = [
   },
   {
     feature: "Time to launch",
-    capsignal: "5–7 business days",
+    capsignal: "Same business day",
     manual: "2–4 weeks",
     crm: "1–2 weeks setup",
     agency: "2–6 weeks onboarding",
@@ -92,7 +92,7 @@ export const compareVerdicts = [
       "You need to reach investors who are actively deploying in your space",
       "You want outreach from your inbox with automated follow-up",
       "You need replies turning into meetings—not lost in spreadsheets",
-      "You're running a Seed or Series A raise with 5–7 days to launch",
+      "You're running a Seed or Series A raise and need to go live same business day",
     ],
   },
   {

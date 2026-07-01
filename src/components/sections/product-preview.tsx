@@ -129,7 +129,7 @@ export function ProductPreview() {
         <div className="min-w-0 flex-1 border-b border-white/[0.06] p-3 md:p-4 xl:border-b-0 xl:border-r">
           <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
             <p className="font-mono text-[9px] uppercase tracking-wider text-text-on-dark-muted">
-              Ranked shortlist · click for detail
+              Top matches · click for detail
             </p>
             <div className="flex gap-1">
               <PreviewFilterChip label="All" active />

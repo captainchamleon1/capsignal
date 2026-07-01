@@ -39,7 +39,7 @@ export default function NewCampaignPage() {
       <div>
         <h1 className="text-2xl font-semibold text-text-primary">New campaign</h1>
         <p className="mt-1 text-sm text-text-secondary">
-          We&apos;ll build a ranked shortlist of investors deploying in your space
+          We&apos;ll score investors deploying in your space with AI matching
         </p>
       </div>
 
@@ -84,7 +84,7 @@ export default function NewCampaignPage() {
           </select>
         </div>
         <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-          {loading ? "Building shortlist…" : "Create & score investors"}
+          {loading ? "Scoring matches…" : "Create & score investors"}
         </Button>
       </form>
     </div>

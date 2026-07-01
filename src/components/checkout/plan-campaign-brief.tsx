@@ -1,6 +1,6 @@
 import type { RaiseProfileDraft } from "@/lib/raise-profile";
 import type { RaiseBriefInsights } from "@/lib/plan/raise-brief";
-import { formatInvestorCount } from "@/lib/match-display";
+import { formatInvestorCount, INVESTOR_DATABASE_SIZE } from "@/lib/match-display";
 import { cn } from "@/lib/utils";
 
 type PlanCampaignBriefProps = {
@@ -20,7 +20,7 @@ export function PlanCampaignBrief({ profile, brief, className }: PlanCampaignBri
   ].filter(Boolean);
 
   const memoLines = [
-    `${formatInvestorCount(brief.vcFunds)} VC funds · ${formatInvestorCount(brief.angels)} angels & operators`,
+    `${formatInvestorCount(brief.poolSize)} investors match your raise from ${formatInvestorCount(INVESTOR_DATABASE_SIZE)}+ on file`,
     `${formatInvestorCount(brief.activeDeployers)} with a deployment in the last 90 days`,
     ...(brief.metroMatches > 0
       ? [`${formatInvestorCount(brief.metroMatches)} near ${profile.city}`]

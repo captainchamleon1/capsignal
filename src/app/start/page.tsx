@@ -10,7 +10,7 @@ import { Check } from "lucide-react";
 export const metadata: Metadata = {
   title: "Build your raise profile",
   description:
-    "Complete your raise profile to get a scored investor shortlist — before any pricing or commitment.",
+    "Complete your raise profile to see AI-matched investors — before any pricing or commitment.",
 };
 
 const journeySteps = [

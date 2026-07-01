@@ -48,7 +48,7 @@ const dataRoomFiles = [
 ];
 
 const crmStages = [
-  { stage: "Shortlisted", count: 48, active: false },
+  { stage: "Matched", count: 48, active: false },
   { stage: "Contacted", count: 0, active: true },
   { stage: "Replied", count: 0, active: false },
   { stage: "Meeting", count: 0, active: false },

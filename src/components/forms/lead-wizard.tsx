@@ -327,6 +327,8 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
           sector,
           company: data.company,
           city: data.city.trim(),
+          raise: data.raise?.trim(),
+          sectorLabel: data.sector,
           limit: PREVIEW_TOP_COUNT,
         }),
       });
@@ -378,8 +380,8 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
           topInvestors: [],
           emptyMessage:
             api.source === "empty"
-              ? "Investor database is loading. We'll build your shortlist manually from your profile."
-              : "No strong automated matches yet. Our team will review your profile and curate a shortlist.",
+              ? "Investor database is loading. We'll score matches from your profile manually."
+              : "No strong automated matches yet. Our team will review your profile and finish your match set.",
         });
         trackFunnelMilestone("match_preview_open", { matchCount: 0, empty: true });
         setModalLoading(false);
@@ -402,7 +404,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
     setPreview({
       estimatedMatches: 0,
       topInvestors: [],
-      emptyMessage: "We'll build your shortlist from your profile.",
+      emptyMessage: "We'll score your matches from your profile.",
     });
     setModalLoading(false);
   }
@@ -577,7 +579,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                       placeholder="jane@company.com"
                       autoComplete="email"
                     />
-                    <p className={hintClass}>Where we send your shortlist and account invite.</p>
+                    <p className={hintClass}>Where we send your matches and account invite.</p>
                   </div>
                   <div>
                     <label className={labelClass}>

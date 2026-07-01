@@ -1,7 +1,8 @@
 import type { RaiseProfileDraft } from "@/lib/raise-profile";
 import type { MatchPreviewInvestor } from "@/lib/leads/match-types";
-import { resolveDisplayMatchCount, formatInvestorCount } from "@/lib/match-display";
+import { resolveDisplayMatchCount, formatInvestorCount, INVESTOR_DATABASE_SIZE } from "@/lib/match-display";
 import { getDemoMatches } from "@/lib/data/demo-investors";
+import { buildMatchRationale } from "@/lib/data/scoring/match-rationale";
 import { testimonials, type Testimonial } from "@/lib/content/testimonials";
 import { selfServePricing } from "@/lib/content/guarantee";
 
@@ -100,53 +101,61 @@ function deriveSegmentCounts(pool: number, profile: RaiseProfileDraft) {
   };
 }
 
-function buildHeadline(profile: RaiseProfileDraft, segments: ReturnType<typeof deriveSegmentCounts>) {
-  return `${profile.company} · ${profile.stage} · ${formatInvestorCount(segments.vcFunds)} VC funds, ${formatInvestorCount(segments.angels)} angels`;
+function buildHeadline(_profile: RaiseProfileDraft) {
+  return "Here are a few of your top matches.";
 }
 
 function buildSubhead(
   profile: RaiseProfileDraft,
   segments: ReturnType<typeof deriveSegmentCounts>,
 ): string {
-  const lines: string[] = [
-    `Matched on stage (${profile.stage}), sector (${profile.sector}), check size, and who deployed in the last 90 days.`,
+  const parts: string[] = [
+    `Scored for ${profile.company} · ${profile.stage} · ${profile.sector}.`,
   ];
   if (profile.city && segments.metroMatches > 0) {
-    lines.push(
-      `${formatInvestorCount(segments.metroMatches)} investors near ${profile.city} ranked first, then national.`,
-    );
+    parts.push(`Investors near ${profile.city} ranked first.`);
   }
-  if (profile.traction?.trim()) {
-    lines.push(`Traction on file: ${profile.traction.trim()}.`);
-  }
-  lines.push(
-    "Outreach, CRM, data room, and deck review included — start with a 7-day trial.",
+  parts.push(
+    `Subscribe to unlock the full database of ${formatInvestorCount(INVESTOR_DATABASE_SIZE)}+ VC funds and angels — plus outreach, CRM, data room, and deck review.`,
   );
-  return lines.join(" ");
+  return parts.join(" ");
 }
 
 function resolveSpotlightInvestors(profile: RaiseProfileDraft): MatchPreviewInvestor[] {
   if (profile.topInvestors?.length) {
-    return profile.topInvestors.slice(0, 3).map((inv, i) => ({
+    return profile.topInvestors.slice(0, 5).map((inv, i) => ({
       ...inv,
       blurred: i > 0,
     }));
   }
-  return getDemoMatches(profile.stageKey ?? "seed", profile.sectorKey ?? "b2b_saas", 3).map(
-    (inv, i) => ({
-      firm: inv.firm,
+  return getDemoMatches(
+    profile.stageKey ?? "seed",
+    profile.sectorKey ?? "b2b_saas",
+    5,
+    profile.city,
+  ).map((inv, i) => ({
+    firm: inv.firm,
+    partner: inv.partner,
+    score: inv.score,
+    reason: buildMatchRationale({
+      company: profile.company,
+      stage: profile.stageKey ?? "seed",
+      sector: profile.sectorKey ?? "b2b_saas",
+      sectorLabel: profile.sector,
+      city: profile.city,
+      raise: profile.raise,
+      firmName: inv.firm,
       partner: inv.partner,
-      score: inv.score,
-      reason: inv.reason.replace(
-        /B2B SaaS|enterprise software/i,
-        profile.sector.split("/")[0]?.trim() ?? profile.sector,
-      ),
-      fundSize: inv.fundSize,
-      checkSize: inv.checkSize,
-      investments: inv.investments,
-      blurred: i > 0,
+      hqCity: inv.hqCity,
+      checkSizeLabel: inv.checkSize,
+      portfolioCompanies: inv.investments,
+      variantSeed: inv.firm,
     }),
-  );
+    fundSize: inv.fundSize,
+    checkSize: inv.checkSize,
+    investments: inv.investments,
+    blurred: i > 0,
+  }));
 }
 
 export function buildRaiseBrief(profile: RaiseProfileDraft): RaiseBriefInsights {
@@ -159,7 +168,7 @@ export function buildRaiseBrief(profile: RaiseProfileDraft): RaiseBriefInsights 
     poolSize,
     ...segments,
     firstName: fname,
-    headline: buildHeadline(profile, segments),
+    headline: buildHeadline(profile),
     subhead: buildSubhead(profile, segments),
     memoSubject: `${profile.stage} · ${profile.raise || "Current round"} · ${profile.sector}`,
     ctaLabel: `Start ${selfServePricing.trialLabel.toLowerCase()}`,
@@ -217,11 +226,11 @@ export function buildPersonalizedPillars(profile: RaiseProfileDraft) {
 export const planLaunchSteps = (profile: RaiseProfileDraft) => [
   {
     when: "First 48 hours",
-    title: "Review your shortlist",
-    body: `Approve VC and angel matches for ${profile.company}. Unlock verified emails and LinkedIn paths. 5+ active matches in 48 hours or a full refund.`,
+    title: "Review your matches",
+    body: `Your AI-matched VC and angel targets for ${profile.company}. Unlock verified emails and LinkedIn paths. 5+ active matches in 48 hours or a full refund.`,
   },
   {
-    when: "Days 3–5",
+    when: "Same business day",
     title: "Outreach live",
     body: `Sequences send from your domain. Cadence set for ${profile.stage}${profile.timeline?.trim() ? ` · target ${profile.timeline.trim()}` : ""}.`,
   },

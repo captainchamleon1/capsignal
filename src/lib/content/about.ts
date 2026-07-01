@@ -12,7 +12,7 @@ export const team = [
   {
     name: "Morgan Tate",
     role: "Head of Customer Success",
-    bio: "Former VC associate. Runs onboarding, shortlist review, and weekly campaign reporting.",
+    bio: "Former VC associate. Runs onboarding, match review, and weekly campaign reporting.",
   },
 ] as const;
 

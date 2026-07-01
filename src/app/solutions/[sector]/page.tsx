@@ -74,7 +74,7 @@ export default async function SectorPage({ params }: Props) {
             {sector.exampleInvestors.join(" · ")}
           </p>
           <p className="mt-3 text-xs leading-relaxed text-text-tertiary">
-            Illustrative examples—not endorsements. Your shortlist is built from live signal data.
+            Illustrative examples—not endorsements. Your matches are scored from live signal data.
           </p>
         </Panel>
       </PageSection>

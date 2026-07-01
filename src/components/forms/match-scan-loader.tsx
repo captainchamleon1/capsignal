@@ -82,7 +82,7 @@ export function MatchScanLoader({ company, city, sector, stage }: MatchScanLoade
         Scanning investor database
       </p>
       <p className="mt-4 text-lg font-semibold text-text-on-dark sm:text-xl">
-        Building your ranked shortlist
+        Building your top matches
       </p>
 
       {profileBits.length > 0 && (

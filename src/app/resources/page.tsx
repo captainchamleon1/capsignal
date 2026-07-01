@@ -21,7 +21,7 @@ export default function ResourcesPage() {
       <PageHeader
         label="Resources"
         title="Fundraising guides"
-        description="Practical writing on investor outreach, shortlist building, and raise execution—from the CapSignal team."
+        description="Practical writing on investor outreach, AI matching, and raise execution—from the CapSignal team."
       />
 
       <PageSection>

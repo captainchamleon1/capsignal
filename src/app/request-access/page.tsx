@@ -15,7 +15,7 @@ export default function RequestAccessPage() {
       <PageHeader
         label="Request access"
         title="See your investor matches"
-        description="Complete your raise profile — we'll show a ranked shortlist preview, then send the full list within one business day."
+        description="Complete your raise profile — we'll show AI-matched investors, then unlock the full pool within one business day."
       />
 
       <PageSection size="sm" narrow>

@@ -16,7 +16,7 @@ export const additionalCaseStudies: CaseStudy[] = [
     challenge:
       "First-time founders had warm intros to three funds but needed 200+ additional targets for a competitive Seed process.",
     approach:
-      "Raise profile emphasized inference optimization and design partners. Shortlist weighted funds with ML infra follow-ons in the last two quarters.",
+      "Raise profile emphasized inference optimization and design partners. Match scoring weighted funds with ML infra follow-ons in the last two quarters.",
     results: [
       { label: "Investors contacted", value: "312" },
       { label: "Reply rate", value: "9.4%" },
@@ -25,7 +25,7 @@ export const additionalCaseStudies: CaseStudy[] = [
     ],
     quote:
       "The match rationale saved us — we stopped wasting time on funds that hadn't done infra in two years.",
-    timeline: "Week 1: shortlist · Week 2: live outreach · Week 10: signed",
+    timeline: "Week 1: matches · Week 2: live outreach · Week 10: signed",
   },
   {
     slug: "agentflow-seed",
@@ -41,14 +41,14 @@ export const additionalCaseStudies: CaseStudy[] = [
     challenge:
       "Generic 'AI investor' lists included funds that only invest in foundation models, not agents.",
     approach:
-      "Segmented shortlist by portfolio overlap with automation and enterprise SaaS. Thesis hooks referenced specific portfolio companies.",
+      "Segmented matches by portfolio overlap with automation and enterprise SaaS. Thesis hooks referenced specific portfolio companies.",
     results: [
       { label: "New funds discovered", value: "5" },
       { label: "Reply rate", value: "8.1%" },
       { label: "Lead investor", value: "Seed-focused VC" },
       { label: "Round close", value: "11 weeks" },
     ],
-    quote: "The 48-hour guarantee forced us to actually read the shortlist — that's when we found our lead.",
+    quote: "The 48-hour guarantee forced us to actually read the matches — that's when we found our lead.",
     timeline: "Match preview → trial → outreach live day 6",
   },
   {
@@ -112,14 +112,14 @@ export const additionalCaseStudies: CaseStudy[] = [
     challenge:
       "Exported CSV from a directory but no way to personalize or track 260 contacts.",
     approach:
-      "Imported sector filters into CapSignal raise profile. Approved shortlist in dashboard before launch.",
+      "Imported sector filters into CapSignal raise profile. Approved matches in dashboard before launch.",
     results: [
-      { label: "Shortlist size", value: "260" },
+      { label: "Match pool size", value: "260" },
       { label: "Reply rate", value: "6.8%" },
       { label: "Meetings", value: "14" },
     ],
     quote: "OpenVC told us who exists. CapSignal told us who to email this month and handled the cadence.",
-    timeline: "5 days to live outreach",
+    timeline: "Same business day to live outreach",
   },
   {
     slug: "helio-climate-seed",
@@ -135,9 +135,9 @@ export const additionalCaseStudies: CaseStudy[] = [
     challenge:
       "Investors passed on 'climate' label without seeing software metrics and enterprise traction.",
     approach:
-      "Shortlist verified deployment via recorded investments. Messaging led with software ACV, carbon as context.",
+      "Matches verified deployment via recorded investments. Messaging led with software ACV, carbon as context.",
     results: [
-      { label: "Verified climate deployers", value: "89 on shortlist" },
+      { label: "Verified climate deployers", value: "89 matched" },
       { label: "Reply rate", value: "8.5%" },
       { label: "Lead closed", value: "11 weeks" },
     ],
@@ -158,7 +158,7 @@ export const additionalCaseStudies: CaseStudy[] = [
     challenge:
       "Consultant owned relationships in their inbox; founder had limited visibility into pipeline.",
     approach:
-      "Full shortlist rebuild in CapSignal. Founder-owned domain outreach with weekly iteration on reply data.",
+      "Full match rebuild in CapSignal. Founder-owned domain outreach with weekly iteration on reply data.",
     results: [
       { label: "Monthly cost", value: "$99.99 vs $15K" },
       { label: "Partner meetings", value: "Same volume" },

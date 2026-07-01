@@ -22,7 +22,7 @@ export const coreDocs: DocArticle[] = [
     sections: [
       { heading: "1. Submit raise profile", body: "Complete the request access form with stage, sector, traction, target raise, and investor preferences. Our team reviews within one business day." },
       { heading: "2. Kickoff call", body: "30-minute call to align on positioning, timeline, and tier selection. You'll receive onboarding checklist afterward." },
-      { heading: "3. Review shortlist", body: "Ranked investor list appears in your dashboard within 3–5 days. Approve, exclude, or request additions before messaging begins." },
+      { heading: "3. Review matches", body: "AI-ranked investor list appears in your dashboard within 3–5 days. Approve, exclude, or request additions before messaging begins." },
       { heading: "4. Approve messaging", body: "Review sample sequences for top investors. Edit tone or facts as needed. Nothing sends until you approve." },
       { heading: "5. Domain setup", body: "We configure SPF/DKIM on your domain and connect to your inbox. Test send confirms deliverability." },
       { heading: "6. Launch", body: "Campaign goes live. Dashboard tracks sends, opens, replies, and meetings in real time." },
@@ -54,13 +54,13 @@ export const coreDocs: DocArticle[] = [
   },
   {
     slug: "approving-shortlist",
-    title: "Reviewing and approving your shortlist",
+    title: "Reviewing and approving your matches",
     description: "How to exclude investors and request additions.",
     category: "campaigns",
     sections: [
       { heading: "Bulk actions", body: "Select multiple rows to exclude or tag. Excluded investors never receive outreach in this campaign." },
       { heading: "Add investors", body: "Submit names via dashboard or email. We score and add within 24 hours if data is available." },
-      { heading: "Approval lock", body: "Once approved, shortlist locks for initial batch. Additions possible but require re-approval for new messaging." },
+      { heading: "Approval lock", body: "Once approved, your match pool locks for the initial batch. Additions possible but require re-approval for new messaging." },
     ],
   },
   {

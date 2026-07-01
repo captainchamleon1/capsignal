@@ -4,7 +4,7 @@ export const productModules = [
     title: "Investor matching",
     headline: "Rank investors by who is deploying right now",
     description:
-      "CapSignal scores every investor against your raise using four signal layers refreshed daily. You get a ranked shortlist with written rationale—not a exported CSV from a stale database.",
+      "CapSignal scores every investor against your raise using four signal layers refreshed daily. You get AI-ranked matches with written rationale—not an exported CSV from a stale database.",
     bullets: [
       "Match scores from 0–100 with per-investor explanation",
       "Filter by check size, stage, sector, and geography",
@@ -42,7 +42,7 @@ export const productModules = [
 ] as const;
 
 export const productStats = [
-  { label: "Avg. shortlist size", value: "247" },
+  { label: "Avg. match pool size", value: "247" },
   { label: "Sequences per campaign", value: "4.2" },
   { label: "Follow-up touchpoints", value: "3–5" },
   { label: "Dashboard refresh", value: "Real-time" },

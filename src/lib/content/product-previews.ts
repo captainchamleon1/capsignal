@@ -186,7 +186,7 @@ export const previewCrm = {
   ],
   pipeline: [
     {
-      stage: "Shortlisted",
+      stage: "Matched",
       count: 48,
       tone: "muted" as const,
       cards: [] as { firm: string; note: string }[],

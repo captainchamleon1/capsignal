@@ -1,7 +1,7 @@
 export const lpProofStats = [
   { value: "12K+", label: "Investor firms (public data)" },
   { value: "3", label: "Open data sources" },
-  { value: "5–7 days", label: "Typical campaign setup" },
+  { value: "Same day", label: "Typical campaign setup" },
   { value: "Source", label: "Attribution on every record" },
 ] as const;
 
@@ -13,7 +13,7 @@ export const lpSteps = [
   },
   {
     step: "02",
-    title: "Approve your shortlist",
+    title: "Approve your matches",
     body: "Ranked investors with source-attributed fit scores—nothing sends until you sign off.",
   },
   {
@@ -34,7 +34,7 @@ export const lpFaqs = [
   },
   {
     q: "How fast can we launch?",
-    a: "Most campaigns go live within 5–7 business days after profile submission and shortlist approval.",
+    a: "Most founders go live the same business day after subscribing and approving their matches.",
   },
   {
     q: "Is there a success fee?",

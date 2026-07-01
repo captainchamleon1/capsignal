@@ -18,14 +18,14 @@ export function buildLeadFollowUpEmail(lead: LeadForEmail) {
     ? ` Based on ${lead.company}'s ${roundParts} profile${lead.raise ? ` (${lead.raise})` : ""}, your matches are ready.`
     : ` Your investor matches for ${lead.company} are ready.`;
 
-  const subject = `Your investor shortlist for ${lead.company}`;
+  const subject = `Your matched investors for ${lead.company}`;
 
   const text = [
     `Hi ${greeting},`,
     "",
     `Thanks for building your raise profile with CapSignal.${roundLine}`,
     "",
-    "Unlock your shortlist and start outreach:",
+    "Unlock your matches and start outreach:",
     planUrl,
     "",
     "CapSignal gives you scored investor matches, intro-ready outreach, and a pipeline to run your round without cold-blasting hundreds of firms.",
@@ -39,7 +39,7 @@ export function buildLeadFollowUpEmail(lead: LeadForEmail) {
   const html = `<!DOCTYPE html><html><body style="font-family:system-ui,sans-serif;color:#111;max-width:560px;line-height:1.5">
 <p>Hi ${escapeHtml(greeting)},</p>
 <p>Thanks for building your raise profile with CapSignal.${escapeHtml(roundLine)}</p>
-<p><strong>Unlock your shortlist and start outreach:</strong></p>
+<p><strong>Unlock your matches and start outreach:</strong></p>
 <p><a href="${escapeHtml(planUrl)}" style="display:inline-block;background:#111;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:600">View your plan →</a></p>
 <p style="color:#555">CapSignal gives you scored investor matches, intro-ready outreach, and a pipeline to run your round without cold-blasting hundreds of firms.</p>
 <p style="color:#555">Questions? Reply to this email. We read every message.</p>

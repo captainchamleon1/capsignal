@@ -19,7 +19,7 @@ export const capabilities = [
     id: "matching",
     title: "Investor matching",
     description:
-      "Daily scores from deployment activity, thesis alignment, and check-size fit. Review the shortlist before anything sends.",
+      "Daily scores from deployment activity, thesis alignment, and check-size fit. Review AI-matched investors before anything sends.",
     span: "large" as const,
   },
   {
@@ -72,8 +72,8 @@ export const workflow = [
   },
   {
     step: "2",
-    title: "Shortlist review",
-    body: "Ranked investors with scores and rationale. Approve or exclude before launch.",
+    title: "Match review",
+    body: "AI-ranked investors with scores and rationale. Approve or exclude before launch.",
   },
   {
     step: "3",
@@ -118,7 +118,7 @@ export const comparisonRows = [
     feature: "Time to launch",
     manual: "2–4 weeks",
     crm: "1–2 weeks setup",
-    capsignal: "5–7 business days",
+    capsignal: "Same business day",
   },
   {
     feature: "Investor CRM",

@@ -13,7 +13,7 @@ export const onboardingSteps = [
     key: "you",
     label: "About you",
     title: "Let's start with you",
-    subtitle: "We use this to set up your account and keep your shortlist private.",
+    subtitle: "We use this to set up your account and keep your matches private.",
     why: "Investors respond better when outreach comes from a real founder — not a generic alias.",
     eta: "30 sec",
   },
@@ -43,7 +43,7 @@ export const onboardingSteps = [
     label: "Track record",
     title: "Your funding history",
     subtitle: "Prior raises and exits help us calibrate investor tier and warm-intro paths.",
-    why: "A repeat founder raising a Seed round gets a different shortlist than a first-time pre-seed team.",
+    why: "A repeat founder raising a Seed round gets a different match set than a first-time pre-seed team.",
     eta: "45 sec",
   },
   {
@@ -92,7 +92,7 @@ export const scoringPhases = [
   "Prioritizing investors active in your metro…",
   "Filtering by stage, check size, and sector fit…",
   "Matching thesis signals and recent deployment activity…",
-  "Ranking your shortlist by fit score…",
+  "Ranking your top matches by fit score…",
 ] as const;
 
 /** City-aware copy for the match scan loader. */
@@ -103,7 +103,7 @@ export function buildScoringPhases(city?: string): string[] {
     `Mapping ${metro} and regional investor activity…`,
     `Filtering by stage, check size, and sector fit…`,
     `Matching thesis signals and recent deployment data…`,
-    `Ranking your shortlist by fit score…`,
+    `Ranking your top matches by fit score…`,
   ];
 }
 
@@ -116,7 +116,7 @@ export const unlockMilestones = [
   { step: 3, label: "Thesis matching" },
   { step: 4, label: "Investor tier calibration" },
   { step: 5, label: "Round strategy" },
-  { step: 6, label: "Investor shortlist preview" },
+  { step: 6, label: "AI match preview" },
 ] as const;
 
 export const planNextSteps = [
@@ -127,13 +127,13 @@ export const planNextSteps = [
   },
   {
     step: "02",
-    title: "Approve your shortlist",
-    body: "Review ranked investors with scores and rationale. Exclude anyone before launch.",
+    title: "Approve your matches",
+    body: "Review AI-ranked investors with scores and rationale. Exclude anyone before launch.",
   },
   {
     step: "03",
     title: "Launch outreach",
-    body: "Thesis-aware sequences from your domain — live in 5–7 business days.",
+    body: "Thesis-aware sequences from your domain — go live same business day.",
   },
 ] as const;
 

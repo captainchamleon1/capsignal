@@ -1,6 +1,6 @@
 export const founderBenefits = [
   {
-    title: "Shortlist quality",
+    title: "Match quality",
     body: "Every investor on your list scored against live deployment activity in your sector—not a generic VC database export.",
   },
   {
@@ -13,7 +13,7 @@ export const founderBenefits = [
   },
   {
     title: "Hands-on support",
-    body: "Onboarding call, shortlist review, and message approval before launch. Scale and Full Service tiers add strategic support.",
+    body: "Onboarding call, match review, and message approval before launch. Scale and Full Service tiers add strategic support.",
   },
 ] as const;
 
@@ -36,7 +36,6 @@ export const founderSectors = [
 
 export const founderTimeline = [
   { day: "Day 1–2", event: "Raise profile submitted, kickoff call scheduled" },
-  { day: "Day 3–5", event: "Shortlist generated, messaging drafted for review" },
-  { day: "Day 5–7", event: "Domain configured, sequences approved, campaign live" },
+  { day: "Same business day", event: "Domain configured, sequences approved, campaign live" },
   { day: "Week 2+", event: "Weekly reports, targeting adjustments, meeting tracking" },
 ] as const;

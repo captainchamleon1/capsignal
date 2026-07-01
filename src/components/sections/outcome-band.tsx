@@ -164,11 +164,11 @@ export function OutcomeBand() {
               With CapSignal
             </p>
             <p className="mt-2 text-sm text-text-secondary">
-              Ranked shortlist from public data, inbox-native sequences, per-campaign analytics.
+              Ranked matches from public data, inbox-native sequences, per-campaign analytics.
             </p>
 
             <div className="mt-8 space-y-0">
-              <Metric value="5–7 days" label="Typical setup time" detail="After shortlist approval" highlight />
+              <Metric value="Same business day" label="Typical setup time" detail="After subscribe" highlight />
               <Metric
                 value="—"
                 label="Reply rate"

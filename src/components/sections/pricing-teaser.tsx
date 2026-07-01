@@ -17,7 +17,7 @@ export function PricingTeaser() {
               One plan. No success carry.
             </h2>
             <p className="mt-4 max-w-lg text-[15px] leading-relaxed text-text-secondary">
-              {capsignalPlan.price}/mo for verified investor contacts, ranked shortlists, outreach
+              {capsignalPlan.price}/mo for verified investor contacts, AI-ranked matches, outreach
               sequences, and hands-on raise support.
             </p>
             <TextLink href="/pricing" className="mt-6 inline-block">

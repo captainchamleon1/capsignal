@@ -58,7 +58,7 @@ export const additionalDocs: DocArticle[] = [
     category: "campaigns",
     sections: [
       { heading: "When to exclude", body: "Board conflicts, portfolio competitors, prior explicit passes, active conversations off-platform." },
-      { heading: "How", body: "Bulk exclude in shortlist review or tag with do-not-contact." },
+      { heading: "How", body: "Bulk exclude in match review or tag with do-not-contact." },
     ],
   },
   {
@@ -68,13 +68,13 @@ export const additionalDocs: DocArticle[] = [
     category: "campaigns",
     sections: [
       { heading: "Metrics", body: "Sent, opened, replied, meetings — week over week." },
-      { heading: "Recommendations", body: "Suggested shortlist and copy adjustments based on performance." },
+      { heading: "Recommendations", body: "Suggested match and copy adjustments based on performance." },
     ],
   },
   {
     slug: "import-contacts",
     title: "Importing existing investor contacts",
-    description: "CSV import and merge with scored shortlist.",
+    description: "CSV import and merge with AI-scored matches.",
     category: "getting-started",
     sections: [
       { heading: "CSV format", body: "Columns: firm, partner, email, notes, stage. Import from dashboard." },

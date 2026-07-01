@@ -149,11 +149,11 @@ export function MatchPreviewModal({
                 id="match-preview-title"
                 className="display-serif mt-3 text-2xl font-semibold leading-tight text-text-on-dark sm:text-3xl"
               >
-                Our team will curate your shortlist
+                Our team will finish your match set
               </h2>
               <p className="mt-4 text-base leading-relaxed text-text-on-dark-muted sm:text-[17px]">
                 {preview.emptyMessage ??
-                  "We could not auto-score every investor from current source data — a human review produces a sharper shortlist for niche profiles."}
+                  "We could not auto-score every investor from current source data — a human review produces sharper matches for niche profiles."}
               </p>
             </>
           ) : (
@@ -249,7 +249,7 @@ export function MatchPreviewModal({
               </ul>
               {remainingMatches > 0 && (
                 <p className="mt-5 rounded border border-dashed border-border bg-surface-muted py-4 text-center text-xs text-text-secondary">
-                  +{formatInvestorCount(remainingMatches)} more in your ranked shortlist — unlock
+                  +{formatInvestorCount(remainingMatches)} more AI-matched investors — unlock
                   verified emails, LinkedIn paths, and outreach sequences
                 </p>
               )}
@@ -288,11 +288,11 @@ export function MatchPreviewModal({
                   <SearchCheck className="h-8 w-8 text-brand" aria-hidden="true" />
                 </div>
                 <p className="mt-6 text-lg font-semibold text-text-primary">
-                  White-glove shortlist in progress
+                  AI matching in progress
                 </p>
                 <p className="mt-3 text-[15px] leading-relaxed text-text-secondary">
-                  A fundraising specialist reviews your raise profile, filters 12,000+ investor
-                  records, and builds a ranked list — usually within one business day.
+                  We&apos;re scoring 12,000+ investor records against your stage, sector, and
+                  location — usually ready within one business day if auto-match needs a hand.
                 </p>
                 <ul className="mt-8 space-y-4 border border-border bg-surface-muted p-5 text-left sm:p-6">
                   {[
@@ -321,7 +321,7 @@ export function MatchPreviewModal({
                   submitting && "opacity-70",
                 )}
               >
-                {submitting ? "Saving…" : "Continue — unlock your shortlist"}
+                {submitting ? "Saving…" : "Continue — see your full matches"}
               </button>
               {showGuarantee && <GuaranteeLine className="mt-4" />}
               <button

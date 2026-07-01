@@ -4,7 +4,7 @@ import { CheckoutSuccessClient } from "@/app/checkout/success/checkout-success-c
 
 export const metadata: Metadata = {
   title: "Welcome to CapSignal",
-  description: "Your subscription is active. Complete onboarding to unlock your investor shortlist.",
+  description: "Your subscription is active. Complete onboarding to unlock your matched investors.",
 };
 
 export default function CheckoutSuccessPage() {

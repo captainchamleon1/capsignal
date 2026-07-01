@@ -14,9 +14,10 @@ type PlanGateViewProps = {
   profile: RaiseProfileDraft;
   checkoutHref?: string;
   preview?: boolean;
+  matchesLoading?: boolean;
 };
 
-export function PlanGateView({ profile, checkoutHref, preview }: PlanGateViewProps) {
+export function PlanGateView({ profile, checkoutHref, preview, matchesLoading }: PlanGateViewProps) {
   const brief = buildRaiseBrief(profile);
 
   const checkoutParams = new URLSearchParams({
@@ -40,7 +41,7 @@ export function PlanGateView({ profile, checkoutHref, preview }: PlanGateViewPro
         <div className="mx-auto max-w-5xl">
           <header className="max-w-3xl">
             <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
-              {profile.stage} · {profile.sector}
+              {profile.company} · {profile.stage} · {profile.sector}
             </p>
             <h1 className="display-serif mt-4 break-safe text-balance text-[1.65rem] font-semibold leading-[1.2] text-text-primary sm:text-3xl md:text-[2.125rem]">
               {brief.headline}
@@ -53,7 +54,7 @@ export function PlanGateView({ profile, checkoutHref, preview }: PlanGateViewPro
           <div className="mt-10 grid gap-10 xl:grid-cols-[1fr_360px] xl:items-start xl:gap-12">
             <div className="min-w-0 space-y-12">
               <PlanCampaignBrief profile={profile} brief={brief} />
-              <PlanMatchIntel profile={profile} brief={brief} />
+              <PlanMatchIntel profile={profile} brief={brief} matchesLoading={matchesLoading} />
               <PlanLaunchTimeline profile={profile} />
               <PlanOfferStack profile={profile} />
               <PlanSocialProof brief={brief} />

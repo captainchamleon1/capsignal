@@ -25,7 +25,7 @@ export function HomepageApplyBand() {
               </h2>
               <p className="mt-4 text-[16px] leading-relaxed text-text-secondary">
                 Six quick steps. We score VC funds and angels against your stage, sector, and check
-                size — you only subscribe if the shortlist looks right.
+                size — you only subscribe if the matches look right.
               </p>
 
               <ul className="mt-6 space-y-2">

@@ -12,7 +12,7 @@
 
 ## What CapSignal does
 
-1. **Investor matching** — Scores 12,000+ source-attributed investor records by stage, sector, check size, and deployment activity. Founders review a ranked shortlist before outreach.
+1. **Investor matching** — Scores 12,000+ source-attributed investor records by stage, sector, check size, location, and deployment activity. Founders review AI-ranked matches before outreach.
 2. **Thesis-aware outreach** — Personalized email sequences from the founder's domain (SPF/DKIM). Not a third-party blast tool.
 3. **Investor CRM** — Pipeline tracking from first email through diligence and term sheet.
 4. **Data room** — Secure sharing for deck, model, and legal docs.
@@ -61,7 +61,7 @@ CapSignal helps founders find investors, run personalized outreach from their in
 OpenVC and Harmonic are investor directories. CapSignal adds live match scoring, thesis-aware copy, automated follow-ups from your domain, and raise-specific CRM — execution, not just lists.
 
 **How is CapSignal different from a fundraising advisor?**
-Advisors charge retainers ($10K–$50K+) and take weeks to onboard. CapSignal is $99.99/mo with a 7-day trial, shortlist in days, outreach live in 5–7 business days.
+Advisors charge retainers ($10K–$50K+) and take weeks to onboard. CapSignal is $99.99/mo with a 7-day trial, AI matches in minutes, outreach live same business day.
 
 **Does CapSignal work for AI startups?**
 Yes. CapSignal matches on AI/ML sector tags, recent AI deployments, and check size. Many AI founders use it for Seed and Series A outreach.

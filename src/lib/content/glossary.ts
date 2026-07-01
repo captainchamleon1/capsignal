@@ -7,7 +7,7 @@ const coreGlossaryTerms = [
   { term: "Sequence", definition: "A multi-step outreach cadence (typically 3–5 emails) sent to one investor over 2–3 weeks." },
   { term: "Reply rate", definition: "Percentage of contacted investors who respond by email. Tracked per campaign from your outreach data." },
   { term: "Send window", definition: "Optimal days/times for outreach based on investor timezone and historical open data." },
-  { term: "Shortlist", definition: "Ranked list of target investors approved before campaign launch." },
+  { term: "Match pool", definition: "AI-ranked set of target investors scored before campaign launch." },
   { term: "Signal layer", definition: "One of four data categories—deployment, thesis, engagement, network—used in scoring." },
   { term: "SPF/DKIM", definition: "Email authentication records that improve deliverability when sending from your domain." },
   { term: "Warm intro", definition: "Introduction through a mutual connection. CapSignal maps potential paths via portfolio overlap." },
@@ -20,7 +20,7 @@ const coreGlossaryTerms = [
   { term: "Signal refresh", definition: "Nightly recalculation of investor activity scores from new data." },
   { term: "Engagement signal", definition: "Reply patterns, subject line performance, and send timing data from prior campaigns." },
   { term: "Exclusion list", definition: "Investors flagged to never receive outreach—conflicts, prior passes, existing relationships." },
-  { term: "Campaign", definition: "One fundraising outreach effort with defined shortlist, sequences, and timeline." },
+  { term: "Campaign", definition: "One fundraising outreach effort with a defined match pool, sequences, and timeline." },
 ] as const;
 
 export const glossaryTerms = [...coreGlossaryTerms, ...additionalGlossaryTerms];

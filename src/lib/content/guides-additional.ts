@@ -39,19 +39,19 @@ export const additionalGuides: Guide[] = [
     sections: [
       { heading: "Infra narrative", body: "Technical moat, performance benchmarks, developer adoption, open-source traction, and path to platform revenue." },
       { heading: "Vertical AI narrative", body: "Industry-specific workflow, ACV, sales cycle, regulatory context, and incumbent displacement — not model architecture alone." },
-      { heading: "Shortlist split", body: "Run separate investor tiers or campaigns if you span both; mixed messaging confuses partners." },
+      { heading: "Match split", body: "Run separate investor tiers or campaigns if you span both; mixed messaging confuses partners." },
     ],
   },
   {
     slug: "founder-led-investor-outreach-guide",
     title: "The complete founder-led investor outreach guide",
-    description: "End-to-end playbook from shortlist to term sheet without an advisor.",
+    description: "End-to-end playbook from AI matching to term sheet without an advisor.",
     category: "Outreach",
     readTime: "18 min",
     published: "2026-04-01",
     sections: [
       { heading: "Phase 1: Profile", body: "Document stage, sector, traction, raise amount, and exclusions (conflicts, prior passes)." },
-      { heading: "Phase 2: Shortlist", body: "200–400 scored investors with rationale. Founder approves every row." },
+      { heading: "Phase 2: AI matching", body: "200–400 scored investors with rationale. Founder approves every row." },
       { heading: "Phase 3: Messaging", body: "Thesis hooks per top 50; template structure for long tail with personalization tokens." },
       { heading: "Phase 4: Launch", body: "Batch sends Tue–Thu mornings investor-local. Monitor bounces and replies daily." },
       { heading: "Phase 5: Pipeline", body: "Meeting recaps within 24h. Weekly review of stalled deals." },
@@ -156,7 +156,7 @@ export const additionalGuides: Guide[] = [
     published: "2026-05-05",
     sections: [
       { heading: "Timing", body: "Fund not deploying, partner bandwidth, end of fund life — not fixable; move on." },
-      { heading: "Thesis", body: "Wrong sector or stage — fix shortlist, not pitch." },
+      { heading: "Thesis", body: "Wrong sector or stage — fix your matches, not pitch." },
       { heading: "Traction", body: "Too early — delay raise or show design partners and LOIs." },
       { heading: "Competition", body: "Crowded space — sharpen differentiation and incumbent wedge." },
     ],
@@ -282,7 +282,7 @@ export const additionalGuides: Guide[] = [
     published: "2026-01-30",
     sections: [
       { heading: "Verify deployment", body: "Many funds market climate; fewer deploy. Use investment records, not website copy." },
-      { heading: "Software climate", body: "Often overlaps B2B SaaS investors — dual track shortlists." },
+      { heading: "Software climate", body: "Often overlaps B2B SaaS investors — dual track match pools." },
     ],
   },
   {

@@ -1,5 +1,8 @@
 import type { MatchResult, RaiseContext } from "@/lib/data/types";
 import { db } from "@/lib/db";
+import { cityFit } from "@/lib/data/scoring/location";
+import { buildMatchRationale } from "@/lib/data/scoring/match-rationale";
+import { formatCheckSize } from "@/lib/format";
 
 const STAGE_ORDER = ["pre_seed", "seed", "series_a", "series_b"];
 
@@ -68,6 +71,15 @@ function weightedScore(parts: { score: number; weight: number }[]): number {
   return Math.round(parts.reduce((sum, p) => sum + p.score * p.weight, 0) / totalWeight);
 }
 
+function countRecentInvestments(
+  investments: { announcedAt: Date | null }[],
+  months = 12,
+): number {
+  const cutoff = Date.now() - months * 30 * 24 * 60 * 60 * 1000;
+  return investments.filter((inv) => inv.announcedAt && inv.announcedAt.getTime() >= cutoff)
+    .length;
+}
+
 export async function scoreInvestorsForRaise(
   context: RaiseContext,
   limit = 50,
@@ -78,10 +90,11 @@ export async function scoreInvestorsForRaise(
     include: {
       signals: { orderBy: { observedAt: "desc" }, take: 8 },
       people: { where: { isPartner: true, isActive: true }, take: 1 },
+      funds: { where: { status: { in: ["active", "raising"] } }, take: 1 },
       investments: {
         where: context.sector ? { companySector: context.sector } : undefined,
         orderBy: { announcedAt: "desc" },
-        take: 3,
+        take: 5,
       },
     },
     orderBy: { dataQuality: "desc" },
@@ -102,6 +115,7 @@ export async function scoreInvestorsForRaise(
       context.checkSizeMin,
       context.checkSizeMax,
     );
+    const locationScore = cityFit(firm.hqCity, context.city);
 
     const signalMap = new Map(firm.signals.map((s) => [s.signalType, s]));
     const deploySignal = signalMap.get("deployment_velocity");
@@ -112,35 +126,36 @@ export async function scoreInvestorsForRaise(
     if (stageScore !== null) scoreParts.push({ score: stageScore, weight: 0.3 });
     if (sectorScore !== null) scoreParts.push({ score: sectorScore, weight: 0.3 });
     if (checkScore !== null) scoreParts.push({ score: checkScore, weight: 0.15 });
-    if (deploySignal) scoreParts.push({ score: deploySignal.score, weight: 0.15 });
+    if (locationScore !== null) scoreParts.push({ score: locationScore, weight: 0.1 });
+    if (deploySignal) scoreParts.push({ score: deploySignal.score, weight: 0.12 });
     if (partnerSignal) scoreParts.push({ score: partnerSignal.score, weight: 0.05 });
     if (fundSignal) scoreParts.push({ score: fundSignal.score, weight: 0.05 });
 
     if (scoreParts.length === 0) continue;
 
     const matchScore = weightedScore(scoreParts);
+    const portfolio =
+      firm.investments.length > 0
+        ? firm.investments.map((i) => i.companyName)
+        : [];
 
-    const rationaleParts: string[] = [];
-    if (stageScore !== null && stageScore >= 80) {
-      rationaleParts.push(`Source data lists ${context.stage.replace("_", "-")} stage`);
-    }
-    if (sectorScore !== null && sectorScore >= 80) {
-      rationaleParts.push(`Source data lists ${context.sector.replace("_", " ")} focus`);
-    } else if (sectorScore !== null && sectorScore >= 60) {
-      rationaleParts.push("Adjacent sector in source data");
-    }
-    if (checkScore !== null && checkScore >= 80) {
-      rationaleParts.push("Check size fits your raise (from source data)");
-    }
-    if (deploySignal && deploySignal.score >= 60) rationaleParts.push(deploySignal.rationale);
-    if (firm.investments.length > 0) {
-      rationaleParts.push(
-        `Recorded investments: ${firm.investments.map((i) => i.companyName).join(", ")}`,
-      );
-    }
-    if (rationaleParts.length === 0) {
-      rationaleParts.push("Limited public thesis data — verify fit before outreach");
-    }
+    const rationale = buildMatchRationale({
+      company: context.company,
+      stage: context.stage,
+      sector: context.sector,
+      sectorLabel: context.sectorLabel,
+      city: context.city,
+      raise: context.raise,
+      firmName: firm.name,
+      partner: firm.people[0]?.name,
+      hqCity: firm.hqCity,
+      checkMinUsd: firm.checkMinUsd,
+      checkMaxUsd: firm.checkMaxUsd,
+      portfolioCompanies: portfolio,
+      recentInvestmentCount: countRecentInvestments(firm.investments),
+      activeFundName: firm.funds[0]?.name ?? null,
+      variantSeed: firm.id,
+    });
 
     const signals: MatchResult["signals"] = [];
     if (stageScore !== null) {
@@ -163,12 +178,19 @@ export async function scoreInvestorsForRaise(
         rationale: deploySignal.rationale,
       });
     }
+    if (locationScore !== null) {
+      signals.push({
+        type: "location",
+        score: locationScore,
+        rationale: firm.hqCity ? `HQ ${firm.hqCity}` : "Location fit",
+      });
+    }
 
     results.push({
       firmId: firm.id,
       firmName: firm.name,
       matchScore,
-      rationale: rationaleParts.join(". ") + ".",
+      rationale,
       signals,
       topPartner: firm.people[0]?.name,
     });

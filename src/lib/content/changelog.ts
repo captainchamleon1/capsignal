@@ -8,7 +8,7 @@ export type ChangelogEntry = {
 export const changelog: ChangelogEntry[] = [
   { date: "2026-06-18", title: "LinkedIn sequence builder", type: "feature", body: "Scale tier users can configure LinkedIn touchpoints alongside email sequences in the dashboard." },
   { date: "2026-06-10", title: "Segment-level analytics", type: "feature", body: "Analytics view now breaks reply rates by sector, stage, and geography tags." },
-  { date: "2026-06-02", title: "Bulk shortlist actions", type: "improvement", body: "Select multiple investors to exclude, tag, or export in one action." },
+  { date: "2026-06-02", title: "Bulk match actions", type: "improvement", body: "Select multiple investors to exclude, tag, or export in one action." },
   { date: "2026-05-22", title: "Faster score refresh", type: "improvement", body: "Investor activity scores now update every 24 hours, down from 48." },
   { date: "2026-05-14", title: "CSV pipeline export", type: "feature", body: "Export full campaign pipeline with status, scores, and reply history." },
   { date: "2026-05-01", title: "Open-trigger follow-ups", type: "feature", body: "Optional accelerated follow-up when an investor opens but doesn't reply within 48 hours." },

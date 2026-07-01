@@ -14,10 +14,10 @@ export const raiseMovement = {
     "12,000+ investors scored on live deployment and thesis fit",
     "Thesis-aware sequences from your domain — one investor at a time",
     "CRM, data room, and deck review through diligence",
-    "Live in days. $99/mo. No success fees.",
+    "Go live same business day. $99/mo. No success fees.",
   ],
   easePoints: [
-    { title: "Know who to contact", body: "Ranked shortlist with rationale — VC funds and angels." },
+    { title: "Know who to contact", body: "AI-ranked matches with rationale — VC funds and angels." },
     { title: "Know what to say", body: "Outreach drafted from your raise profile and their thesis." },
     { title: "Know where you stand", body: "Every reply, meeting, and doc view in one pipeline." },
   ],

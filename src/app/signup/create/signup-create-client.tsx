@@ -63,7 +63,7 @@ export function SignupCreateClient() {
           <Logo href="/" className="justify-center" />
           <h1 className="mt-8 text-xl font-semibold text-text-primary">Create your account</h1>
           <p className="mt-2 text-sm text-text-secondary">
-            Unlock your investor shortlist and pipeline
+            Unlock your matched investors and pipeline
           </p>
         </div>
 

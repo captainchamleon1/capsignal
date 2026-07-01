@@ -21,6 +21,17 @@ type Investor = {
   status: string;
 };
 
+const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {
+  shortlisted: "Matched",
+  excluded: "Excluded",
+  contacted: "Contacted",
+  replied: "Replied",
+  meeting: "Meeting",
+  diligence: "Diligence",
+  passed: "Passed",
+  committed: "Committed",
+};
+
 export function CampaignPipeline({
   campaignId,
   investors,
@@ -78,7 +89,7 @@ export function CampaignPipeline({
                   >
                     {STATUSES.map((s) => (
                       <option key={s} value={s}>
-                        {s.replace("_", " ")}
+                        {STATUS_LABELS[s]}
                       </option>
                     ))}
                   </select>

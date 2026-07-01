@@ -115,7 +115,7 @@ export default function OnboardingPage() {
             </select>
           </div>
           <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-            {loading ? "Building shortlist…" : "Continue to dashboard"}
+            {loading ? "Scoring matches…" : "Continue to dashboard"}
           </Button>
         </form>
       </Container>

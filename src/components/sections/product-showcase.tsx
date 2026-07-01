@@ -8,7 +8,7 @@ import { SequencesPreview } from "@/components/product/sequences-preview";
 import { AnalyticsPreview } from "@/components/product/analytics-preview";
 
 const views = [
-  { id: "investors", label: "Matching", caption: "Ranked shortlist with live match scores" },
+  { id: "investors", label: "Matching", caption: "AI-ranked matches with live scores" },
   { id: "sequences", label: "Outreach", caption: "Thesis-aware sequences from your domain" },
   { id: "analytics", label: "CRM", caption: "Pipeline, funnel, and data room through close" },
 ] as const;
