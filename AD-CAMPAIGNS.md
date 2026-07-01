@@ -23,7 +23,7 @@ Total starting spend ≈ **$80/day (~$2,400/mo)**. A B2B lead like this typicall
 # GOOGLE ADS — Search
 
 **Campaign:** `Search — Founder Fundraising`
-**Type:** Search · **Networks:** Google Search only (uncheck Search Partners + Display to start) · **Locations:** US, Canada, UK (add others as desired) · **Language:** English · **Bidding:** Maximize Conversions (cap manual CPC ~$8 first week) → tCPA after data · **Conversion:** *Request Access* (set as the only "primary" conversion action so bidding optimizes to it).
+**Type:** Search · **Networks:** Google Search only (uncheck Search Partners + Display to start) · **Locations:** US, Canada, UK (add others as desired) · **Language:** English · **Bidding:** Maximize Conversions (cap manual CPC ~$8 first week) → tCPA after data · **Conversion:** while lead volume is low, set **`email_captured`** (fires when a visitor saves contact info at wizard step 2 — wire the dataLayer event to a Google Ads conversion in GTM) as the primary conversion so bidding has signal; once *Request Access* fires ~15+/month, switch primary to *Request Access* and demote `email_captured` to secondary.
 
 Final URL: `https://getcapsignal.com/start` · Final URL suffix: `utm_source=google&utm_medium=cpc&utm_campaign=search_founder&utm_content={creative}` · enable auto-tagging.
 

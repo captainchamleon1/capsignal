@@ -1,8 +1,8 @@
 import { industryOptions } from "@/lib/content/industries";
 
 export const onboardingMeta = {
-  title: "See who matches your raise",
-  subtitle: "Tell us what you're trying to solve — we'll score active investors in your space and build your outreach profile.",
+  title: "Meet investors actively writing checks in your space",
+  subtitle: "Pick your stage and industry — see your top investor matches in about 30 seconds, before we ask for anything else.",
   timeEstimate: "~4 min",
   stepsCount: 6,
   /** Steps 2–6 shown in the progress UI (step 1 is a lightweight gate). */
@@ -111,50 +111,51 @@ export function resolvePillarsForNeeds(needs: string[]): Set<OfferPillarId> {
 export const onboardingSteps = [
   {
     id: 1,
-    key: "you",
-    label: "Get started",
-    title: "What's the hardest part of your raise right now?",
+    key: "raise",
+    label: "Your raise",
+    title: "What are you raising right now?",
     subtitle:
-      "Select all that apply — we'll tailor your matches, outreach, and plan to what you picked.",
+      "Two taps — stage and industry. We'll show you matching investors immediately, no email required to look.",
     why: "",
     eta: "",
     isGate: true,
   },
   {
     id: 2,
-    key: "company",
-    label: "Company",
-    title: "Tell us about your company",
+    key: "matches",
+    label: "Your matches",
+    title: "Investors matching your raise",
     subtitle:
-      "Industry and city help us surface investors who deploy in your space — starting with firms active in your area.",
-    why: "Founders who lead with local warm paths close faster. We prioritize investors near you, then expand nationally.",
-    eta: "45 sec",
+      "Save your profile to unlock the full ranked list — partner names, check sizes, and outreach paths included.",
+    why: "We save your progress so you can finish on any device — and send your match list if you drop off.",
+    eta: "30 sec",
   },
   {
     id: 3,
+    key: "goals",
+    label: "Goals",
+    title: "What's the hardest part of your raise right now?",
+    subtitle:
+      "Select all that apply — we'll tailor your matches, outreach, and plan to what you picked.",
+    why: "Your picks decide what we set up first: matching, outreach, pipeline, or diligence.",
+    eta: "20 sec",
+  },
+  {
+    id: 4,
     key: "business",
     label: "Business",
-    title: "Describe what you're building",
+    title: "Tell us about your company",
     subtitle:
-      "Pick your customer segment now — add a business description if you want sharper thesis matching and outreach copy.",
+      "Segment, city, and a short description sharpen thesis matching and outreach copy.",
     why: "Generic blasts get ignored. Specific thesis hooks get replies.",
     eta: "1 min",
   },
   {
-    id: 4,
-    key: "track-record",
-    label: "Track record",
-    title: "Your funding history",
-    subtitle: "Prior raises and exits help us calibrate investor tier and warm-intro paths.",
-    why: "A repeat founder raising a Seed round gets a different match set than a first-time pre-seed team.",
-    eta: "45 sec",
-  },
-  {
     id: 5,
-    key: "raise",
+    key: "round",
     label: "This round",
     title: "Details on your current raise",
-    subtitle: "Check size, traction, and timeline determine urgency and sequence strategy.",
+    subtitle: "Check size, traction, timeline, and funding history calibrate your investor tier.",
     why: "Investors deploying $500K checks at Seed are not the same list as those writing $5M Series A checks.",
     eta: "1 min",
   },
@@ -214,12 +215,12 @@ export function buildScoringPhases(city?: string): string[] {
 export const MATCH_SCAN_MIN_MS = 7000;
 
 export const unlockMilestones = [
-  { step: 1, label: "Your goal" },
-  { step: 2, label: "Company context" },
-  { step: 3, label: "Thesis matching" },
-  { step: 4, label: "Investor tier calibration" },
+  { step: 1, label: "Stage & industry" },
+  { step: 2, label: "First investor matches" },
+  { step: 3, label: "Your goals" },
+  { step: 4, label: "Thesis matching" },
   { step: 5, label: "Round strategy" },
-  { step: 6, label: "AI match preview" },
+  { step: 6, label: "Full AI match preview" },
 ] as const;
 
 export const planNextSteps = [

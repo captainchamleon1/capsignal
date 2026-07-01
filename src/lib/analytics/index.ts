@@ -72,6 +72,20 @@ export function trackFunnelMilestone(milestone: ConversionMilestone, extra?: Eve
   trackEvent("funnel_milestone", { milestone, ...extra });
 }
 
+/**
+ * Fires when a visitor hands over a valid email mid-wizard (before the final
+ * lead submit). Wire this event to a Google Ads conversion in GTM so bidding
+ * has signal while full-lead volume is still low.
+ */
+export function trackEmailCaptured(params?: UtmParams & EventParams) {
+  trackEvent("email_captured", params);
+  trackFunnelMilestone("email_captured", params);
+
+  if (window.fbq) {
+    window.fbq("track", "CompleteRegistration", params);
+  }
+}
+
 export function trackLeadConversion(params?: UtmParams & EventParams) {
   trackEvent("generate_lead", params);
   trackFunnelMilestone("match_preview_confirm", params);

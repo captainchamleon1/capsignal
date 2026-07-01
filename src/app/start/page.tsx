@@ -8,19 +8,24 @@ import { Reveal, RevealStagger } from "@/components/ui/reveal";
 import { Check } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "See who matches your raise",
+  title: "Meet investors actively writing checks in your space",
   description:
-    "Tell us what you're trying to solve — see AI-matched investors before any pricing or commitment.",
+    "Pick your stage and industry — see AI-matched investors in about 30 seconds, before any pricing or commitment.",
 };
 
 const journeySteps = [
-  "What you need help with",
-  "Company & industry fit",
+  "Pick your stage & industry (two taps)",
+  "See your first investor matches",
+  "Tell us what you need help with",
   "Business model & traction context",
-  "Funding history & exit background",
-  "Current raise details",
-  "Review & score your matches",
+  "Current raise & funding history",
+  "Review & score your full match list",
 ];
+
+const mobileProofStats = [
+  { value: "12K+", label: "Investor firms scored" },
+  { value: "30 sec", label: "To your first matches" },
+] as const;
 
 export default function StartPage() {
   return (
@@ -41,7 +46,7 @@ export default function StartPage() {
                 {onboardingMeta.title}
               </h1>
               <p className="mt-5 text-[16px] leading-[1.65] text-text-secondary">
-                {onboardingMeta.subtitle} You&apos;ll see your investor matches before pricing.
+                {onboardingMeta.subtitle}
               </p>
 
               <ol className="mt-10 space-y-3 border-t border-border pt-8">
@@ -84,9 +89,28 @@ export default function StartPage() {
             </Reveal>
 
             <Reveal delay={100} direction="left" className="order-1 min-w-0 lg:order-2">
-              <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.2em] text-brand lg:hidden">
-                Raise profile · {onboardingMeta.timeEstimate}
-              </p>
+              {/* Compact hero for mobile — the full left column is desktop-only. */}
+              <div className="mb-6 lg:hidden">
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-brand">
+                  Raise profile · {onboardingMeta.timeEstimate}
+                </p>
+                <h1 className="display-serif mt-3 text-balance text-[1.75rem] font-semibold leading-[1.12] text-text-primary sm:text-4xl">
+                  {onboardingMeta.title}
+                </h1>
+                <p className="mt-3 text-[15px] leading-relaxed text-text-secondary">
+                  {onboardingMeta.subtitle}
+                </p>
+                <div className="mt-4 grid grid-cols-2 gap-3">
+                  {mobileProofStats.map((stat) => (
+                    <div key={stat.label} className="border border-border bg-surface-elevated px-3.5 py-3">
+                      <p className="font-mono text-base font-medium tabular-nums text-text-primary">
+                        {stat.value}
+                      </p>
+                      <p className="mt-0.5 text-[11px] leading-snug text-text-tertiary">{stat.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div
                 id="apply"
                 className="min-w-0 scroll-mt-20 border border-border bg-surface-elevated p-4 shadow-[0_32px_100px_-32px_rgba(0,0,0,0.15)] sm:p-6 md:scroll-mt-24 lg:p-10"

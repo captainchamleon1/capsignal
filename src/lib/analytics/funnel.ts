@@ -6,10 +6,10 @@ export const FUNNELS = {
 export type FunnelName = (typeof FUNNELS)[keyof typeof FUNNELS];
 
 export const ONBOARDING_STEPS = [
-  "about_you",
-  "company",
+  "raise_basics",
+  "matches_unlock",
+  "goals",
   "business",
-  "track_record",
   "this_round",
   "review",
 ] as const;
@@ -17,6 +17,8 @@ export const ONBOARDING_STEPS = [
 export type OnboardingStepKey = (typeof ONBOARDING_STEPS)[number];
 
 export const CONVERSION_MILESTONES = [
+  "teaser_matches_view",
+  "email_captured",
   "match_scan_start",
   "match_preview_open",
   "match_preview_confirm",

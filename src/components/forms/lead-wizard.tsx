@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { submitLead } from "@/lib/leads/submit";
 import { getStoredUtm } from "@/lib/analytics/utm";
 import {
+  trackEmailCaptured,
   trackFunnelMilestone,
   trackFunnelStepComplete,
   trackFunnelStepView,
@@ -20,6 +21,7 @@ import { FUNNELS, onboardingStepKey } from "@/lib/analytics/funnel";
 import type { MatchPreview } from "@/lib/leads/match-types";
 import type { LeadPayload } from "@/lib/leads/types";
 import { MatchPreviewModal } from "@/components/forms/match-preview-modal";
+import { MatchTeaser } from "@/components/forms/match-teaser";
 import { IndustryPicker } from "@/components/onboarding/industry-picker";
 import {
   MobileProfileStrip,
@@ -128,6 +130,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
   const [restoredSession, setRestoredSession] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const emailCapturedRef = useRef(false);
   const { data: authSession } = authClient.useSession();
 
   useEffect(() => {
@@ -242,7 +245,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
   }
 
   function resolveStepData(wizardData: WizardData): WizardData {
-    if (step === 1 && !wizardData.role.trim()) {
+    if (step === 2 && !wizardData.role.trim()) {
       return { ...wizardData, role: roleOptions[0] };
     }
     return wizardData;
@@ -250,12 +253,18 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
 
   function validateStep(wizardData: WizardData = data): boolean {
     if (step === 1) {
-      if (wizardData.fundraisingNeeds.length === 0) {
-        setError("Select at least one thing you need help with.");
+      if (!wizardData.stage) {
+        setError("Pick your current stage.");
         return false;
       }
+      if (!wizardData.sector) {
+        setError("Pick your industry so we can score matches.");
+        return false;
+      }
+    }
+    if (step === 2) {
       if (!wizardData.name.trim() || !wizardData.email.trim() || !wizardData.company.trim()) {
-        setError("Name, work email, and company are required.");
+        setError("Name, work email, and company are required to save your matches.");
         return false;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(wizardData.email)) {
@@ -263,27 +272,25 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
         return false;
       }
     }
-    if (step === 2) {
-      if (!wizardData.sector) {
-        setError("Industry is required.");
+    if (step === 3) {
+      if (wizardData.fundraisingNeeds.length === 0) {
+        setError("Select at least one thing you need help with.");
         return false;
       }
     }
-    if (step === 3) {
+    if (step === 4) {
       if (!wizardData.segment) {
         setError("Select a customer segment to continue.");
         return false;
       }
     }
-    if (step === 4) {
-      if (!wizardData.priorFunding || !wizardData.hadExit) {
-        setError("Tell us about your funding history and any prior exits.");
+    if (step === 5) {
+      if (!wizardData.raise || !wizardData.traction || !wizardData.timeline) {
+        setError("Complete all raise details to continue.");
         return false;
       }
-    }
-    if (step === 5) {
-      if (!wizardData.stage || !wizardData.raise || !wizardData.traction || !wizardData.timeline) {
-        setError("Complete all raise details to continue.");
+      if (!wizardData.priorFunding || !wizardData.hadExit) {
+        setError("Tell us about your funding history and any prior exits.");
         return false;
       }
     }
@@ -298,7 +305,18 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
     const stepKey = onboardingStepKey(step);
     if (stepKey) {
       trackFunnelStepComplete(FUNNELS.onboarding, step, stepKey, {
-        skipped_description: step === 3 && !resolved.businessDescription.trim() ? true : undefined,
+        skipped_description: step === 4 && !resolved.businessDescription.trim() ? true : undefined,
+      });
+    }
+
+    if (step === 2 && !emailCapturedRef.current) {
+      emailCapturedRef.current = true;
+      trackEmailCaptured({
+        source,
+        lead_email: resolved.email.trim().toLowerCase(),
+        lead_stage: resolved.stage,
+        lead_sector: resolved.sector,
+        ...getStoredUtm(),
       });
     }
 
@@ -307,7 +325,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
       step: nextStep,
       data: resolved,
       source,
-      triggerEarlyAlert: step === 1,
+      triggerEarlyAlert: step === 2,
     });
 
     if (step < TOTAL_STEPS) {
@@ -323,9 +341,9 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
       return;
     }
     setError(null);
-    trackFunnelStepComplete(FUNNELS.onboarding, 3, "business", { skipped_description: true });
-    void syncWizardProgress({ step: 4, data, source });
-    goToStep(4);
+    trackFunnelStepComplete(FUNNELS.onboarding, 4, "business", { skipped_description: true });
+    void syncWizardProgress({ step: 5, data, source });
+    goToStep(5);
   }
 
   async function openPreview() {
@@ -513,41 +531,43 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
 
   const reviewSections = [
     {
-      label: "You",
+      label: "Your raise",
       step: 1,
+      rows: [[data.stage, data.sector].filter(Boolean)],
+    },
+    {
+      label: "You",
+      step: 2,
       rows: [
         [data.name, data.email].filter(Boolean),
         [data.company].filter(Boolean),
+      ].filter((row) => row.length > 0),
+    },
+    {
+      label: "Goals",
+      step: 3,
+      rows: [
         data.fundraisingNeeds.length > 0 ? fundraisingNeedLabels(data.fundraisingNeeds) : [],
       ].filter((row) => row.length > 0),
     },
     {
-      label: "Company",
-      step: 2,
-      rows: [[data.city, data.website].filter(Boolean), [data.sector].filter(Boolean)],
-    },
-    {
       label: "Business",
-      step: 3,
+      step: 4,
       rows: [
         [data.segment],
+        [data.city, data.website].filter(Boolean),
         data.businessDescription.trim()
           ? [data.businessDescription.slice(0, 120) + (data.businessDescription.length > 120 ? "…" : "")]
           : ["Skipped. Add later in your profile"],
-      ],
-    },
-    {
-      label: "Track record",
-      step: 4,
-      rows: [[data.priorFunding], [data.hadExit]],
+      ].filter((row) => row.length > 0),
     },
     {
       label: "This round",
       step: 5,
       rows: [
-        [data.stage, data.raise].filter(Boolean),
-        [data.traction].filter(Boolean),
+        [data.raise, data.traction].filter(Boolean),
         [data.timeline, data.priorOutreach].filter(Boolean),
+        [data.priorFunding, data.hadExit].filter(Boolean),
       ],
     },
   ];
@@ -585,21 +605,36 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
               {step === 1 && (
                 <>
                   <div>
-                    <div className="mb-2 flex items-end justify-between gap-3">
-                      <label className={labelClass}>What do you need help with?</label>
-                      <span className="text-[11px] text-text-tertiary">Select all that apply</span>
-                    </div>
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      {fundraisingNeedOptions.map((option) => (
+                    <label className={labelClass}>Current stage</label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {stages.map((s) => (
                         <SelectableCard
-                          key={option.value}
-                          selected={data.fundraisingNeeds.includes(option.value)}
-                          onClick={() => toggleFundraisingNeed(option.value)}
-                          title={option.label}
-                          description={option.description}
+                          key={s}
+                          compact
+                          selected={data.stage === s}
+                          onClick={() => update("stage", s)}
+                          title={s}
                         />
                       ))}
                     </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>Industry</label>
+                    <IndustryPicker value={data.sector} onChange={(v) => update("sector", v)} />
+                  </div>
+                </>
+              )}
+
+              {step === 2 && (
+                <>
+                  <MatchTeaser stage={data.stage} sector={data.sector} />
+                  <div className="border-t border-border pt-5">
+                    <p className="text-sm font-medium text-text-primary">
+                      Save your profile to unlock the full list
+                    </p>
+                    <p className={hintClass}>
+                      We&apos;ll keep your matches and progress — finish on any device.
+                    </p>
                   </div>
                   <div>
                     <label htmlFor="wiz-name" className={labelClass}>
@@ -647,12 +682,41 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                 </>
               )}
 
-              {step === 2 && (
+              {step === 3 && (
+                <div>
+                  <div className="mb-2 flex items-end justify-between gap-3">
+                    <label className={labelClass}>What do you need help with?</label>
+                    <span className="text-[11px] text-text-tertiary">Select all that apply</span>
+                  </div>
+                  <div className="grid gap-2 sm:grid-cols-2">
+                    {fundraisingNeedOptions.map((option) => (
+                      <SelectableCard
+                        key={option.value}
+                        selected={data.fundraisingNeeds.includes(option.value)}
+                        onClick={() => toggleFundraisingNeed(option.value)}
+                        title={option.label}
+                        description={option.description}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {step === 4 && (
                 <>
-                  <div className="rounded-md border border-brand/20 bg-brand/5 px-4 py-3 text-sm text-text-secondary">
-                    <span className="font-medium text-text-primary">Good — </span>
-                    we score 12,000+ investor records and prioritize firms active in your space
-                    {data.company.trim() ? ` at ${data.company.trim()}` : ""}.
+                  <div>
+                    <label className={labelClass}>Customer segment</label>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {segmentOptions.map((s) => (
+                        <SelectableCard
+                          key={s.value}
+                          selected={data.segment === s.value}
+                          onClick={() => update("segment", s.value)}
+                          title={s.value}
+                          description={s.description}
+                        />
+                      ))}
+                    </div>
                   </div>
                   <div>
                     <label htmlFor="wiz-city" className={labelClass}>
@@ -673,7 +737,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                   </div>
                   <div>
                     <label htmlFor="wiz-website" className={labelClass}>
-                      Website
+                      Website <span className="font-normal text-text-tertiary">(optional)</span>
                     </label>
                     <input
                       id="wiz-website"
@@ -682,29 +746,6 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                       className="field-input"
                       placeholder="acme.com"
                     />
-                  </div>
-                  <div>
-                    <label className={labelClass}>Industry</label>
-                    <IndustryPicker value={data.sector} onChange={(v) => update("sector", v)} />
-                  </div>
-                </>
-              )}
-
-              {step === 3 && (
-                <>
-                  <div>
-                    <label className={labelClass}>Customer segment</label>
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      {segmentOptions.map((s) => (
-                        <SelectableCard
-                          key={s.value}
-                          selected={data.segment === s.value}
-                          onClick={() => update("segment", s.value)}
-                          title={s.value}
-                          description={s.description}
-                        />
-                      ))}
-                    </div>
                   </div>
                   <div>
                     <div className="mb-2 flex items-end justify-between gap-4">
@@ -755,55 +796,8 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                 </>
               )}
 
-              {step === 4 && (
-                <>
-                  <div>
-                    <label className={labelClass}>Funding raised to date</label>
-                    <div className="space-y-2">
-                      {priorFundingOptions.map((option) => (
-                        <SelectableCard
-                          key={option}
-                          compact
-                          selected={data.priorFunding === option}
-                          onClick={() => update("priorFunding", option)}
-                          title={option}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <label className={labelClass}>Have you had a prior exit?</label>
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      {exitOptions.map((option) => (
-                        <SelectableCard
-                          key={option}
-                          compact
-                          selected={data.hadExit === option}
-                          onClick={() => update("hadExit", option)}
-                          title={option}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-
               {step === 5 && (
                 <>
-                  <div>
-                    <label className={labelClass}>Current stage</label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {stages.map((s) => (
-                        <SelectableCard
-                          key={s}
-                          compact
-                          selected={data.stage === s}
-                          onClick={() => update("stage", s)}
-                          title={s}
-                        />
-                      ))}
-                    </div>
-                  </div>
                   <div>
                     <label className={labelClass}>Target raise</label>
                     <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
@@ -860,6 +854,34 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                       ))}
                     </div>
                   </div>
+                  <div>
+                    <label className={labelClass}>Funding raised to date</label>
+                    <div className="space-y-2">
+                      {priorFundingOptions.map((option) => (
+                        <SelectableCard
+                          key={option}
+                          compact
+                          selected={data.priorFunding === option}
+                          onClick={() => update("priorFunding", option)}
+                          title={option}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className={labelClass}>Have you had a prior exit?</label>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {exitOptions.map((option) => (
+                        <SelectableCard
+                          key={option}
+                          compact
+                          selected={data.hadExit === option}
+                          onClick={() => update("hadExit", option)}
+                          title={option}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </>
               )}
 
@@ -908,10 +930,12 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                 onNext={goNext}
                 nextLabel={
                   step === 1
-                    ? "Build my profile"
-                    : step === TOTAL_STEPS
-                      ? "Score my investor matches"
-                      : "Continue"
+                    ? "Show my investor matches"
+                    : step === 2
+                      ? "Unlock my full match list"
+                      : step === TOTAL_STEPS
+                        ? "Score my investor matches"
+                        : "Continue"
                 }
                 error={error}
               />
@@ -944,7 +968,13 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
           onBack={() => goToStep(step - 1)}
           onNext={goNext}
           nextLabel={
-            step === 1 ? "Build my profile" : step === TOTAL_STEPS ? "Score matches" : "Continue"
+            step === 1
+              ? "Show my matches"
+              : step === 2
+                ? "Unlock full list"
+                : step === TOTAL_STEPS
+                  ? "Score matches"
+                  : "Continue"
           }
           error={error}
         />
