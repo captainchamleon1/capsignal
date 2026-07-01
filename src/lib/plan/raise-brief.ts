@@ -1,10 +1,15 @@
 import type { RaiseProfileDraft } from "@/lib/raise-profile";
 import type { MatchPreviewInvestor } from "@/lib/leads/match-types";
-import { resolveDisplayMatchCount, formatInvestorCount, INVESTOR_DATABASE_SIZE } from "@/lib/match-display";
+import { resolveDisplayMatchCount, formatInvestorCount } from "@/lib/match-display";
 import { getDemoMatches } from "@/lib/data/demo-investors";
 import { buildMatchRationale } from "@/lib/data/scoring/match-rationale";
 import { testimonials, type Testimonial } from "@/lib/content/testimonials";
 import { selfServePricing } from "@/lib/content/guarantee";
+import {
+  normalizeFundraisingNeeds,
+  resolvePillarsForNeeds,
+  type OfferPillarId,
+} from "@/lib/content/onboarding";
 
 export type RaiseBriefInsights = {
   poolSize: number;
@@ -101,24 +106,73 @@ function deriveSegmentCounts(pool: number, profile: RaiseProfileDraft) {
   };
 }
 
-function buildHeadline(_profile: RaiseProfileDraft) {
-  return "Here are a few of your top matches.";
+function formatList(items: string[]): string {
+  if (items.length === 0) return "";
+  if (items.length === 1) return items[0]!;
+  if (items.length === 2) return `${items[0]} and ${items[1]}`;
+  return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
+}
+
+const pillarDeliverables: Record<OfferPillarId, string> = {
+  matching: "verified emails and scored matches",
+  outreach: "thesis-aware sequences from your domain",
+  crm: "investor CRM through close",
+  dataroom: "secure data room with view tracking",
+  deck: "live pitch deck review",
+  support: "onboarding and top-100 target research",
+};
+
+function buildDeliverablePhrases(needs: string[]): string[] {
+  if (needs.length === 0) {
+    return ["verified contacts", "outreach from your domain", "investor CRM"];
+  }
+
+  const phrases: string[] = [];
+  const pillars = resolvePillarsForNeeds(needs);
+
+  for (const pillar of pillars) {
+    phrases.push(pillarDeliverables[pillar]);
+  }
+  if (needs.includes("warm-intros")) {
+    phrases.push("portfolio overlap intro paths");
+  }
+  if (needs.includes("follow-ups")) {
+    phrases.push("automated follow-up cadence");
+  }
+
+  return [...new Set(phrases)].slice(0, 3);
+}
+
+function buildHeadline(profile: RaiseProfileDraft, poolSize: number) {
+  return `${formatInvestorCount(poolSize)} investors scored for ${profile.company}.`;
 }
 
 function buildSubhead(
   profile: RaiseProfileDraft,
   segments: ReturnType<typeof deriveSegmentCounts>,
 ): string {
-  const parts: string[] = [
-    `Scored for ${profile.company} · ${profile.stage} · ${profile.sector}.`,
+  const needs = normalizeFundraisingNeeds(profile);
+
+  const statParts = [
+    `${formatInvestorCount(segments.activeDeployers)} deploying in the last 90 days`,
+    `${formatInvestorCount(segments.highFitMatches)} scored 85+ on thesis fit`,
   ];
-  if (profile.city && segments.metroMatches > 0) {
-    parts.push(`Investors near ${profile.city} ranked first.`);
+
+  if (profile.city?.trim() && segments.metroMatches > 0) {
+    statParts.push(
+      `${formatInvestorCount(segments.metroMatches)} near ${profile.city.trim()}`,
+    );
   }
-  parts.push(
-    `Subscribe to unlock the full database of ${formatInvestorCount(INVESTOR_DATABASE_SIZE)}+ VC funds and angels — plus outreach, CRM, data room, and deck review.`,
-  );
-  return parts.join(" ");
+  if (needs.includes("warm-intros") && segments.warmIntroPaths > 0) {
+    statParts.push(
+      `${formatInvestorCount(segments.warmIntroPaths)} warm intro paths mapped`,
+    );
+  }
+
+  const deliverables = buildDeliverablePhrases(needs);
+  const unlock = `Unlock the full list — ${formatList(deliverables)}.`;
+
+  return `${statParts.join(" · ")}. ${unlock}`;
 }
 
 function resolveSpotlightInvestors(profile: RaiseProfileDraft): MatchPreviewInvestor[] {
@@ -168,10 +222,10 @@ export function buildRaiseBrief(profile: RaiseProfileDraft): RaiseBriefInsights 
     poolSize,
     ...segments,
     firstName: fname,
-    headline: buildHeadline(profile),
+    headline: buildHeadline(profile, poolSize),
     subhead: buildSubhead(profile, segments),
     memoSubject: `${profile.stage} · ${profile.raise || "Current round"} · ${profile.sector}`,
-    ctaLabel: `Start ${selfServePricing.trialLabel.toLowerCase()}`,
+    ctaLabel: selfServePricing.unlockCta,
     spotlightInvestors: resolveSpotlightInvestors(profile),
     testimonial,
   };
@@ -180,16 +234,17 @@ export function buildRaiseBrief(profile: RaiseProfileDraft): RaiseBriefInsights 
 export function buildPersonalizedPillars(profile: RaiseProfileDraft) {
   const { company, stage, sector, city } = profile;
   const metro = city?.trim();
+  const emphasized = resolvePillarsForNeeds(normalizeFundraisingNeeds(profile));
 
-  return [
+  const pillars = [
     {
-      id: "matching",
+      id: "matching" as const,
       title: "Investor matching",
       description: `12,000+ records screened for ${company}'s ${stage} round — VC funds and angels scored on stage, check size, ${sector}, and recent deployment.`,
       highlight: "VC funds + angels",
     },
     {
-      id: "outreach",
+      id: "outreach" as const,
       title: "Outreach sequences",
       description: metro
         ? `Email sequences reference each fund's thesis and portfolio. ${metro} investors first, then national. Sends from your domain — not a third-party blast.`
@@ -197,46 +252,75 @@ export function buildPersonalizedPillars(profile: RaiseProfileDraft) {
       highlight: "Your inbox",
     },
     {
-      id: "crm",
+      id: "crm" as const,
       title: "Investor CRM",
       description: `Pipeline for ${company}: contacted, replied, meeting booked, diligence — through close.`,
       highlight: "Reply → meeting",
     },
     {
-      id: "dataroom",
+      id: "dataroom" as const,
       title: "Data room",
       description: "Deck, model, cap table — shared with per-investor permissions and view tracking.",
       highlight: "Per-investor access",
     },
     {
-      id: "deck",
+      id: "deck" as const,
       title: "Pitch deck review",
       description: `Two live review sessions on ${company}'s deck before partner meetings.`,
       highlight: "2 sessions included",
     },
     {
-      id: "support",
+      id: "support" as const,
       title: "Onboarding & support",
       description: "Kickoff call, deep research on your top 100 targets, priority support when you need help.",
       highlight: "Human support",
     },
-  ] as const;
+  ];
+
+  return pillars
+    .map((pillar) => ({ ...pillar, emphasized: emphasized.has(pillar.id) }))
+    .sort((a, b) => Number(b.emphasized) - Number(a.emphasized));
 }
 
-export const planLaunchSteps = (profile: RaiseProfileDraft) => [
-  {
-    when: "First 48 hours",
-    title: "Review your matches",
-    body: `Your AI-matched VC and angel targets for ${profile.company}. Unlock verified emails and LinkedIn paths. 5+ active matches in 48 hours or a full refund.`,
-  },
-  {
-    when: "Same business day",
-    title: "Outreach live",
-    body: `Sequences send from your domain. Cadence set for ${profile.stage}${profile.timeline?.trim() ? ` · target ${profile.timeline.trim()}` : ""}.`,
-  },
-  {
-    when: "Week 2+",
-    title: "Run the pipeline",
-    body: "Replies in CRM. Diligence in the data room. Deck review before partner calls.",
-  },
-] as const;
+export function buildGoalSummary(profile: RaiseProfileDraft) {
+  const needs = normalizeFundraisingNeeds(profile);
+  return {
+    needs,
+    emphasizedPillars: resolvePillarsForNeeds(needs),
+  };
+}
+
+export const planLaunchSteps = (profile: RaiseProfileDraft) => {
+  const needs = normalizeFundraisingNeeds(profile);
+  const wantsOutreach = needs.some((n) => ["outreach", "follow-ups", "spreadsheet"].includes(n));
+  const wantsPipeline = needs.some((n) => ["pipeline", "spreadsheet", "dataroom"].includes(n));
+  const wantsMatching = needs.length === 0 || needs.some((n) =>
+    ["find-investors", "active-deployers", "warm-intros", "spreadsheet", "first-raise"].includes(n),
+  );
+
+  const steps = [
+    {
+      when: "First 48 hours",
+      title: wantsMatching ? "Review your matches" : "Approve your targets",
+      body: wantsMatching
+        ? `Your AI-matched VC and angel targets for ${profile.company}. Unlock verified emails and LinkedIn paths. 5+ active matches in 48 hours or a full refund.`
+        : `Unlock verified contacts and thesis-ranked targets for ${profile.company}. 5+ active matches in 48 hours or a full refund.`,
+    },
+    {
+      when: "Same business day",
+      title: wantsOutreach ? "Outreach live" : "Launch your workspace",
+      body: wantsOutreach
+        ? `Sequences send from your domain. Cadence set for ${profile.stage}${profile.timeline?.trim() ? ` · target ${profile.timeline.trim()}` : ""}.`
+        : `Your raise workspace is configured for ${profile.company} — matches, CRM, and data room ready to use.`,
+    },
+    {
+      when: "Week 2+",
+      title: wantsPipeline ? "Run the pipeline" : "Close the round",
+      body: wantsPipeline
+        ? "Replies in CRM. Diligence in the data room. Deck review before partner calls."
+        : "Track replies, share diligence, and move investors from first email to term sheet.",
+    },
+  ] as const;
+
+  return steps;
+};

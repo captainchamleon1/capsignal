@@ -17,6 +17,7 @@ export type RaiseProfileDraft = {
   traction: string;
   timeline: string;
   priorOutreach: string;
+  fundraisingNeeds?: string[];
   matchCount?: number; /** Estimated profile match pool shown in funnel copy */
   topInvestors?: MatchPreviewInvestor[];
   stageKey?: string;

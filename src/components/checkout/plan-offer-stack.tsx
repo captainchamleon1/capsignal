@@ -37,7 +37,7 @@ export function PlanOfferStack({ profile, className, compact }: PlanOfferStackPr
           Everything included
         </p>
         <h2 className="mt-2 text-lg font-semibold text-text-primary md:text-xl">
-          Included in your subscription
+          What you unlock with the full list
         </h2>
       </div>
 
@@ -47,9 +47,19 @@ export function PlanOfferStack({ profile, className, compact }: PlanOfferStackPr
           return (
             <li
               key={pillar.id}
-              className="flex gap-3 border border-border bg-surface-muted/60 p-3.5 sm:p-4"
+              className={cn(
+                "flex gap-3 border p-3.5 sm:p-4",
+                pillar.emphasized
+                  ? "border-brand/40 bg-brand-tint/40"
+                  : "border-border bg-surface-muted/60",
+              )}
             >
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-brand-tint text-brand">
+              <span
+                className={cn(
+                  "flex h-9 w-9 shrink-0 items-center justify-center",
+                  pillar.emphasized ? "bg-brand text-white" : "bg-brand-tint text-brand",
+                )}
+              >
                 <Icon className="h-4 w-4" aria-hidden="true" />
               </span>
               <div className="min-w-0 flex-1">

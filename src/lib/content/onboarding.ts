@@ -1,21 +1,124 @@
 import { industryOptions } from "@/lib/content/industries";
 
 export const onboardingMeta = {
-  title: "Build your raise profile",
-  subtitle: "Investor matching, outreach, and CRM — personalized to your company.",
+  title: "See who matches your raise",
+  subtitle: "Tell us what you're trying to solve — we'll score active investors in your space and build your outreach profile.",
   timeEstimate: "~4 min",
   stepsCount: 6,
+  /** Steps 2–6 shown in the progress UI (step 1 is a lightweight gate). */
+  profileStepsCount: 5,
 } as const;
+
+export const fundraisingNeedOptions = [
+  {
+    value: "find-investors",
+    label: "Find the right investors",
+    description: "I don't know who's actively deploying in my space",
+    pillars: ["matching"],
+  },
+  {
+    value: "active-deployers",
+    label: "Reach investors writing checks now",
+    description: "I need firms with recent deployment activity, not stale lists",
+    pillars: ["matching"],
+  },
+  {
+    value: "warm-intros",
+    label: "Map warm intro paths",
+    description: "I want portfolio overlap and mutual connections surfaced",
+    pillars: ["matching"],
+  },
+  {
+    value: "outreach",
+    label: "Automate cold outreach",
+    description: "Writing and sending investor emails is eating my time",
+    pillars: ["outreach"],
+  },
+  {
+    value: "follow-ups",
+    label: "Stop chasing follow-ups",
+    description: "Replies slip through and sequences stall without me noticing",
+    pillars: ["outreach"],
+  },
+  {
+    value: "pipeline",
+    label: "Track my investor pipeline",
+    description: "I'm losing conversations across email, notes, and spreadsheets",
+    pillars: ["crm"],
+  },
+  {
+    value: "dataroom",
+    label: "Share diligence securely",
+    description: "I need one place for deck, model, and legal with access controls",
+    pillars: ["dataroom"],
+  },
+  {
+    value: "deck",
+    label: "Sharpen my pitch deck",
+    description: "I want feedback before partners see my story",
+    pillars: ["deck"],
+  },
+  {
+    value: "spreadsheet",
+    label: "Ditch the investor spreadsheet",
+    description: "I'm copy-pasting names into a sheet with no system behind it",
+    pillars: ["matching", "crm", "outreach"],
+  },
+  {
+    value: "first-raise",
+    label: "Navigate my first institutional round",
+    description: "This is my first real raise — I need guidance, not just a database",
+    pillars: ["support", "matching"],
+  },
+] as const;
+
+export type FundraisingNeedValue = (typeof fundraisingNeedOptions)[number]["value"];
+export type OfferPillarId = (typeof fundraisingNeedOptions)[number]["pillars"][number];
+
+export function fundraisingNeedLabel(value: string): string {
+  return fundraisingNeedOptions.find((o) => o.value === value)?.label ?? value;
+}
+
+export function fundraisingNeedLabels(values: string[]): string[] {
+  return values.map(fundraisingNeedLabel).filter(Boolean);
+}
+
+export function formatFundraisingNeeds(values: string[]): string {
+  return fundraisingNeedLabels(values).join(", ");
+}
+
+/** Normalize legacy single-string saves and empty state. */
+export function normalizeFundraisingNeeds(
+  data: { fundraisingNeeds?: string[]; fundraisingNeed?: string } | undefined,
+): string[] {
+  if (!data) return [];
+  if (Array.isArray(data.fundraisingNeeds) && data.fundraisingNeeds.length > 0) {
+    return data.fundraisingNeeds;
+  }
+  if (data.fundraisingNeed?.trim()) return [data.fundraisingNeed.trim()];
+  return [];
+}
+
+export function resolvePillarsForNeeds(needs: string[]): Set<OfferPillarId> {
+  const ids = new Set<OfferPillarId>();
+  for (const need of needs) {
+    const option = fundraisingNeedOptions.find((o) => o.value === need);
+    option?.pillars.forEach((pillar) => ids.add(pillar));
+  }
+  return ids;
+}
 
 export const onboardingSteps = [
   {
     id: 1,
     key: "you",
-    label: "About you",
-    title: "Let's start with you",
-    subtitle: "We use this to set up your account and keep your matches private.",
-    why: "Investors respond better when outreach comes from a real founder — not a generic alias.",
-    eta: "30 sec",
+    label: "Get started",
+    title: "What's the hardest part of your raise right now?",
+    subtitle:
+      "Select all that apply — we'll tailor your matches, outreach, and plan to what you picked.",
+    why: "",
+    eta: "",
+    isGate: true,
   },
   {
     id: 2,
@@ -111,7 +214,7 @@ export function buildScoringPhases(city?: string): string[] {
 export const MATCH_SCAN_MIN_MS = 7000;
 
 export const unlockMilestones = [
-  { step: 1, label: "Account identity" },
+  { step: 1, label: "Your goal" },
   { step: 2, label: "Company context" },
   { step: 3, label: "Thesis matching" },
   { step: 4, label: "Investor tier calibration" },

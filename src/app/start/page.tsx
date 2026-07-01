@@ -8,18 +8,18 @@ import { Reveal, RevealStagger } from "@/components/ui/reveal";
 import { Check } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Build your raise profile",
+  title: "See who matches your raise",
   description:
-    "Complete your raise profile to see AI-matched investors — before any pricing or commitment.",
+    "Tell us what you're trying to solve — see AI-matched investors before any pricing or commitment.",
 };
 
 const journeySteps = [
-  "About you & your company",
+  "What you need help with",
+  "Company & industry fit",
   "Business model & traction context",
   "Funding history & exit background",
   "Current raise details",
   "Review & score your matches",
-  "Choose plan & unlock contacts",
 ];
 
 export default function StartPage() {
@@ -41,8 +41,7 @@ export default function StartPage() {
                 {onboardingMeta.title}
               </h1>
               <p className="mt-5 text-[16px] leading-[1.65] text-text-secondary">
-                {onboardingMeta.subtitle} Complete all six steps — you&apos;ll see your investor
-                matches before pricing.
+                {onboardingMeta.subtitle} You&apos;ll see your investor matches before pricing.
               </p>
 
               <ol className="mt-10 space-y-3 border-t border-border pt-8">

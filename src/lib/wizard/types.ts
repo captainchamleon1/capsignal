@@ -1,6 +1,7 @@
 export type WizardProgressData = {
   name: string;
   email: string;
+  fundraisingNeeds: string[];
   role: string;
   company: string;
   city: string;

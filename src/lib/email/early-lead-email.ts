@@ -1,4 +1,5 @@
 import type { WizardProgressData } from "@/lib/wizard/types";
+import { formatFundraisingNeeds } from "@/lib/content/onboarding";
 
 export type EarlyLeadAlert = {
   name: string;
@@ -17,6 +18,7 @@ export function buildEarlyLeadAlertEmail(lead: EarlyLeadAlert) {
     ["Name", lead.name],
     ["Email", lead.email],
     ["Step", `${lead.step} of 6`],
+    ["Need", lead.data.fundraisingNeeds?.length ? formatFundraisingNeeds(lead.data.fundraisingNeeds) : ""],
     ["Role", lead.data.role],
     ["Company", lead.data.company],
     ["City", lead.data.city],

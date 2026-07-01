@@ -130,6 +130,7 @@ export async function POST(request: Request) {
                 data: {
                   name: snap.name,
                   email: snap.email,
+                  fundraisingNeeds: [],
                   role: "",
                   company: snap.company ?? "",
                   city: snap.city ?? "",

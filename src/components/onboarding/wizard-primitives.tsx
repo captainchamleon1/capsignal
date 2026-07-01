@@ -11,34 +11,34 @@ type WizardProgressProps = {
 };
 
 export function WizardProgress({ step, className }: WizardProgressProps) {
-  const pct = Math.round((step / onboardingMeta.stepsCount) * 100);
+  if (step <= 1) return null;
+
+  const profileSteps = onboardingSteps.filter((s) => !("isGate" in s && s.isGate));
+  const profileStep = step - 1;
+  const total = onboardingMeta.profileStepsCount;
+  const pct = Math.round((profileStep / total) * 100);
+  const current = onboardingSteps[step - 1];
 
   return (
     <div className={className}>
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-text-tertiary">
-            Step {step} of {onboardingMeta.stepsCount}
+            Step {profileStep} of {total}
           </p>
-          <p className="mt-1 truncate text-sm font-medium text-text-primary">
-            {onboardingSteps[step - 1]?.label}
-          </p>
+          <p className="mt-1 truncate text-sm font-medium text-text-primary">{current?.label}</p>
         </div>
-        <div className="shrink-0 text-right">
-          <p className="font-mono text-lg font-medium tabular-nums text-brand">{pct}%</p>
-          <p className="text-[11px] text-text-tertiary">{onboardingMeta.timeEstimate}</p>
-        </div>
+        <p className="shrink-0 text-[11px] text-text-tertiary">{onboardingMeta.timeEstimate}</p>
       </div>
-      <div className="mt-3 h-1.5 overflow-hidden bg-surface-muted">
+      <div className="mt-3 h-1 overflow-hidden bg-surface-muted">
         <div
           className="h-full bg-brand transition-all duration-500 ease-out"
           style={{ width: `${pct}%` }}
         />
       </div>
 
-      {/* Mobile step pills */}
       <div className="mt-4 flex gap-1.5 overflow-x-auto pb-1 lg:hidden [-webkit-overflow-scrolling:touch]">
-        {onboardingSteps.map((s) => (
+        {profileSteps.map((s) => (
           <span
             key={s.key}
             className={cn(
@@ -66,19 +66,30 @@ export function WizardStepHeader({ step }: WizardStepHeaderProps) {
   const config = onboardingSteps[step - 1];
   if (!config) return null;
 
+  const isGate = "isGate" in config && config.isGate;
+
   return (
-    <div className="border-b border-border pb-5 md:pb-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
-        {config.label} · ~{config.eta}
-      </p>
-      <h2 className="mt-2 text-lg font-semibold tracking-tight text-text-primary md:mt-3 md:text-2xl">
+    <div className={cn("pb-5 md:pb-6", !isGate && "border-b border-border")}>
+      {!isGate && config.eta ? (
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-brand">
+          {config.label} · ~{config.eta}
+        </p>
+      ) : null}
+      <h2
+        className={cn(
+          "text-lg font-semibold tracking-tight text-text-primary md:text-2xl",
+          !isGate && config.eta ? "mt-2 md:mt-3" : "",
+        )}
+      >
         {config.title}
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-text-secondary">{config.subtitle}</p>
-      <p className="mt-3 border-l-2 border-brand/40 bg-brand-tint/50 py-2 pl-3 pr-3 text-xs leading-relaxed text-text-secondary md:mt-4 md:py-2.5 md:pr-4">
-        <span className="font-medium text-text-primary">Why we ask: </span>
-        {config.why}
-      </p>
+      {!isGate && config.why ? (
+        <p className="mt-3 border-l-2 border-brand/40 bg-brand-tint/50 py-2 pl-3 pr-3 text-xs leading-relaxed text-text-secondary md:mt-4 md:py-2.5 md:pr-4">
+          <span className="font-medium text-text-primary">Why we ask: </span>
+          {config.why}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -149,6 +160,8 @@ type MobileProfileStripProps = {
 };
 
 export function MobileProfileStrip({ step, data }: MobileProfileStripProps) {
+  if (step <= 1) return null;
+
   const chips = [
     data.name,
     data.company,
@@ -202,6 +215,8 @@ type ProfilePreviewPanelProps = {
 };
 
 export function ProfilePreviewPanel({ step, data }: ProfilePreviewPanelProps) {
+  if (step <= 1) return null;
+
   const rows = [
     data.name && { label: "Founder", value: data.name },
     data.company && { label: "Company", value: data.company },

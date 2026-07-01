@@ -22,6 +22,7 @@ export const previewRaiseProfile: RaiseProfileDraft = {
   traction: "$420K ARR · 18 customers",
   timeline: "Close by Q3 2026",
   priorOutreach: "Some cold outreach, no CRM",
+  fundraisingNeeds: ["find-investors", "outreach", "pipeline"],
   matchCount: resolveDisplayMatchCount("seed", "deep_tech", "Acme AI", undefined, "San Francisco"),
   stageKey: "seed",
   sectorKey: "deep_tech",

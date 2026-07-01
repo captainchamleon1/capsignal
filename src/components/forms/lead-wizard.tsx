@@ -36,6 +36,10 @@ import {
 } from "@/lib/match-display";
 import {
   businessDescriptionExample,
+  formatFundraisingNeeds,
+  fundraisingNeedLabels,
+  fundraisingNeedOptions,
+  normalizeFundraisingNeeds,
   onboardingMeta,
   MATCH_SCAN_MIN_MS,
   roleOptions,
@@ -84,6 +88,7 @@ type WizardData = WizardProgressData;
 const emptyData: WizardData = {
   name: "",
   email: "",
+  fundraisingNeeds: [] as string[],
   role: "",
   company: "",
   city: "",
@@ -134,7 +139,11 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
       if (cancelled) return;
 
       if (saved) {
-        setData(saved.data);
+        setData({
+          ...emptyData,
+          ...saved.data,
+          fundraisingNeeds: normalizeFundraisingNeeds(saved.data),
+        });
         setStep(saved.step);
         setRestoredSession(true);
       } else if (isPaidClickSession()) {
@@ -221,6 +230,17 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
     [step, data, source],
   );
 
+  function toggleFundraisingNeed(value: string) {
+    setData((d) => {
+      const current = d.fundraisingNeeds;
+      const next = current.includes(value)
+        ? current.filter((v) => v !== value)
+        : [...current, value];
+      return { ...d, fundraisingNeeds: next };
+    });
+    setError(null);
+  }
+
   function resolveStepData(wizardData: WizardData): WizardData {
     if (step === 1 && !wizardData.role.trim()) {
       return { ...wizardData, role: roleOptions[0] };
@@ -230,8 +250,12 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
 
   function validateStep(wizardData: WizardData = data): boolean {
     if (step === 1) {
-      if (!wizardData.name.trim() || !wizardData.email.trim()) {
-        setError("Name and work email are required.");
+      if (wizardData.fundraisingNeeds.length === 0) {
+        setError("Select at least one thing you need help with.");
+        return false;
+      }
+      if (!wizardData.name.trim() || !wizardData.email.trim() || !wizardData.company.trim()) {
+        setError("Name, work email, and company are required.");
         return false;
       }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(wizardData.email)) {
@@ -240,8 +264,8 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
       }
     }
     if (step === 2) {
-      if (!wizardData.company.trim() || !wizardData.sector) {
-        setError("Company name and industry are required.");
+      if (!wizardData.sector) {
+        setError("Industry is required.");
         return false;
       }
     }
@@ -411,6 +435,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
 
   function buildPayload(): LeadPayload {
     const parts = [
+      data.fundraisingNeeds.length > 0 && `Goals: ${formatFundraisingNeeds(data.fundraisingNeeds)}`,
       data.role && `Role: ${data.role}`,
       data.city && `City: ${data.city.trim()}`,
       data.segment && `Segment: ${data.segment}`,
@@ -487,11 +512,19 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
     descLen >= 120 ? "strong" : descLen >= 40 ? "good" : descLen > 0 ? "weak" : "empty";
 
   const reviewSections = [
-    { label: "About you", step: 1, rows: [[data.name, data.email], [data.role].filter(Boolean)] },
+    {
+      label: "You",
+      step: 1,
+      rows: [
+        [data.name, data.email].filter(Boolean),
+        [data.company].filter(Boolean),
+        data.fundraisingNeeds.length > 0 ? fundraisingNeedLabels(data.fundraisingNeeds) : [],
+      ].filter((row) => row.length > 0),
+    },
     {
       label: "Company",
       step: 2,
-      rows: [[data.company, data.city, data.website].filter(Boolean), [data.sector].filter(Boolean)],
+      rows: [[data.city, data.website].filter(Boolean), [data.sector].filter(Boolean)],
     },
     {
       label: "Business",
@@ -521,7 +554,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
 
   return (
     <>
-      <div id={id} className="grid gap-8 lg:grid-cols-[1fr_280px] lg:gap-12">
+      <div id={id} className={cn("grid gap-8", step > 1 && "lg:grid-cols-[1fr_280px] lg:gap-12")}>
         <div className="min-w-0 pb-[calc(5.5rem+env(safe-area-inset-bottom))] lg:pb-0">
           {restoredSession ? (
             <p className="mb-4 rounded-md border border-brand/20 bg-brand/5 px-3 py-2 text-sm text-text-secondary">
@@ -552,6 +585,23 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
               {step === 1 && (
                 <>
                   <div>
+                    <div className="mb-2 flex items-end justify-between gap-3">
+                      <label className={labelClass}>What do you need help with?</label>
+                      <span className="text-[11px] text-text-tertiary">Select all that apply</span>
+                    </div>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {fundraisingNeedOptions.map((option) => (
+                        <SelectableCard
+                          key={option.value}
+                          selected={data.fundraisingNeeds.includes(option.value)}
+                          onClick={() => toggleFundraisingNeed(option.value)}
+                          title={option.label}
+                          description={option.description}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <div>
                     <label htmlFor="wiz-name" className={labelClass}>
                       Full name
                     </label>
@@ -579,33 +629,6 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                       placeholder="jane@company.com"
                       autoComplete="email"
                     />
-                    <p className={hintClass}>Where we send your matches and account invite.</p>
-                  </div>
-                  <div>
-                    <label className={labelClass}>
-                      Your role{" "}
-                      <span className="font-normal text-text-tertiary">(defaults to Founder & CEO)</span>
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {roleOptions.map((r) => (
-                        <SelectableCard
-                          key={r}
-                          compact
-                          selected={data.role === r}
-                          onClick={() => update("role", r)}
-                          title={r}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {step === 2 && (
-                <>
-                  <div className="rounded-md border border-brand/20 bg-brand/5 px-4 py-3 text-sm text-text-secondary">
-                    <span className="font-medium text-text-primary">Great start.</span> We score
-                    12,000+ investor records — prioritizing firms near you, then expanding nationally.
                   </div>
                   <div>
                     <label htmlFor="wiz-company" className={labelClass}>
@@ -619,6 +642,17 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                       placeholder="Acme Inc."
                       autoComplete="organization"
                     />
+                    <p className={hintClass}>We&apos;ll score investors against your company next.</p>
+                  </div>
+                </>
+              )}
+
+              {step === 2 && (
+                <>
+                  <div className="rounded-md border border-brand/20 bg-brand/5 px-4 py-3 text-sm text-text-secondary">
+                    <span className="font-medium text-text-primary">Good — </span>
+                    we score 12,000+ investor records and prioritize firms active in your space
+                    {data.company.trim() ? ` at ${data.company.trim()}` : ""}.
                   </div>
                   <div>
                     <label htmlFor="wiz-city" className={labelClass}>
@@ -872,7 +906,13 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
                 totalSteps={TOTAL_STEPS}
                 onBack={() => goToStep(step - 1)}
                 onNext={goNext}
-                nextLabel={step === TOTAL_STEPS ? "Score my investor matches" : "Continue"}
+                nextLabel={
+                  step === 1
+                    ? "Build my profile"
+                    : step === TOTAL_STEPS
+                      ? "Score my investor matches"
+                      : "Continue"
+                }
                 error={error}
               />
               <WizardTrustFooter />
@@ -903,7 +943,9 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
           totalSteps={TOTAL_STEPS}
           onBack={() => goToStep(step - 1)}
           onNext={goNext}
-          nextLabel={step === TOTAL_STEPS ? "Score matches" : "Continue"}
+          nextLabel={
+            step === 1 ? "Build my profile" : step === TOTAL_STEPS ? "Score matches" : "Continue"
+          }
           error={error}
         />
       </div>
@@ -923,7 +965,7 @@ export function LeadWizard({ source = "lp-start", id }: LeadWizardProps) {
             setModalLoading(false);
           }}
           onConfirm={handleConfirm}
-          confirmLabel={selfServePricing.cta}
+          confirmLabel={selfServePricing.unlockCta}
           profileSummary={{
             name: data.name,
             company: data.company,
