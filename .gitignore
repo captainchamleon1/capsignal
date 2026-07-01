@@ -45,7 +45,12 @@ next-env.d.ts
 
 # database
 /dev.db
+/prisma/dev.db
 *.db-journal
+
+# visitor session exports (contain lead/session data)
+/data/visitor-sessions-*.json
+/data/missed-leads-analysis.json
 /data/*.gz
 /data/sec-feed*.xml*
 
