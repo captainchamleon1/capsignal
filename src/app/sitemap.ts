@@ -2,7 +2,6 @@ import type { MetadataRoute } from "next";
 import { productModules } from "@/lib/content/product";
 import { guides } from "@/lib/content/resources";
 import { faqEntries } from "@/lib/content/answers";
-import { caseStudies } from "@/lib/content/customers";
 import { sectors } from "@/lib/content/sectors";
 import { docs } from "@/lib/content/docs";
 import { siteConfig } from "@/lib/content/site";
@@ -15,7 +14,6 @@ const staticRoutes = [
   "/founders",
   "/partners",
   "/pricing",
-  "/customers",
   "/compare",
   "/resources",
   "/docs",
@@ -68,12 +66,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
       priority: 0.6,
-    })),
-    ...caseStudies.map((c) => ({
-      url: `${base}/customers/${c.slug}`,
-      lastModified: new Date(),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
     })),
     ...sectors.map((s) => ({
       url: `${base}/solutions/${s.slug}`,

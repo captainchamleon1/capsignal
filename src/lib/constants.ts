@@ -6,7 +6,6 @@ export * from "./content/platform";
 export * from "./content/founders";
 export * from "./content/partners";
 export * from "./content/pricing";
-export * from "./content/customers";
 export * from "./content/about";
 export * from "./content/security";
 export * from "./content/resources";
@@ -22,7 +21,6 @@ export {
   capabilities,
   signalLayers,
   workflow,
-  testimonials,
   comparisonRows,
   integrations,
 } from "./content/home";

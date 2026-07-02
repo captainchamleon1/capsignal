@@ -3,7 +3,6 @@ import type { MatchPreviewInvestor } from "@/lib/leads/match-types";
 import { resolveDisplayMatchCount, formatInvestorCount } from "@/lib/match-display";
 import { getDemoMatches } from "@/lib/data/demo-investors";
 import { buildMatchRationale } from "@/lib/data/scoring/match-rationale";
-import { testimonials, type Testimonial } from "@/lib/content/testimonials";
 import { selfServePricing } from "@/lib/content/guarantee";
 import {
   normalizeFundraisingNeeds,
@@ -26,7 +25,6 @@ export type RaiseBriefInsights = {
   memoSubject: string;
   ctaLabel: string;
   spotlightInvestors: MatchPreviewInvestor[];
-  testimonial: Testimonial;
 };
 
 function hashProfile(input: string): number {
@@ -45,20 +43,6 @@ function firstName(full: string): string {
   const trimmed = full.trim();
   if (!trimmed) return "Founder";
   return trimmed.split(/\s+/)[0] ?? "Founder";
-}
-
-function pickTestimonial(profile: RaiseProfileDraft): Testimonial {
-  const stage = profile.stage.toLowerCase();
-  const sector = profile.sector.toLowerCase();
-  const match =
-    testimonials.find(
-      (t) =>
-        t.stage.toLowerCase() === stage &&
-        (sector.includes("ai") ? t.sector.toLowerCase().includes("ai") : true),
-    ) ??
-    testimonials.find((t) => t.stage.toLowerCase() === stage) ??
-    testimonials[0];
-  return match;
 }
 
 function resolvePoolSize(profile: RaiseProfileDraft): number {
@@ -216,7 +200,6 @@ export function buildRaiseBrief(profile: RaiseProfileDraft): RaiseBriefInsights 
   const poolSize = resolvePoolSize(profile);
   const segments = deriveSegmentCounts(poolSize, profile);
   const fname = firstName(profile.name);
-  const testimonial = pickTestimonial(profile);
 
   return {
     poolSize,
@@ -227,7 +210,6 @@ export function buildRaiseBrief(profile: RaiseProfileDraft): RaiseBriefInsights 
     memoSubject: `${profile.stage} · ${profile.raise || "Current round"} · ${profile.sector}`,
     ctaLabel: selfServePricing.unlockCta,
     spotlightInvestors: resolveSpotlightInvestors(profile),
-    testimonial,
   };
 }
 

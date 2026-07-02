@@ -87,8 +87,6 @@ export const workflow = [
   },
 ] as const;
 
-export const testimonials = [] as const;
-
 export const comparisonRows = [
   {
     feature: "Investor targeting",

@@ -7,7 +7,6 @@ import { PlanPricingCard } from "@/components/checkout/plan-pricing-card";
 import { PlanCampaignBrief } from "@/components/checkout/plan-campaign-brief";
 import { PlanMatchIntel } from "@/components/checkout/plan-match-intel";
 import { PlanLaunchTimeline } from "@/components/checkout/plan-launch-timeline";
-import { PlanSocialProof } from "@/components/checkout/plan-social-proof";
 import { Container } from "@/components/ui/container";
 
 type PlanGateViewProps = {
@@ -57,7 +56,6 @@ export function PlanGateView({ profile, checkoutHref, preview, matchesLoading }:
               <PlanMatchIntel profile={profile} brief={brief} matchesLoading={matchesLoading} />
               <PlanLaunchTimeline profile={profile} />
               <PlanOfferStack profile={profile} />
-              <PlanSocialProof brief={brief} />
               <UnlockSignalPreview
                 company={profile.company}
                 city={profile.city}
