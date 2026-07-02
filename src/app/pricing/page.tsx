@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { pricingComparison, pricingFaqs } from "@/lib/content/pricing";
-import { guarantee, selfServePricing } from "@/lib/content/guarantee";
+import { selfServePricing } from "@/lib/content/guarantee";
 import { openvcComparison } from "@/lib/content/openvc-compare";
 import { PageHeader } from "@/components/ui/page-header";
 import { PageSection } from "@/components/ui/page-section";
@@ -25,7 +25,7 @@ export default function PricingPage() {
       <PageHeader
         label="Pricing"
         title="One plan. No success fees."
-        description={`${selfServePricing.trialLabel}, then ${selfServePricing.priceFull}/mo · ${guarantee.short}. No per-seat pricing, no carry, no percentage of capital raised.`}
+        description={`${selfServePricing.trialLabel}, then ${selfServePricing.priceFull}/mo · Cancel anytime. No per-seat pricing, no carry, no percentage of capital raised.`}
       />
 
       <PageSection border="bottom">

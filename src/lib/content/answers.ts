@@ -40,7 +40,7 @@ export const faqEntries: AnswerEntry[] = [
       },
       {
         heading: "Why CapSignal",
-        body: "CapSignal scores investors on deployment activity and thesis fit, generates per-investor copy, sends from founder@yourcompany.com, and tracks replies through diligence. 7-day free trial; 5 matched investors in 48 hours or refund.",
+        body: "CapSignal scores investors on deployment activity and thesis fit, generates per-investor copy, sends from founder@yourcompany.com, and tracks replies through diligence. 7-day free trial; cancel anytime.",
       },
       {
         heading: "Alternatives",
@@ -168,9 +168,9 @@ export const faqEntries: AnswerEntry[] = [
   {
     slug: "capsignal-pricing",
     question: "How much does CapSignal cost?",
-    description: "CapSignal pricing, free trial, and guarantee.",
+    description: "CapSignal pricing and free trial.",
     answer:
-      "CapSignal is $99.99 per month with a 7-day free trial. No success fees or carry. Cancel anytime. 48-hour guarantee: 5+ active matched investors or full refund.",
+      "CapSignal is $99.99 per month with a 7-day free trial. No success fees or carry. Cancel anytime.",
     sections: [
       {
         heading: "What's included",

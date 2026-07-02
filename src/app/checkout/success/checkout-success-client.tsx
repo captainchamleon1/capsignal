@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { guarantee, selfServePricing } from "@/lib/content/guarantee";
+import { selfServePricing, supportEmail } from "@/lib/content/guarantee";
 import { trackFunnelMilestone } from "@/lib/analytics";
 import { logServerMilestone } from "@/lib/analytics/log-server-milestone";
 import { GuaranteeLine } from "@/components/ui/guarantee-line";
@@ -85,8 +85,8 @@ export function CheckoutSuccessClient() {
       </div>
       <p className="mt-6 text-xs text-text-tertiary">
         Need help? Email{" "}
-        <Link href={`mailto:${guarantee.email}`} className="text-text-secondary underline">
-          {guarantee.email}
+        <Link href={`mailto:${supportEmail}`} className="text-text-secondary underline">
+          {supportEmail}
         </Link>
       </p>
     </Container>

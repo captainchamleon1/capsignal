@@ -285,8 +285,8 @@ export const planLaunchSteps = (profile: RaiseProfileDraft) => {
       when: "First 48 hours",
       title: wantsMatching ? "Review your matches" : "Approve your targets",
       body: wantsMatching
-        ? `Your AI-matched VC and angel targets for ${profile.company}. Unlock verified emails and LinkedIn paths. 5+ active matches in 48 hours or a full refund.`
-        : `Unlock verified contacts and thesis-ranked targets for ${profile.company}. 5+ active matches in 48 hours or a full refund.`,
+        ? `Your AI-matched VC and angel targets for ${profile.company}. Unlock verified emails and LinkedIn paths.`
+        : `Unlock verified contacts and thesis-ranked targets for ${profile.company}.`,
     },
     {
       when: "Same business day",

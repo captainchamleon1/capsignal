@@ -1,5 +1,5 @@
 import { siteConfig } from "@/lib/content/site";
-import { guarantee, selfServePricing } from "@/lib/content/guarantee";
+import { selfServePricing } from "@/lib/content/guarantee";
 
 export type LegalSection = {
   id: string;
@@ -80,7 +80,7 @@ export const privacyPolicy: LegalDocument = {
       list: [
         "Provide, operate, and improve the Service, including investor matching, outreach workflows, campaign analytics, and data-room features.",
         "Process subscriptions, free trials, refunds, and billing through Stripe.",
-        "Respond to access requests, support inquiries, and guarantee claims.",
+        "Respond to access requests and support inquiries.",
         "Send transactional messages (account confirmations, billing receipts, product updates you opt into).",
         "Monitor site performance, diagnose errors, understand marketing effectiveness, and prevent abuse.",
         "Comply with law, enforce our Terms of Service, and protect the rights and safety of CapSignal, our users, and others.",
@@ -205,7 +205,7 @@ export const termsOfService: LegalDocument = {
       paragraphs: [
         "CapSignal provides software and related services to help founders identify relevant investors, run thesis-aware outreach, track campaign performance, and manage raise materials.",
         "Features may change over time. We may add, modify, or discontinue functionality with reasonable notice when the change materially affects paid subscribers.",
-        "Certain deliverability, reply-rate, and meeting outcomes depend on your sector, stage, list quality, messaging, and market conditions. CapSignal does not guarantee fundraising success except as expressly stated in our written guarantee below.",
+        "Certain deliverability, reply-rate, and meeting outcomes depend on your sector, stage, list quality, messaging, and market conditions. CapSignal does not guarantee fundraising success.",
       ],
     },
     {
@@ -215,21 +215,12 @@ export const termsOfService: LegalDocument = {
         `Self-serve plans include a ${selfServePricing.trialDays}-day free trial when offered at checkout. Unless you cancel before the trial ends, your payment method on file will be charged ${selfServePricing.priceFull} ${selfServePricing.period} (plus applicable taxes) and will renew automatically each billing period until cancelled.`,
         "Payments are processed by Stripe. By subscribing, you authorize us and Stripe to charge your payment method for recurring fees and any applicable taxes.",
         "You may cancel from account settings or by emailing support before the next renewal date. Cancellation stops future charges; access generally continues through the end of the paid period unless otherwise stated.",
-        "Fees are non-refundable except where required by law or covered by our guarantee. Failed payments may result in suspension until resolved.",
-      ],
-    },
-    {
-      id: "guarantee",
-      title: "4. 48-hour match guarantee",
-      paragraphs: [
-        guarantee.body,
-        `To claim a refund under this guarantee, email ${guarantee.email} within 14 days of your first paid charge with your account email and a brief description of your raise profile. We will verify match delivery against our internal criteria and process eligible refunds through Stripe.`,
-        "The guarantee applies to the self-serve subscription described on our pricing page and does not extend to custom enterprise engagements unless agreed in writing.",
+        "Fees are non-refundable except where required by law. Failed payments may result in suspension until resolved.",
       ],
     },
     {
       id: "your-data",
-      title: "5. Your content and data",
+      title: "4. Your content and data",
       paragraphs: [
         'You retain ownership of decks, investor lists, messages, metrics, and other materials you upload or create ("Customer Content").',
         "You grant CapSignal a limited license to host, process, transmit, and display Customer Content solely to provide and improve the Service, troubleshoot issues, and comply with law.",
@@ -238,7 +229,7 @@ export const termsOfService: LegalDocument = {
     },
     {
       id: "acceptable-use",
-      title: "6. Acceptable use",
+      title: "5. Acceptable use",
       paragraphs: ["You agree not to:"],
       list: [
         'Send unlawful, deceptive, or unsolicited bulk email ("spam") or violate CAN-SPAM, GDPR, CASL, or similar regulations',
@@ -251,7 +242,7 @@ export const termsOfService: LegalDocument = {
     },
     {
       id: "email-compliance",
-      title: "7. Outreach and email compliance",
+      title: "6. Outreach and email compliance",
       paragraphs: [
         "You are responsible for the content of messages sent through or in connection with CapSignal, including accurate sender identification, working unsubscribe mechanisms where required, and honoring opt-out requests promptly.",
         "We may throttle send volume, pause campaigns, or suspend accounts that threaten domain reputation, generate excessive complaints, or appear to violate email or securities laws.",
@@ -259,28 +250,28 @@ export const termsOfService: LegalDocument = {
     },
     {
       id: "third-party",
-      title: "8. Third-party services",
+      title: "7. Third-party services",
       paragraphs: [
         "The Service integrates with third parties such as Stripe, email providers, and analytics tools. Your use of those services may be subject to their terms. CapSignal is not responsible for third-party outages or policies outside our control.",
       ],
     },
     {
       id: "ip",
-      title: "9. CapSignal intellectual property",
+      title: "8. CapSignal intellectual property",
       paragraphs: [
         "CapSignal owns the Service, software, branding, documentation, and underlying technology, excluding Customer Content. You may not copy, modify, or create derivative works except as allowed by these Terms or written permission.",
       ],
     },
     {
       id: "confidentiality",
-      title: "10. Confidentiality",
+      title: "9. Confidentiality",
       paragraphs: [
         "Each party may receive confidential information from the other. You agree not to disclose non-public CapSignal product details; we treat your non-public raise materials as confidential and use them only as described in our Privacy Policy.",
       ],
     },
     {
       id: "disclaimers",
-      title: "11. Disclaimers",
+      title: "10. Disclaimers",
       paragraphs: [
         'THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE." TO THE MAXIMUM EXTENT PERMITTED BY LAW, CAPSIGNAL DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.',
         "CapSignal does not provide legal, tax, or investment advice. Matching investors or facilitating outreach does not constitute an endorsement of any investor or offering.",
@@ -288,7 +279,7 @@ export const termsOfService: LegalDocument = {
     },
     {
       id: "liability",
-      title: "12. Limitation of liability",
+      title: "11. Limitation of liability",
       paragraphs: [
         "TO THE MAXIMUM EXTENT PERMITTED BY LAW, CAPSIGNAL AND ITS OFFICERS, DIRECTORS, EMPLOYEES, AND SUPPLIERS WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, OR FOR LOST PROFITS, DATA, OR GOODWILL.",
         "OUR TOTAL LIABILITY FOR ANY CLAIM ARISING OUT OF THESE TERMS OR THE SERVICE IS LIMITED TO THE GREATER OF (A) AMOUNTS YOU PAID TO CAPSIGNAL IN THE TWELVE MONTHS BEFORE THE CLAIM OR (B) ONE HUNDRED U.S. DOLLARS ($100).",
@@ -297,14 +288,14 @@ export const termsOfService: LegalDocument = {
     },
     {
       id: "indemnity",
-      title: "13. Indemnification",
+      title: "12. Indemnification",
       paragraphs: [
         "You will defend and indemnify CapSignal against claims, damages, and expenses (including reasonable attorneys' fees) arising from Customer Content, your outreach, your violation of these Terms, or your violation of applicable law.",
       ],
     },
     {
       id: "termination",
-      title: "14. Termination",
+      title: "13. Termination",
       paragraphs: [
         "You may stop using the Service and cancel your subscription at any time. We may suspend or terminate access if you breach these Terms, create legal or deliverability risk, or fail to pay fees.",
         "Sections that by nature should survive termination — including payment obligations, disclaimers, limitation of liability, indemnity, and governing law — will survive.",
@@ -312,7 +303,7 @@ export const termsOfService: LegalDocument = {
     },
     {
       id: "disputes",
-      title: "15. Governing law and disputes",
+      title: "14. Governing law and disputes",
       paragraphs: [
         "These Terms are governed by the laws of the State of Delaware, USA, excluding conflict-of-law rules. Except where prohibited, exclusive jurisdiction for disputes will be the state or federal courts located in Delaware, and you consent to personal jurisdiction there.",
         "Before filing a formal claim, please contact us at " + support + " so we can try to resolve the issue informally.",
@@ -320,7 +311,7 @@ export const termsOfService: LegalDocument = {
     },
     {
       id: "changes-terms",
-      title: "16. Changes",
+      title: "15. Changes",
       paragraphs: [
         "We may update these Terms. Continued use after the effective date of revised Terms constitutes acceptance. If you disagree with a material change, cancel your subscription before the change takes effect.",
       ],

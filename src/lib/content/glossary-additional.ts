@@ -1,6 +1,5 @@
 /** Extended glossary — merged in glossary.ts */
 export const additionalGlossaryTerms = [
-  { term: "48-hour guarantee", definition: "CapSignal policy: 5+ active matched investors within 48 hours of signup or full subscription refund." },
   { term: "ADV filing", definition: "SEC Form ADV — public registration for investment advisers; source for CapSignal firm data." },
   { term: "Agent startup", definition: "Company building AI agents for workflows; distinct investor list from infra or vertical AI." },
   { term: "Angel investor", definition: "Individual investing personal capital, often at Pre-seed and Seed." },

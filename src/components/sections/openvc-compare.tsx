@@ -1,5 +1,5 @@
 import { openvcComparison } from "@/lib/content/openvc-compare";
-import { guarantee } from "@/lib/content/guarantee";
+import { selfServePricing } from "@/lib/content/guarantee";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Container } from "@/components/ui/container";
 import { Button } from "@/components/ui/button";
@@ -69,8 +69,11 @@ export function OpenVcCompare() {
 
         <Reveal delay={200} className="mt-10 flex flex-col items-start gap-4 border border-border bg-surface-elevated p-5 pb-safe md:flex-row md:items-center md:justify-between md:p-8">
           <div className="max-w-lg">
-            <p className="font-mono text-[10px] uppercase tracking-wider text-brand">{guarantee.title}</p>
-            <p className="mt-2 text-sm leading-relaxed text-text-secondary">{guarantee.body}</p>
+            <p className="font-mono text-[10px] uppercase tracking-wider text-brand">{selfServePricing.trialLabel}</p>
+            <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+              Build your raise profile, preview your matches, and try the full platform free for{" "}
+              {selfServePricing.trialDays} days. Cancel anytime before the trial ends.
+            </p>
           </div>
           <Button
             variant="primary"

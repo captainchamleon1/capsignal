@@ -65,7 +65,7 @@ export const planOfferPillars = [
 ] as const;
 
 export const planOfferProof = [
-  "48-hour match guarantee — 5+ active investors or full refund",
+  "7-day free trial — cancel anytime before it ends",
   "Up to 500 investor targets per campaign",
   "Go live same business day after you subscribe",
 ] as const;

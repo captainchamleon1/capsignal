@@ -35,7 +35,7 @@ export function CheckoutClient() {
     let resolved = loadRaiseProfile();
 
     // Visitors arriving from lead emails have no wizard session — build a
-    // minimal profile from URL params (?email=&name=&company=&stage=&sector=)
+    // minimal profile from URL params (?email=&name=&company=&stage=&sector=&firms=)
     // so they can reach checkout directly.
     if (!resolved?.email) {
       const emailParam = searchParams.get("email")?.trim();
@@ -45,30 +45,50 @@ export function CheckoutClient() {
       }
       const stageKey = stage ?? undefined;
       const sectorKey = sector ?? undefined;
+      const stageLabel =
+        (stageKey && keyToStageLabel[stageKey]) ?? stageKey?.replace(/_/g, "-");
+      const sectorLabel =
+        (sectorKey && keyToSectorLabel[sectorKey]) ?? sectorKey?.replace(/_/g, " ");
+
+      // `firms` carries the exact investors named in the outreach email so the
+      // preview on this page matches what the founder was already sent.
+      const firmNames = (searchParams.get("firms") ?? "")
+        .split(",")
+        .map((f) => f.trim())
+        .filter(Boolean)
+        .slice(0, 5);
+      const topInvestors = firmNames.map((firm, i) => ({
+        firm,
+        partner: null,
+        score: 96 - i * 3,
+        reason: [
+          "Hand-matched for your raise",
+          stageLabel && sectorLabel ? `${stageLabel} · ${sectorLabel}` : stageLabel ?? sectorLabel,
+        ]
+          .filter(Boolean)
+          .join(" — "),
+        blurred: i > 0,
+      }));
+
       const fromLink: RaiseProfileDraft = {
         name: searchParams.get("name")?.trim() ?? "",
         email: emailParam,
         company: searchParams.get("company")?.trim() ?? "your company",
         city: "",
         website: "",
-        sector:
-          (sectorKey && keyToSectorLabel[sectorKey]) ??
-          sectorKey?.replace(/_/g, " ") ??
-          "",
+        sector: sectorLabel ?? "",
         segment: "",
         businessDescription: "",
         priorFunding: "",
         hadExit: "",
-        stage:
-          (stageKey && keyToStageLabel[stageKey]) ??
-          stageKey?.replace(/_/g, "-") ??
-          "",
+        stage: stageLabel ?? "",
         raise: "",
         traction: "",
         timeline: "",
         priorOutreach: "",
         stageKey,
         sectorKey,
+        ...(topInvestors.length > 0 ? { topInvestors } : {}),
         source: "lead_email",
       };
       saveRaiseProfile(fromLink);

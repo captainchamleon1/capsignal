@@ -28,7 +28,6 @@ export const additionalDocs: DocArticle[] = [
     category: "account",
     sections: [
       { heading: "Trial access", body: "Full platform access for 7 days. Card required; billing starts after trial unless cancelled." },
-      { heading: "Guarantee", body: "5+ matched investors in 48 hours or refund — see guarantee terms." },
     ],
   },
   {

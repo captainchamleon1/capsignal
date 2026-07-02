@@ -1,29 +1,24 @@
 import { cn } from "@/lib/utils";
-import { guarantee } from "@/lib/content/guarantee";
+import { selfServePricing } from "@/lib/content/guarantee";
 
 type GuaranteeLineProps = {
   className?: string;
   suffix?: string;
-  /** Use muted styling on dark backgrounds */
   onDark?: boolean;
 };
 
+/** Trial terms line shown near pricing CTAs. */
 export function GuaranteeLine({ className, suffix, onDark }: GuaranteeLineProps) {
   return (
     <p
       className={cn(
-        "text-center text-xs font-semibold leading-snug sm:text-[13px]",
-        onDark ? "text-text-on-dark" : "text-text-primary",
+        "text-center text-[11px] leading-relaxed",
+        onDark ? "text-text-on-dark-muted" : "text-text-tertiary",
         className,
       )}
     >
-      {guarantee.short}
-      {suffix ? (
-        <span className={cn("font-normal", onDark ? "text-text-on-dark-muted" : "text-text-tertiary")}>
-          {" "}
-          · {suffix}
-        </span>
-      ) : null}
+      {selfServePricing.trialLabel} · Cancel anytime
+      {suffix ? ` · ${suffix}` : ""}
     </p>
   );
 }
