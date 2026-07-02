@@ -6,7 +6,13 @@ import { selfServePricing } from "@/lib/content/guarantee";
 import { buildRaiseBrief } from "@/lib/plan/raise-brief";
 import { trackFunnelMilestone } from "@/lib/analytics";
 import { logServerMilestone } from "@/lib/analytics/log-server-milestone";
-import { loadRaiseProfile } from "@/lib/raise-profile";
+import {
+  keyToSectorLabel,
+  keyToStageLabel,
+  loadRaiseProfile,
+  saveRaiseProfile,
+  type RaiseProfileDraft,
+} from "@/lib/raise-profile";
 import { UnlockSignalPreview } from "@/components/checkout/unlock-signal-preview";
 import { PlanOfferStack } from "@/components/checkout/plan-offer-stack";
 import { PlanPricingCard } from "@/components/checkout/plan-pricing-card";
@@ -26,24 +32,62 @@ export function CheckoutClient() {
   const [profile, setProfile] = useState<ReturnType<typeof loadRaiseProfile>>(null);
 
   useEffect(() => {
-    const saved = loadRaiseProfile();
-    if (!saved?.email) {
-      router.replace("/start#apply");
-      return;
+    let resolved = loadRaiseProfile();
+
+    // Visitors arriving from lead emails have no wizard session — build a
+    // minimal profile from URL params (?email=&name=&company=&stage=&sector=)
+    // so they can reach checkout directly.
+    if (!resolved?.email) {
+      const emailParam = searchParams.get("email")?.trim();
+      if (!emailParam) {
+        router.replace("/start#apply");
+        return;
+      }
+      const stageKey = stage ?? undefined;
+      const sectorKey = sector ?? undefined;
+      const fromLink: RaiseProfileDraft = {
+        name: searchParams.get("name")?.trim() ?? "",
+        email: emailParam,
+        company: searchParams.get("company")?.trim() ?? "your company",
+        city: "",
+        website: "",
+        sector:
+          (sectorKey && keyToSectorLabel[sectorKey]) ??
+          sectorKey?.replace(/_/g, " ") ??
+          "",
+        segment: "",
+        businessDescription: "",
+        priorFunding: "",
+        hadExit: "",
+        stage:
+          (stageKey && keyToStageLabel[stageKey]) ??
+          stageKey?.replace(/_/g, "-") ??
+          "",
+        raise: "",
+        traction: "",
+        timeline: "",
+        priorOutreach: "",
+        stageKey,
+        sectorKey,
+        source: "lead_email",
+      };
+      saveRaiseProfile(fromLink);
+      resolved = fromLink;
     }
-    setProfile(saved);
+
+    setProfile(resolved);
     setReady(true);
     trackFunnelMilestone("checkout_view", {
-      company: saved.company,
-      matchCount: saved.matchCount,
+      company: resolved.company,
+      matchCount: resolved.matchCount,
     });
     logServerMilestone("checkout_view", {
       pagePath: "/checkout",
-      leadEmail: saved.email,
-      leadName: saved.name,
-      leadCompany: saved.company,
+      leadEmail: resolved.email,
+      leadName: resolved.name,
+      leadCompany: resolved.company,
     });
-  }, [router]);
+  }, [router, searchParams, stage, sector]);
 
   if (!ready || !profile) {
     return (
